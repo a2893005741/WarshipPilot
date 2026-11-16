@@ -22,6 +22,7 @@ class TaskController:
         self.vm = None
         self.native = None
         self.scheduler = False
+        self.failures = {}
         self.due = self.load_due()
         self.delay_until = 0.
         self.first_resume = True
@@ -108,6 +109,7 @@ class TaskController:
             self.mirror(run)
             result = run.result
             if status == 'completed':
+                self.failures.pop(self.result['task'], None)
                 self.result['collected'] = getattr(result, 'collected', 0)
                 self.result.update(status='completed', action='原生任务完成，已回港', ended=now())
                 task = self.result['task']
@@ -118,8 +120,9 @@ class TaskController:
             elif status == 'stopped':
                 self.result.update(status='stopped', action=run.error or '任务已停止', ended=now())
             else:
-                self.scheduler = False
                 self.result.update(status='fault', error=run.error, action='已停止输入', ended=now())
+                if self.scheduler:
+                    self.task_failed(self.result['task'], run.error)
                 self.runtime.store.event('原生任务 · 停止：' + run.error, 'warning')
             self.persist()
         if status == 'fault':
@@ -139,9 +142,14 @@ class TaskController:
             if not any(c['enabled'] for k,c in read_tasks(self.runtime.store.root).items() if k in SUPPORTED):
                 raise ValueError('请先在远征或常用图配置中启用任务')
             self.scheduler = True
-            self.event('调度器已启动')
+            self.failures.clear()
+            self.runtime.auto_connect_enabled = True
+            self.runtime.next_connect = 0
+            self.save_due()
+            self.event('调度器已启动' + ('' if self.runtime.serial else '，正在连接模拟器'))
         elif action == 'scheduler-stop':
             self.scheduler = False
+            self.save_due()
             self.stop('调度器已停止')
         elif action == 'pause':
             if not self.busy:raise ValueError('当前没有运行任务')
@@ -182,23 +190,38 @@ class TaskController:
         self.persist()
 
     def load_due(self):
-        """Next run times survive a backend restart (data/scheduler.json)."""
+        """Next run times and the scheduler switch survive a restart or an
+        update (data/scheduler.json), like AzurPilot resuming its task loop."""
         import json
         path = self.runtime.store.root / 'scheduler.json'
         try:
-            due = json.loads(path.read_text(encoding='utf-8')).get('due', {})
-            return {k: v for k, v in due.items() if k in SUPPORTED and datetime.fromisoformat(v)}
+            data = json.loads(path.read_text(encoding='utf-8'))
+            self.scheduler = bool(data.get('scheduler', False))
+            return {k: v for k, v in data.get('due', {}).items() if k in SUPPORTED and datetime.fromisoformat(v)}
         except (OSError, ValueError, AttributeError):
             return {}
 
     def save_due(self):
-        atomic_json(self.runtime.store.root / 'scheduler.json', {'due': self.due})
+        atomic_json(self.runtime.store.root / 'scheduler.json', {'due': self.due, 'scheduler': self.scheduler})
+
+    def task_failed(self, task, message):
+        """A failed task is retried later instead of stopping the scheduler;
+        three failures in a row stop it (the screen likely needs a human)."""
+        self.failures[task] = self.failures.get(task, 0) + 1
+        if self.failures[task] >= 3:
+            self.scheduler = False
+            self.event(f'{NAMES.get(task, task)} 连续失败 {self.failures[task]} 次，调度器已停止：{message[:200]}')
+        else:
+            self.due[task] = (datetime.now(timezone.utc) + timedelta(minutes=10)).isoformat()
+            self.event(f'{NAMES.get(task, task)} 失败（第 {self.failures[task]} 次），10 分钟后重试：{message[:200]}')
+        self.save_due()
 
     def persist(self):
         atomic_json(self.runtime.store.root/'automation-last-run.json', self.state())
 
     def schedule(self):
         if not self.scheduler or self.busy:return
+        if not self.runtime.serial or self.runtime.status != 'live':return  # wait for the device
         tasks=read_tasks(self.runtime.store.root)
         current=datetime.now(timezone.utc)
         local=datetime.now().strftime('%H:%M')
@@ -296,7 +319,9 @@ class TaskController:
                 if time.monotonic()-self.page_time>limit:
                     raise RuntimeError('原任务页面长期没有进展：'+self.result['page'])
         except Exception as exc:
-            self.vm=None;self.scheduler=False;self.touch=None
+            self.vm=None;self.touch=None
+            if self.scheduler and self.result.get('task'):
+                self.task_failed(self.result['task'], str(exc))
             self.result.update(status='fault',error=str(exc)[:700],action='已停止输入')
             self.event('停止：'+str(exc)[:500]);self.persist()
             self.runtime.save_fault('原任务停止：'+str(exc)[:300])

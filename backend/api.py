@@ -139,6 +139,8 @@ def create_app(runtime: Runtime, key: str, shutdown):
                     return JSONResponse(await asyncio.to_thread(runtime.updater.install))
                 return JSONResponse(runtime.updater.save_settings(
                     repo=body.get("repo"), token=body.get("token"), auto_check=body.get("auto_check")))
+            if action == "serial":
+                return JSONResponse(await asyncio.to_thread(runtime.set_serial, str(body.get("serial", ""))))
             if action == "device-config":
                 return JSONResponse(await asyncio.to_thread(
                     runtime.save_device_settings, str(body.get("screenshot_method", "")),

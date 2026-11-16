@@ -44,8 +44,8 @@ class Adb:
         return self.run("-s", serial, "shell", *args).decode("utf-8", errors="replace").strip()
 
     def ensure_input_ready(self, serial):
-        if serial != '127.0.0.1:16416':
-            raise ValueError('本轮仅允许已确认的MuMu舰R实例127.0.0.1:16416')
+        # Any connected instance may receive input, but only while the game is
+        # in front and no other automation (old script / probes) runs on it.
         if time.monotonic()-self.input_checked<2:
             return
         activity=self.shell(serial,'dumpsys','activity','activities')

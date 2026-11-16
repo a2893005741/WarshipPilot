@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Gauge, MousePointerClick, Save, ScanLine} from 'lucide-react';
+import {Gauge, Link, MousePointerClick, Save, ScanLine} from 'lucide-react';
 
 type BenchResult = {method:string; ok:boolean; cost:number|null; rating:string; error:string; detail:any};
 type BenchRun = {time:string; results:BenchResult[]; recommended:string|null};
@@ -29,14 +29,16 @@ function ResultTable({run, kind, onUse}:{run?:BenchRun; kind:'screenshot'|'click
   </table>;
 }
 
-export default function DeviceMethods({api, device, connected, onChanged, onError}:{
-  api:(path:string, body?:any)=>Promise<any>; device?:DeviceState; connected:boolean;
+export default function DeviceMethods({api, device, serial, connectError, connected, onChanged, onError}:{
+  api:(path:string, body?:any)=>Promise<any>; device?:DeviceState; serial:string; connectError:string; connected:boolean;
   onChanged:()=>void; onError:(m:string)=>void;
 }) {
   const [shot, setShot] = useState('nemu_ipc');
   const [control, setControl] = useState('ADB');
   const [mumu, setMumu] = useState('');
   const [clickReady, setClickReady] = useState(false);
+  const [serialInput, setSerialInput] = useState(serial);
+  useEffect(()=>{ setSerialInput(serial); }, [serial]);
   useEffect(()=>{ if(device){setShot(device.screenshot_method); setControl(device.control_method); setMumu(device.mumu_path);} },
     [device?.screenshot_method, device?.control_method, device?.mumu_path]);
   if (!device) return null;
@@ -50,6 +52,13 @@ export default function DeviceMethods({api, device, connected, onChanged, onErro
     <div className="panel-head"><div><Gauge size={18}/><h2>截图与控制方式</h2></div>
       <span className={device.ready?'status-ok':'status-bad'}>{device.ready?'已就绪':connected?'未初始化':'未连接'}</span></div>
     <div className="panel-body">
+      <div className="method-grid">
+        <label className="wide">模拟器 Serial（启动时自动连接，只连这个地址；MuMu12 多开：16384、16416、16448…）
+          <div className="serial-row"><input value={serialInput} onChange={e=>setSerialInput(e.target.value)} placeholder="127.0.0.1:16416"/>
+          <button className="primary" onClick={()=>api('serial', {serial:serialInput}).then(onChanged).catch(e=>onError(e.message))}><Link size={16}/>保存并连接</button></div>
+          {connected?<span className="status-ok">已连接 {serial}</span>:connectError?<span className="hint error">{connectError}</span>:null}
+        </label>
+      </div>
       <div className="method-grid">
         <label>截图方式<select value={shot} onChange={e=>setShot(e.target.value)} disabled={running}>
           {device.screenshot_methods.map(m=><option key={m}>{m}</option>)}</select></label>

@@ -15,9 +15,32 @@ from backend.runtime import Runtime
 from backend.store import atomic_json
 
 
+def take_over_older(data_dir, port, auth_file):
+    """True if the running instance is older than this build and was told to exit."""
+    import urllib.request
+    from backend.updater import parse_version
+    from backend.version import VERSION
+    try:
+        with urllib.request.urlopen(f"http://127.0.0.1:{port}/health", timeout=3) as response:
+            running = json.loads(response.read().decode("utf-8")).get("version", "")
+    except Exception:
+        return False
+    if not parse_version(running) or parse_version(running) >= parse_version(VERSION):
+        return False
+    try:
+        key = json.loads(auth_file.read_text(encoding="utf-8"))["key"]
+        request = urllib.request.Request(f"http://127.0.0.1:{port}/api/shutdown", data=b"{}", method="POST",
+                                         headers={"Authorization": f"Bearer {key}", "Content-Type": "application/json"})
+        urllib.request.urlopen(request, timeout=5).read()
+        return True
+    except Exception:
+        return False
+
+
 def main():
     parser = argparse.ArgumentParser(description="舰R助手 · 原生远征与原脚本出征")
-    parser.add_argument("--host", default="127.0.0.1")
+    # Default comes from data/config.json "host" (0.0.0.0: LAN console, access code required).
+    parser.add_argument("--host", default=None)
     parser.add_argument("--port", type=int, default=22680)
     default_data = (Path(sys.executable).resolve().parent.parent / "WarshipPilot-data") if getattr(sys, "frozen", False) else Path(os.getenv("LOCALAPPDATA", str(Path.home()))) / "WarshipPilot"
     parser.add_argument("--data-dir", type=Path, default=default_data)
@@ -35,19 +58,37 @@ def main():
     try:
         msvcrt.locking(lock_file.fileno(), msvcrt.LK_NBLCK, 1)
     except OSError:
-        for _ in range(30):
-            if auth_file.exists():
-                break
-            threading.Event().wait(0.1)
-        key = json.loads(auth_file.read_text(encoding="utf-8"))["key"]
-        url = f"http://127.0.0.1:{args.port}/#key={key}"
-        if not args.no_browser:
-            webbrowser.open(url)
-        return
+        # Another instance owns this data folder. If it is an older version,
+        # ask it to exit and take over (double-clicking a new release must
+        # not silently open the old console).
+        if take_over_older(args.data_dir, args.port, auth_file):
+            for _ in range(100):
+                try:
+                    msvcrt.locking(lock_file.fileno(), msvcrt.LK_NBLCK, 1)
+                    break
+                except OSError:
+                    threading.Event().wait(0.3)
+            else:
+                raise RuntimeError("旧版本没有退出，请先在旧版本右上角退出后台")
+        else:
+            for _ in range(30):
+                if auth_file.exists():
+                    break
+                threading.Event().wait(0.1)
+            key = json.loads(auth_file.read_text(encoding="utf-8"))["key"]
+            url = f"http://127.0.0.1:{args.port}/#key={key}"
+            if not args.no_browser:
+                webbrowser.open(url)
+            return
     if not auth_file.exists():
         atomic_json(auth_file, {"key": secrets.token_urlsafe(24)})
     key = json.loads(auth_file.read_text(encoding="utf-8"))["key"]
     url = f"http://127.0.0.1:{args.port}/#key={key}"
+    if args.host is None:
+        try:
+            args.host = json.loads((args.data_dir / "config.json").read_text(encoding="utf-8")).get("host", "0.0.0.0")
+        except (OSError, ValueError):
+            args.host = "0.0.0.0"
     resources = Path(getattr(sys, "_MEIPASS", Path(__file__).resolve().parent))
     runtime = Runtime(args.data_dir, resources)
     server = None
@@ -58,8 +99,7 @@ def main():
 
     from backend.updater import Updater
     runtime.updater = Updater(args.data_dir, {"port": args.port, "argv": sys.argv[1:]},
-                              busy=lambda: runtime.automation.busy or runtime.automation.scheduler
-                              or runtime.benchmark["running"],
+                              busy=lambda: runtime.automation.busy or runtime.benchmark["running"],
                               shutdown=shutdown, event=runtime.store.event)
     runtime.updater.start_auto_check(runtime.stop_event)
     app = create_app(runtime, key, shutdown)
