@@ -6,11 +6,11 @@ import unittest
 import cv2
 import numpy as np
 
-from backend.tasks import expedition as exp
-from backend.tasks.expedition import Expedition
-from backend.ui import assets
-from backend.ui.navigation import GameStuckError
-from backend.vision.color import to_screen
+from module.expedition import expedition as exp
+from module.expedition.expedition import Expedition
+from module.ui import assets
+from module.ui.navigation import GameStuckError
+from module.vision.color import to_screen
 from tests.synthetic import DETECTOR, ScriptedDevice, frame_for, handlers, paint_points
 
 ROOT = Path(__file__).resolve().parents[1]

@@ -10,8 +10,8 @@ from pathlib import Path
 
 import numpy as np
 
-from backend.ui.pages import PageDetector
-from backend.vision import color
+from module.ui.pages import PageDetector
+from module.vision import color
 
 ROOT = Path(__file__).resolve().parents[1]
 DETECTOR = PageDetector(ROOT / 'assets/pages.json')

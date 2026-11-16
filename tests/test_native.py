@@ -3,7 +3,7 @@ import threading
 import time
 import unittest
 
-from backend.native import GatedDevice, NativeRun, TaskStopped
+from module.scheduler.native import GatedDevice, NativeRun, TaskStopped
 from tests.synthetic import frame_for
 
 

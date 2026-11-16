@@ -1,0 +1,19 @@
+# Copy to deploy.yaml or let the first startup create it.
+# Git.Repository may point to an accessible mirror or a local bare repository.
+Git:
+  Executable: .venv/git/cmd/git.exe
+  Repository: ''
+  Branch: native-rewrite
+  Remote: origin
+  AutoUpdate: true
+Python:
+  Executable: .venv/Scripts/python.exe
+  Uv: .venv/uv.exe
+Adb:
+  Executable: .venv/adb/adb.exe
+WebUI:
+  Host: 0.0.0.0
+  Port: 22680
+  AccessCode: ''
+Update:
+  AutoCheck: true

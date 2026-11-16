@@ -3,9 +3,9 @@ import unittest
 
 import numpy as np
 
-from backend.emulator import benchmark
-from backend.emulator.compat import RequestHumanTakeover
-from backend.vision.color import to_screen
+from module.device import benchmark
+from module.device.compat import RequestHumanTakeover
+from module.vision.color import to_screen
 from tests.synthetic import DETECTOR, frame_for
 
 

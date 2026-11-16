@@ -1,11 +1,20 @@
 .venv/
 __pycache__/
 node_modules/
-frontend/dist/
 build/
-dist/
+/dist/
 dist-v*/
 data/
 evidence/
 *.spec
+config/deploy.yaml
+config/warship.json
+log/
+screenshots/
+*.log
+task_plan.md
+findings.md
+progress.md
+.runtime-stage/
+.deployment/
 

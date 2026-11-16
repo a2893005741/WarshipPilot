@@ -2,9 +2,9 @@
 import random
 import unittest
 
-from backend.ui import assets
-from backend.ui.navigation import UI, GameStuckError, UnknownPageError
-from backend.vision.color import to_screen
+from module.ui import assets
+from module.ui.navigation import UI, GameStuckError, UnknownPageError
+from module.vision.color import to_screen
 from tests.synthetic import DETECTOR, ScriptedDevice, frame_for, handlers
 
 import numpy as np

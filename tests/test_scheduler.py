@@ -6,8 +6,9 @@ import threading
 from pathlib import Path
 import unittest
 
-from backend.automation import TaskController
-from backend.task_settings import TaskDraft, save_task
+from module.scheduler.controller import TaskController
+from module.config.task_settings import TaskDraft, save_task
+from module.config.config import Config
 
 
 class Store:
@@ -74,8 +75,18 @@ class SchedulerTest(unittest.TestCase):
         again = Recording(self.runtime)
         self.assertEqual(again.due, {'expedition': '2030-01-01T00:00:00+00:00'})
 
+    def test_pending_update_preserves_scheduler_and_defers_next_task(self):
+        configure(self.root, 'expedition', enabled=True)
+        c = Recording(self.runtime)
+        c.scheduler = True
+        c.update_pending = True
+        c.save_due()
+        c.schedule()
+        self.assertEqual(c.started, [])
+        self.assertTrue(Recording(self.runtime).scheduler)
+
     def test_corrupt_schedule_file_is_ignored(self):
-        (self.root / 'scheduler.json').write_text('{bad', encoding='utf-8')
+        Config(self.root).save_section('Scheduler', {'NextRun': {'expedition': 'bad date'}})
         self.assertEqual(Recording(self.runtime).due, {})
 
 

@@ -1,92 +1,130 @@
-"""Updater: version logic, GitHub responses, install guards."""
-import tempfile
+"""Git updates tested against a real local bare remote, without GitHub."""
 from pathlib import Path
+import subprocess
+import tempfile
+import threading
 import unittest
-from unittest import mock
+from unittest.mock import patch
 
-from backend import updater
-from backend.updater import Updater, parse_version
-
-
-class Response:
-    def __init__(self, status, payload):
-        self.status_code, self.payload = status, payload
-
-    def json(self):
-        return self.payload
-
-    def raise_for_status(self):
-        if self.status_code >= 400:
-            raise RuntimeError(self.status_code)
+from deploy.git import Git
+from module.config.config import Config
+from module.webui.updater import Updater
 
 
-def make(busy=False):
-    tmp = Path(tempfile.mkdtemp())
-    events = []
-    return Updater(tmp, {'port': 22680, 'argv': []}, busy=lambda: busy, shutdown=lambda: None,
-                   event=lambda m, level='info': events.append(m)), events
+def git(root,*args):
+    return subprocess.check_output(['git','-C',str(root),*args],stderr=subprocess.STDOUT,text=True,encoding='utf-8').strip()
 
 
-def release(tag, asset=True):
-    assets = [{'id': 7, 'name': f'WarshipPilot-{tag[1:]}-win-x64.zip', 'size': 10, 'digest': 'sha256:ab'}] if asset else []
-    return {'tag_name': tag, 'name': tag, 'body': 'notes', 'published_at': '2026-11-17T00:00:00Z', 'assets': assets}
+class UpdateTest(unittest.TestCase):
+    def setUp(self):
+        self.tmp=tempfile.TemporaryDirectory()
+        self.addCleanup(self.tmp.cleanup)
+        self.base=Path(self.tmp.name)
+        self.remote=self.base/'remote.git'
+        subprocess.run(['git','init','--bare',str(self.remote)],check=True,capture_output=True)
+        self.author=self.base/'author'
+        subprocess.run(['git','clone',str(self.remote),str(self.author)],check=True,capture_output=True)
+        git(self.author,'config','user.email','test@example.invalid')
+        git(self.author,'config','user.name','Test')
+        git(self.author,'switch','-c','native-rewrite')
+        (self.author/'.gitignore').write_text('config/deploy.yaml\nconfig/warship.json\nlog/\n',encoding='utf-8')
+        self.push('initial')
+        self.live=self.base/'live'
+        subprocess.run(['git','clone','-b','native-rewrite',str(self.remote),str(self.live)],check=True,capture_output=True)
+        Config(self.live).ensure()
+        self.stop=threading.Event()
+        self.addCleanup(self.stop.set)
+        self.busy=True
+        self.quiesced=[]
+        self.u=Updater(self.live,{},lambda:self.busy,lambda:None,lambda *a:None,
+                       self.quiesced.append,self.stop)
 
+    def push(self,message):
+        (self.author/'code.txt').write_text(message,encoding='utf-8')
+        git(self.author,'add','.')
+        git(self.author,'commit','-m',message)
+        git(self.author,'push','origin','native-rewrite')
 
-class VersionTest(unittest.TestCase):
-    def test_numeric_comparison(self):
-        self.assertGreater(parse_version('v0.10.0'), parse_version('0.9.9'))
-        self.assertIsNone(parse_version('latest'))
+    def test_lists_and_applies_commit_without_touching_config(self):
+        before=Config(self.live).deploy_file.read_bytes()
+        self.push('new behavior')
+        state=self.u.check()
+        self.assertEqual(state['state'],'available')
+        self.assertEqual(state['latest']['commits'][0]['subject'],'new behavior')
+        Git(self.live).apply(state['latest']['version'])
+        self.assertEqual((self.live/'code.txt').read_text(),'new behavior')
+        self.assertEqual(Config(self.live).deploy_file.read_bytes(),before)
+        self.assertEqual(self.u.check()['state'],'current')
 
+    def test_dirty_files_block_reset(self):
+        self.push('new')
+        (self.live/'code.txt').write_text('local edit')
+        with self.assertRaisesRegex(ValueError,'未提交'):
+            Git(self.live).apply()
+        self.assertEqual((self.live/'code.txt').read_text(),'local edit')
 
-class CheckTest(unittest.TestCase):
-    def test_newer_release_is_available(self):
-        u, _ = make()
-        with mock.patch.object(updater.requests, 'get', return_value=Response(200, release('v9.0.0'))):
-            state = u.check()
-        self.assertEqual(state['state'], 'available')
-        self.assertEqual(state['latest']['asset']['name'], 'WarshipPilot-9.0.0-win-x64.zip')
-
-    def test_same_version_is_current(self):
-        u, _ = make()
-        with mock.patch.object(updater.requests, 'get', return_value=Response(200, release('v' + updater.VERSION))):
-            self.assertEqual(u.check()['state'], 'current')
-
-    def test_private_repo_without_token_explains(self):
-        u, _ = make()
-        with mock.patch.object(updater.requests, 'get', return_value=Response(404, {})):
-            state = u.check()
-        self.assertEqual(state['state'], 'error')
-        self.assertIn('令牌', state['error'])
-
-    def test_token_is_sent_but_never_exposed(self):
-        u, _ = make()
-        u.save_settings(token='github_pat_secret')
-        with mock.patch.object(updater.requests, 'get', return_value=Response(200, release('v9.0.0'))) as get:
-            state = u.check()
-        self.assertEqual(get.call_args.kwargs['headers']['Authorization'], 'Bearer github_pat_secret')
-        self.assertTrue(state['has_token'])
-        self.assertNotIn('github_pat_secret', repr(state))
-
-    def test_bad_repo_rejected(self):
-        u, _ = make()
+    def test_untracked_program_file_blocks_reset(self):
+        (self.live/'user-script.py').write_text('mine')
         with self.assertRaises(ValueError):
-            u.save_settings(repo='not a repo')
+            Git(self.live).apply()
 
+    def test_divergence_is_not_overwritten(self):
+        git(self.live,'config','user.email','test@example.invalid')
+        git(self.live,'config','user.name','Test')
+        (self.live/'code.txt').write_text('local commit')
+        git(self.live,'commit','-am','local commit')
+        self.push('remote commit')
+        self.assertEqual(self.u.check()['state'],'error')
+        self.assertIn('分叉',self.u.state()['error'])
 
-class InstallGuardTest(unittest.TestCase):
-    def test_source_mode_refuses(self):
-        u, _ = make()
-        with self.assertRaises(ValueError):
-            u.install()
+    def test_waits_for_task_and_hands_over_once(self):
+        self.push('new')
+        self.u.check()
+        done=threading.Event()
+        with patch.object(self.u,'_handover',side_effect=done.set) as handover:
+            self.u.install()
+            self.assertEqual(self.quiesced,[True])
+            self.assertFalse(done.wait(.35))
+            self.busy=False
+            self.assertTrue(done.wait(3))
+            handover.assert_called_once()
 
-    def test_busy_refuses(self):
-        u, _ = make(busy=True)
-        u.status['state'] = 'available'
-        with mock.patch.object(updater.sys, 'frozen', True, create=True):
-            with self.assertRaises(ValueError) as ctx:
-                u.install()
-        self.assertIn('停止', str(ctx.exception))
+    def test_changed_target_requires_recheck(self):
+        self.push('one')
+        target=self.u.check()['latest']['version']
+        self.push('two')
+        with self.assertRaisesRegex(ValueError,'改变'):
+            Git(self.live).apply(target)
+        self.assertEqual((self.live/'code.txt').read_text(),'initial')
 
+    def test_mirror_fetch(self):
+        deployment=Config(self.live).deploy()
+        deployment['Git']['Repository']=str(self.remote)
+        Config(self.live).save_deploy(deployment)
+        git(self.live,'remote','set-url','origin',str(self.base/'unreachable.git'))
+        self.push('mirror works')
+        self.assertEqual(self.u.check()['state'],'available')
 
-if __name__ == '__main__':
+    def test_failed_dependencies_restore_previous_commit(self):
+        from deploy.installer import install
+        previous = git(self.live, 'rev-parse', 'HEAD')
+        self.push('requires new dependencies')
+        with patch('deploy.installer.pip.sync', side_effect=[RuntimeError('dependency failed'), True]):
+            with self.assertRaisesRegex(RuntimeError, 'dependency failed'):
+                install(self.live)
+        self.assertEqual(git(self.live, 'rev-parse', 'HEAD'), previous)
+        self.assertEqual((self.live/'code.txt').read_text(), 'initial')
+
+    def test_handover_failure_releases_task_gate(self):
+        self.push('new')
+        self.u.check()
+        self.u.quiesce=lambda value:self.quiesced.append(value)
+        self.busy=False
+        with patch.object(self.u,'_handover',side_effect=OSError('test failure')):
+            self.u.status['state']='waiting'
+            self.u._wait_and_restart()
+        self.assertEqual(self.quiesced,[False])
+        self.assertEqual(self.u.state()['state'],'error')
+
+if __name__=='__main__':
     unittest.main()

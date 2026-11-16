@@ -6,7 +6,7 @@ import unittest
 
 import numpy as np
 
-from backend.legacy import ColorProfile, LegacyVision
+from module.vision.legacy import ColorProfile, LegacyVision
 
 
 class ColorRulesTest(unittest.TestCase):

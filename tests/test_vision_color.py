@@ -6,8 +6,8 @@ import unittest
 
 import numpy as np
 
-from backend.vision import color
-from backend.ui.pages import Frame, PageDetector
+from module.vision import color
+from module.ui.pages import Frame, PageDetector
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -104,7 +104,7 @@ class GeneratedPagesTest(unittest.TestCase):
     @unittest.skipUnless(glob.glob(str(ROOT / 'evidence/*.png')), 'local evidence frames not present')
     def test_recorded_frames_match_original(self):
         import cv2
-        report = json.loads((ROOT / 'tools/legacy_extract/validation.json').read_text(encoding='utf-8'))
+        report = json.loads((ROOT / 'dev_tools/legacy_extract/validation.json').read_text(encoding='utf-8'))
         detector = PageDetector(ROOT / 'assets/pages.json')
         for item in report['results']:
             path = ROOT / item['file']
