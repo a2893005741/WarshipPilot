@@ -4,6 +4,10 @@ from pathlib import Path
 import msvcrt
 
 
+class AlreadyRunning(RuntimeError):
+    pass
+
+
 @contextmanager
 def instance_lock(root):
     path = Path(root) / 'log' / 'instance.lock'
@@ -17,7 +21,7 @@ def instance_lock(root):
         try:
             msvcrt.locking(stream.fileno(), msvcrt.LK_NBLCK, 1)
         except OSError as exc:
-            raise RuntimeError('本目录的后台或安装器已经运行') from exc
+            raise AlreadyRunning('本目录的后台或安装器已经运行') from exc
         try:
             yield
         finally:

@@ -9,6 +9,7 @@ evidence/
 *.spec
 config/deploy.yaml
 config/warship.json
+config/*.tmp
 log/
 screenshots/
 *.log

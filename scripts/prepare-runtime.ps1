@@ -34,6 +34,10 @@ foreach ($folder in @('cmd','mingw64','usr','etc')) {
     Copy-Item -LiteralPath (Join-Path $GitDirectory $folder) -Destination "$runtime\git\$folder" -Recurse
 }
 Copy-Item -LiteralPath (Join-Path $GitDirectory 'LICENSE.txt') -Destination "$runtime\git"
+& "$runtime\git\cmd\git.exe" config --file "$runtime\git\etc\gitconfig" http.sslBackend schannel
+if ($LASTEXITCODE) { throw 'Portable Git certificate configuration failed' }
+& "$runtime\git\cmd\git.exe" config --file "$runtime\git\etc\gitconfig" http.schannelUseSSLCAInfo false
+if ($LASTEXITCODE) { throw 'Portable Git trust configuration failed' }
 foreach ($file in @('adb.exe','AdbWinApi.dll','AdbWinUsbApi.dll')) {
     Copy-Item -LiteralPath (Join-Path $AdbDirectory $file) -Destination "$runtime\adb"
 }

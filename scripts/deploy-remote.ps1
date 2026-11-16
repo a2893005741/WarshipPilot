@@ -2,33 +2,48 @@
 param(
     [string]$ComputerName = 'DESKTOP-3F63TNA',
     [string]$RuntimeRoot = '.runtime-stage\portable',
-    [string]$Repository = 'https://ghfast.top/https://github.com/a2893005741/WarshipPilot.git'
+    [string]$Repository = 'https://ghfast.top/https://github.com/a2893005741/WarshipPilot.git',
+    [string]$PreparedArchive
 )
 $ErrorActionPreference = 'Stop'
 $root = Split-Path $PSScriptRoot -Parent
 $branch = (& git -C $root branch --show-current).Trim()
 $commit = (& git -C $root rev-parse HEAD).Trim()
 $origin = (& git -C $root remote get-url origin).Trim()
-if (& git -C $root status --porcelain) { throw 'Commit source changes before deployment' }
+if (!$PreparedArchive -and (& git -C $root status --porcelain)) { throw 'Commit source changes before deployment' }
 if (![IO.Path]::IsPathRooted($RuntimeRoot)) { $RuntimeRoot = Join-Path $root $RuntimeRoot }
 if (!(Test-Path -LiteralPath "$RuntimeRoot\.venv\python\python.exe")) { throw 'Prepare the portable runtime first' }
-$stamp = Get-Date -Format 'yyyyMMdd-HHmmss'
-$work = Join-Path $root ".deployment\$stamp"
-$checkout = Join-Path $work 'WarshipPilot'
-New-Item -ItemType Directory -Path $work -Force | Out-Null
-& git clone --no-hardlinks --single-branch --branch $branch $root $checkout
-if ($LASTEXITCODE) { throw 'Source clone failed' }
-& git -C $checkout remote set-url origin $origin
-Copy-Item -LiteralPath "$RuntimeRoot\.venv" -Destination "$checkout\.venv" -Recurse
-Add-Type -AssemblyName System.IO.Compression.FileSystem
-$archive = Join-Path $work 'source-runtime.zip'
-[IO.Compression.ZipFile]::CreateFromDirectory($checkout,$archive,[IO.Compression.CompressionLevel]::Fastest,$false)
+if ($PreparedArchive) {
+    $archive = (Resolve-Path -LiteralPath $PreparedArchive).Path
+    $work = Split-Path $archive -Parent
+    $stamp = Split-Path $work -Leaf
+    if ($stamp -notmatch '^[0-9]{8}-[0-9]{6}$' -or !(Test-Path -LiteralPath "$work\WarshipPilot\.git")) { throw 'Unexpected prepared archive' }
+    $checkout = Join-Path $work 'WarshipPilot'
+    $branch = (& git -C $checkout branch --show-current).Trim()
+    $commit = (& git -C $checkout rev-parse HEAD).Trim()
+} else {
+    $stamp = Get-Date -Format 'yyyyMMdd-HHmmss'
+    $work = Join-Path $root ".deployment\$stamp"
+    $checkout = Join-Path $work 'WarshipPilot'
+    New-Item -ItemType Directory -Path $work -Force | Out-Null
+    & git clone --no-hardlinks --single-branch --branch $branch $root $checkout
+    if ($LASTEXITCODE) { throw 'Source clone failed' }
+    & git -C $checkout remote set-url origin $origin
+    Copy-Item -LiteralPath "$RuntimeRoot\.venv" -Destination "$checkout\.venv" -Recurse
+    Add-Type -AssemblyName System.IO.Compression.FileSystem
+    $archive = Join-Path $work 'source-runtime.zip'
+    [IO.Compression.ZipFile]::CreateFromDirectory($checkout,$archive,[IO.Compression.CompressionLevel]::Fastest,$false)
+}
 $digest = (Get-FileHash -LiteralPath $archive -Algorithm SHA256).Hash
 $credential = Import-Clixml -LiteralPath (Join-Path $env:LOCALAPPDATA "Codex\Credentials\$ComputerName.xml")
 $session = New-PSSession -ComputerName $ComputerName -Credential $credential
 try {
     $remoteArchive = "D:\WarshipPilot-source-$stamp.zip"
-    Copy-Item -LiteralPath $archive -Destination $remoteArchive -ToSession $session
+    $alreadyUploaded = Invoke-Command -Session $session -ArgumentList $remoteArchive,$digest -ScriptBlock {
+        param($archive,$digest)
+        (Test-Path -LiteralPath $archive) -and ((Get-FileHash -LiteralPath $archive).Hash -eq $digest)
+    }
+    if (!$alreadyUploaded) { Copy-Item -LiteralPath $archive -Destination $remoteArchive -ToSession $session }
     $receipt = Invoke-Command -Session $session -ArgumentList $remoteArchive,$stamp,$digest,$branch,$commit,$Repository -ScriptBlock {
         param($archive,$stamp,$digest,$branch,$commit,$repository)
         $ErrorActionPreference = 'Stop'
@@ -40,10 +55,15 @@ try {
         }
         if ((Get-FileHash -LiteralPath $archive).Hash -ne $digest) { throw 'Archive checksum mismatch' }
         Add-Type -AssemblyName System.IO.Compression.FileSystem
-        [IO.Compression.ZipFile]::ExtractToDirectory($archive,$stage)
-        & "$stage\deploy\launcher\rebase-runtime.ps1" -Root $stage
+        if (!(Test-Path -LiteralPath $stage)) { [IO.Compression.ZipFile]::ExtractToDirectory($archive,$stage) }
+        & powershell.exe -NoProfile -ExecutionPolicy Bypass -File "$stage\deploy\launcher\rebase-runtime.ps1" -Root $stage
+        if ($LASTEXITCODE) { throw 'Runtime path setup failed' }
         & "$stage\.venv\Scripts\python.exe" -c 'import sys,cv2,lupa.lua52,yaml; assert sys.base_prefix.startswith(sys.argv[1]); print(sys.version)' $stage
         if ($LASTEXITCODE) { throw 'Portable runtime does not work on remote machine' }
+        & "$stage\.venv\git\cmd\git.exe" config --file "$stage\.venv\git\etc\gitconfig" http.sslBackend schannel
+        if ($LASTEXITCODE) { throw 'Portable Git certificate configuration failed' }
+        & "$stage\.venv\git\cmd\git.exe" config --file "$stage\.venv\git\etc\gitconfig" http.schannelUseSSLCAInfo false
+        if ($LASTEXITCODE) { throw 'Portable Git trust configuration failed' }
         & "$stage\.venv\git\cmd\git.exe" -C $stage fetch --no-tags $repository "+refs/heads/${branch}:refs/remotes/origin/$branch"
         if ($LASTEXITCODE) { throw 'Remote Git update source is unavailable; old installation untouched' }
         $fetched = (& "$stage\.venv\git\cmd\git.exe" -C $stage rev-parse "refs/remotes/origin/$branch").Trim()
@@ -75,7 +95,8 @@ try {
         Move-Item -LiteralPath $live -Destination $backup
         try {
             Move-Item -LiteralPath $stage -Destination $live
-            & "$live\deploy\launcher\rebase-runtime.ps1" -Root $live
+            & powershell.exe -NoProfile -ExecutionPolicy Bypass -File "$live\deploy\launcher\rebase-runtime.ps1" -Root $live
+            if ($LASTEXITCODE) { throw 'Runtime path setup failed after directory switch' }
             $setup = @'
 import sys
 from pathlib import Path
@@ -94,7 +115,7 @@ c.save_deploy(d)
             if ($LASTEXITCODE) { throw 'Configuration migration failed' }
             $desktopUser = (Get-CimInstance Win32_ComputerSystem).UserName
             if (!$desktopUser) { throw 'MuMu IPC needs a logged-in desktop user' }
-            # Keep the task alive through the hidden cmd wrapper; Pythonw is monitored by installer.
+            # WScript waits for BAT; installer --wait-gui keeps the task alive.
             $action = New-ScheduledTaskAction -Execute 'wscript.exe' -Argument ('"'+$live+'\deploy\launcher\hidden.vbs" --no-browser') -WorkingDirectory $live
             $settings = New-ScheduledTaskSettingsSet -ExecutionTimeLimit ([TimeSpan]::Zero) -MultipleInstances IgnoreNew -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries
             $principal = New-ScheduledTaskPrincipal -UserId $desktopUser -LogonType Interactive -RunLevel Highest

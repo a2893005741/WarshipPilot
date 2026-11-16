@@ -28,13 +28,13 @@ def main():
     parser.add_argument('--no-browser', action='store_true')
     args = parser.parse_args()
     root = args.root.resolve()
-    migrated = migrate(root)
-    config = Config(root)
-    deployment = config.deploy()['WebUI']
-    host, port = args.host or deployment['Host'], args.port or deployment['Port']
-    key = deployment['AccessCode']
-    url = f'http://127.0.0.1:{port}/#key={key}'
     with instance_lock(root):
+        migrated = migrate(root)
+        config = Config(root)
+        deployment = config.deploy()['WebUI']
+        host, port = args.host or deployment['Host'], args.port or deployment['Port']
+        key = deployment['AccessCode']
+        url = f'http://127.0.0.1:{port}/#key={key}'
         with socket.socket() as probe:
             if probe.connect_ex(('127.0.0.1', port)) == 0:
                 raise RuntimeError(f'端口 {port} 已被占用，请先退出旧后台')

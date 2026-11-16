@@ -11,7 +11,7 @@ import urllib.request
 
 from deploy import adb, pip
 from deploy.git import Git
-from deploy.lock import instance_lock
+from deploy.lock import instance_lock, AlreadyRunning
 from module.config.config import Config
 from module.config.migration import migrate
 from module.logger import atomic_json, now
@@ -93,6 +93,7 @@ def main():
     parser.add_argument('--root', type=Path, default=Path(__file__).resolve().parents[1])
     parser.add_argument('--wait-pid', type=int, default=0)
     parser.add_argument('--restart', action='store_true')
+    parser.add_argument('--wait-gui', action='store_true')
     parser.add_argument('--target')
     parser.add_argument('--skip-update', action='store_true')
     parser.add_argument('--gui-args-file', type=Path)
@@ -105,6 +106,12 @@ def main():
     try:
         with instance_lock(root):
             previous = install(root, args.target, args.skip_update)
+    except AlreadyRunning:
+        if '--no-browser' not in gui_args:
+            import webbrowser
+            web = Config(root).deploy()['WebUI']
+            webbrowser.open(f"http://127.0.0.1:{web['Port']}/#key={web['AccessCode']}")
+        return
     except Exception as exc:
         atomic_json(result, {'ok': False, 'time': now(), 'error': str(exc)})
         (root / 'log' / 'installer-error.txt').write_text(traceback.format_exc(), encoding='utf-8')
@@ -127,6 +134,9 @@ def main():
             atomic_json(result, {'ok': False, 'time': now(), 'error': str(exc)})
             raise
     atomic_json(result, {'ok': True, 'time': now()})
+    if args.restart and args.wait_gui:
+        # Keep the scheduled task's wrapper alive while its GUI child runs.
+        process.wait()
 
 
 if __name__ == '__main__':

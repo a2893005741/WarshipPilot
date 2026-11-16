@@ -26,7 +26,8 @@ class Git:
     def run(self, *args, timeout=120):
         import os
         env = dict(os.environ, GIT_TERMINAL_PROMPT='0', GCM_INTERACTIVE='never')
-        result = subprocess.run([self.executable, '-C', str(self.root), *args],
+        trust = ['-c', 'http.sslBackend=schannel', '-c', 'http.schannelUseSSLCAInfo=false'] if os.name == 'nt' else []
+        result = subprocess.run([self.executable, *trust, '-C', str(self.root), *args],
                                 capture_output=True, encoding='utf-8', errors='replace',
                                 timeout=timeout, env=env,
                                 creationflags=getattr(subprocess, 'CREATE_NO_WINDOW', 0))

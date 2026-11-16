@@ -6,4 +6,4 @@ command = "cmd.exe /d /c """ & root & "\WarshipPilot.bat"""
 For Each argument In WScript.Arguments
   command = command & " """ & Replace(argument, """", """""") & """"
 Next
-shell.Run command, 0, False
+shell.Run command, 0, True

@@ -27,7 +27,12 @@ def copy_missing(source, target):
                 copy_missing(file, target / file.relative_to(source))
     elif not target.exists():
         target.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(source, target)
+        temporary = target.with_name(target.name + '.migrating')
+        try:
+            shutil.copy2(source, temporary)
+            temporary.replace(target)
+        finally:
+            temporary.unlink(missing_ok=True)
 
 
 def migrate(root, sources=None):

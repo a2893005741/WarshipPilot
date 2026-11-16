@@ -7,9 +7,10 @@ import tempfile
 import threading
 import unittest
 from contextlib import closing
+from unittest.mock import patch
 
 from module.config.config import Config
-from module.config.migration import migrate
+from module.config.migration import migrate, copy_missing
 from module.logger import atomic_json
 from module.config.task_settings import TaskDraft,save_task
 from tests.test_scheduler import Recording,Runtime
@@ -88,6 +89,19 @@ class MigrationTest(unittest.TestCase):
         with self.assertRaises(ValueError):migrate(self.root)
         self.assertFalse(Config(self.root).instance_file.exists())
         self.assertFalse((self.root/'log/migration.json').exists())
+
+    def test_failed_copy_is_retryable(self):
+        source = self.old/'runs/r/screen.png'
+        target = self.root/'screenshots/runs/r/screen.png'
+        def interrupted(source, destination):
+            destination.write_bytes(b'partial')
+            raise OSError('interrupted copy')
+        with patch('module.config.migration.shutil.copy2', side_effect=interrupted):
+            with self.assertRaises(OSError):
+                copy_missing(source, target)
+        self.assertFalse(target.exists())
+        copy_missing(source, target)
+        self.assertEqual(target.read_bytes(), source.read_bytes())
 
     def test_section_writes_do_not_drop_scheduler(self):
         migrate(self.root)
