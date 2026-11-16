@@ -86,7 +86,7 @@ class Expedition(UI):
         self.timeout = timeout
 
     def run(self):
-        result = ExpeditionResult()
+        result = self.result = ExpeditionResult()  # live view for the runner
         deadline = Timer(self.timeout).start()
         unknown = 0
         last_action, repeats = None, 0

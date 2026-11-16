@@ -1,4 +1,5 @@
 import asyncio
+from .version import VERSION
 from contextlib import asynccontextmanager
 import io
 import json
@@ -43,7 +44,7 @@ def create_app(runtime: Runtime, key: str, shutdown):
         return secrets.compare_digest(request.headers.get("authorization", ""), "Bearer " + key)
 
     async def health(request):
-        return JSONResponse({"product": "WarshipPilot", "version": "0.4.0", "read_only": False})
+        return JSONResponse({"product": "WarshipPilot", "version": VERSION, "read_only": False})
 
     async def api(request: Request):
         if not authorized(request):
@@ -129,6 +130,22 @@ def create_app(runtime: Runtime, key: str, shutdown):
                 return JSONResponse(await asyncio.to_thread(evaluate_colors))
             if action == "devices":
                 return JSONResponse(await asyncio.to_thread(runtime.discover, str(body.get("adb_path", ""))))
+            if action in ("update-check", "update-install", "update-settings"):
+                if not runtime.updater:
+                    raise ValueError("更新组件未初始化")
+                if action == "update-check":
+                    return JSONResponse(await asyncio.to_thread(runtime.updater.check))
+                if action == "update-install":
+                    return JSONResponse(await asyncio.to_thread(runtime.updater.install))
+                return JSONResponse(runtime.updater.save_settings(
+                    repo=body.get("repo"), token=body.get("token"), auto_check=body.get("auto_check")))
+            if action == "device-config":
+                return JSONResponse(await asyncio.to_thread(
+                    runtime.save_device_settings, str(body.get("screenshot_method", "")),
+                    str(body.get("control_method", "")), str(body.get("mumu_path", ""))))
+            if action == "benchmark":
+                methods = [str(m) for m in body.get("methods", [])][:10]
+                return JSONResponse(await asyncio.to_thread(runtime.start_benchmark, str(body.get("kind", "")), methods))
             if action == "connect-adb":
                 if not runtime.adb:
                     raise ValueError("请先设置 ADB 路径")

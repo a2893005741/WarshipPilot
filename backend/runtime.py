@@ -14,9 +14,32 @@ import numpy as np
 from PIL import Image
 
 from .device import Adb, find_adb
+from .version import VERSION
 from .store import Store, atomic_json, now
 from .legacy import ColorProfile, LegacyVision
 from .automation import TaskController
+
+SCREENSHOT_DEFAULT, CONTROL_DEFAULT = 'nemu_ipc', 'ADB'  # the pair verified live in v0.4
+
+
+class FrameRecord(dict):
+    """Frame metadata; the PNG is encoded from the RGB frame only when someone reads it."""
+
+    def __init__(self, rgb=None, png=None, **meta):
+        super().__init__(meta)
+        self.rgb, self._png = rgb, png
+
+    def __getitem__(self, key):
+        if key == 'png':
+            if self._png is None:
+                ok, data = cv2.imencode('.png', cv2.cvtColor(self.rgb, cv2.COLOR_RGB2BGR),
+                                        [cv2.IMWRITE_PNG_COMPRESSION, 1])
+                if not ok:
+                    raise RuntimeError('截图编码失败')
+                self._png = data.tobytes()
+            return self._png
+        return super().__getitem__(key)
+
 
 LABELS = ("母港", "出征选择", "关卡选择", "舰队准备", "地图节点", "索敌", "阵型", "战斗", "夜战", "结算", "远征", "战役", "演习", "修理", "补给", "弹窗", "未分类")
 
@@ -29,6 +52,13 @@ class Runtime:
         self.io_lock = threading.Lock()
         config = data / "config.json"
         self.config = json.loads(config.read_text(encoding="utf-8")) if config.exists() else {"schema_version": 1, "serial": "", "interval": 3, "adb_path": ""}
+        self.config.setdefault('screenshot_method', SCREENSHOT_DEFAULT)
+        self.config.setdefault('control_method', CONTROL_DEFAULT)
+        self.config.setdefault('mumu_path', '')
+        self.emulator = None
+        self.emulator_error = ''
+        self.updater = None  # set by main.py (needs the server's shutdown hook)
+        self.benchmark = {'running': False, 'kind': '', 'progress': '', 'results': {}, 'error': ''}
         self.legacy = LegacyVision(resources / "assets" / "legacy")
         self.color_profile = ColorProfile.model_validate(self.config.get("color_profile", {}))
         self.color_observing = bool(self.config.get("color_observing", False))
@@ -56,12 +86,12 @@ class Runtime:
         self.session_count = 0
         self.automation = TaskController(self)
         self.thread = threading.Thread(target=self._loop, name="frame-acquisition", daemon=True)
-        self.store.event("舰R助手 v0.4 已启动 · 已接入原Lua远征、出征、点击及滑动函数")
+        self.store.event(f"舰R助手 v{VERSION} 已启动 · 原生远征 · 原脚本出征")
         self.thread.start()
 
     def state(self):
         with self.lock:
-            return {"version": "0.4.0", "status": self.status, "error": self.error, "serial": self.serial,
+            return {"version": VERSION, "status": self.status, "error": self.error, "serial": self.serial,
                     "legacy": {"profile": self.color_profile.model_dump(), "observing": self.color_observing,
                                "result": deepcopy(self.legacy_result), "stats": self.legacy.catalog["stats"]},
                     "last_serial": self.config.get("serial", ""), "adb_path": self.adb.path if self.adb else "",
@@ -69,6 +99,8 @@ class Runtime:
                     "profile": deepcopy(self.profile), "recognition": self.recognition, "session": deepcopy(self.session),
                     "automation": self.automation.state(),
                     "session_count": self.session_count, "labels": LABELS, "read_only": False,
+                    "device": self.device_state(),
+                    "update": self.updater.state() if self.updater else None,
                     "samples_count": len(self.store.samples())}
 
     def discover(self, path=""):
@@ -89,7 +121,7 @@ class Runtime:
 
     def select(self, serial: str):
         with self.io_lock:
-            if self.automation.vm:
+            if self.automation.busy:
                 raise ValueError('请先停止当前任务，再切换设备')
             if not self.adb:
                 raise ValueError(self.setup_error)
@@ -97,6 +129,7 @@ class Runtime:
             if not any(d["serial"] == serial and d["game_installed"] and d["state"] == "device" for d in devices):
                 raise ValueError("请选择在线且已安装战舰少女R的实例")
             profile = self.adb.profile(serial)
+            self.open_emulator(serial)
             with self.lock:
                 self.serial = serial
                 self.profile = profile
@@ -110,7 +143,9 @@ class Runtime:
                 self.status = "live"
                 self.config["serial"] = serial
                 atomic_json(self.store.root / "config.json", self.config)
-        self.store.event(f"已连接舰R实例 {serial} · 游戏版本 {profile['version']} · 原脚本任务可运行")
+        self.store.event(f"已连接舰R实例 {serial} · 游戏版本 {profile['version']} · "
+                         f"截图 {self.config['screenshot_method']} · 控制 {self.config['control_method']}"
+                         + (f" · 设备方式初始化失败：{self.emulator_error}" if self.emulator_error else ""))
         self.wake.set()
         return profile
 
@@ -120,7 +155,9 @@ class Runtime:
                 if not self.serial:
                     raise ValueError("请先连接舰R实例")
                 self.status = "paused"
-                if self.automation.vm:
+                if self.automation.native:
+                    self.automation.native.paused.set()
+                if self.automation.busy:
                     self.automation.result['status'] = 'paused'
             elif action == "resume":
                 if not self.serial:
@@ -131,6 +168,7 @@ class Runtime:
             elif action == "disconnect":
                 self.automation.scheduler = False
                 self.automation.stop('已断开设备并停止任务')
+                self.close_emulator()
                 self.status = "idle"
                 self.serial = ""
                 self.profile = None
@@ -150,6 +188,12 @@ class Runtime:
     def _loop(self):
         while not self.stop_event.is_set():
             self.wake.clear()
+            if self.automation.native:
+                # The native task takes its own screenshots and publishes them.
+                with self.lock:
+                    self.automation.tick(None)
+                self.wake.wait(.2)
+                continue
             active = self.automation.vm and self.automation.result['status']=='running'
             if self.status=='live' and active and not self.automation.needs_frame:
                 # KeepCapture holds the original frame until the script requests
@@ -163,13 +207,13 @@ class Runtime:
                     with self.io_lock:
                         if self.status != "live":
                             continue
-                        raw, meta = self.adb.screenshot(self.serial)
+                        raw, meta = self.capture()
                         with self.lock:
                             if not self.frame or self.frame.get('backend')!=meta.get('backend'):
                                 self.store.event('截图方式：'+meta.get('backend','adb_png')+
                                                  (' · '+meta['ipc_error'] if meta.get('ipc_error') else ''))
                             self.sequence += 1
-                            self.frame = {"png": raw, "id": self.sequence, "time": now(), "serial": self.serial, **meta}
+                            self.frame = FrameRecord(png=raw, id=self.sequence, time=now(), serial=self.serial, **meta)
                             self.recent_frames[self.sequence] = self.frame
                             if len(self.recent_frames) > 8:
                                 del self.recent_frames[next(iter(self.recent_frames))]
@@ -235,7 +279,7 @@ class Runtime:
             selected = self.recent_frames.get(frame_id) if frame_id is not None else self.frame
             if not selected:
                 raise ValueError("这张画面已过期，请锁定新画面后重新框选")
-            return dict(selected)
+            return selected
 
     def save_sample(self, label: str, roi: list[int] | None, frame_id: int, note: str):
         if label not in LABELS:
@@ -345,10 +389,135 @@ class Runtime:
                         archive.write(file, file.relative_to(self.store.root))
         return output.getvalue()
 
+    # --- device methods (ported AzurPilot screenshot / control backends) ------------
+    def device_state(self):
+        from .emulator.device import CONTROL_METHODS, SCREENSHOT_METHODS
+        return {'screenshot_method': self.config['screenshot_method'], 'control_method': self.config['control_method'],
+                'mumu_path': self.config['mumu_path'], 'screenshot_methods': list(SCREENSHOT_METHODS),
+                'control_methods': list(CONTROL_METHODS), 'ready': self.emulator is not None,
+                'error': self.emulator_error, 'benchmark': deepcopy(self.benchmark)}
+
+    def open_emulator(self, serial):
+        """Create the method device for `serial`; on failure the ADB preview keeps working."""
+        from .emulator.connection import DeviceConfig
+        from .emulator.device import Device
+        self.close_emulator()
+        try:
+            self.emulator = Device(DeviceConfig(
+                Emulator_Serial=serial, Emulator_ScreenshotMethod=self.config['screenshot_method'],
+                Emulator_ControlMethod=self.config['control_method'], EmulatorInfo_path=self.config['mumu_path'],
+                AdbExecutable=self.adb.path if self.adb else ''))
+            self.emulator_error = ''
+        except Exception as exc:
+            self.emulator, self.emulator_error = None, f'{type(exc).__name__}: {exc}'[:300]
+
+    def close_emulator(self):
+        if self.emulator is not None:
+            try:
+                self.emulator.release()
+            except Exception:
+                pass
+        self.emulator = None
+
+    def capture(self):
+        """One preview/legacy frame: the configured method if available, else ADB PNG."""
+        if self.emulator is None:
+            return self.adb.screenshot(self.serial)
+        started = time.monotonic()
+        rgb = self.emulator.screenshot()
+        cost = round((time.monotonic() - started) * 1000, 1)
+        png = FrameRecord(rgb=rgb)['png']
+        return png, {'width': rgb.shape[1], 'height': rgb.shape[0],
+                     'backend': self.emulator.config.Emulator_ScreenshotMethod, 'capture_ms': cost,
+                     'latency_ms': round((time.monotonic() - started) * 1000)}
+
+    def publish_frame(self, rgb, **meta):
+        """Native tasks publish every frame they decide on, for the live preview."""
+        with self.lock:
+            self.sequence += 1
+            self.frame = FrameRecord(rgb=rgb, id=self.sequence, time=now(), serial=self.serial,
+                                     width=rgb.shape[1], height=rgb.shape[0], **meta)
+            self.recent_frames[self.sequence] = self.frame
+            if len(self.recent_frames) > 8:
+                del self.recent_frames[next(iter(self.recent_frames))]
+
+    def save_device_settings(self, screenshot_method, control_method, mumu_path):
+        from .emulator.device import CONTROL_METHODS, SCREENSHOT_METHODS
+        if screenshot_method not in SCREENSHOT_METHODS or control_method not in CONTROL_METHODS:
+            raise ValueError('未知的截图或控制方式')
+        if mumu_path and not Path(mumu_path).exists():
+            raise ValueError('MuMu 路径不存在')
+        with self.io_lock:
+            if self.automation.busy or self.benchmark['running']:
+                raise ValueError('任务或测试运行中，不能切换方式')
+            with self.lock:
+                self.config.update(screenshot_method=screenshot_method, control_method=control_method,
+                                   mumu_path=mumu_path)
+                atomic_json(self.store.root / "config.json", self.config)
+            if self.serial:
+                self.open_emulator(self.serial)
+        self.store.event(f'设备方式：截图 {screenshot_method} · 控制 {control_method}'
+                         + (f' · 初始化失败：{self.emulator_error}' if self.emulator_error else ''))
+        return self.device_state()
+
+    def start_benchmark(self, kind, methods):
+        """Screenshot tests send no input; click tests switch 出征 tabs (user-started only)."""
+        from .emulator import benchmark
+        from .emulator.device import CONTROL_METHODS, SCREENSHOT_METHODS
+        allowed = SCREENSHOT_METHODS if kind == 'screenshot' else CONTROL_METHODS if kind == 'click' else ()
+        if not allowed:
+            raise ValueError('未知测试类型')
+        methods = [m for m in methods if m in allowed] or list(allowed)
+        with self.io_lock, self.lock:
+            if self.emulator is None:
+                raise ValueError('请先连接舰R实例' + (f'（{self.emulator_error}）' if self.emulator_error else ''))
+            if self.automation.busy or self.benchmark['running']:
+                raise ValueError('任务或测试运行中')
+            if kind == 'click':
+                self.adb.ensure_input_ready(self.serial)
+            self.benchmark.update(running=True, kind=kind, progress='准备中', error='')
+            previous = self.status
+            self.status = 'paused'  # keep the preview loop off the device during the test
+
+        def worker():
+            from .ui.pages import PageDetector
+            detector = PageDetector(self.resources / 'assets' / 'pages.json')
+
+            def progress(text):
+                self.benchmark['progress'] = text
+
+            try:
+                with self.io_lock:
+                    if kind == 'screenshot':
+                        results = benchmark.benchmark_screenshot(self.emulator, methods, detector, progress=progress)
+                    else:
+                        results = benchmark.benchmark_click(self.emulator, methods, detector, progress=progress)
+                best = benchmark.recommend(results)
+                with self.lock:
+                    self.benchmark['results'][kind] = {'time': now(), 'results': benchmark.to_json(results),
+                                                       'recommended': best}
+                self.store.event(f'{"截图" if kind == "screenshot" else "点击"}测试完成，推荐 {best or "无可用方式"}')
+            except Exception as exc:
+                self.benchmark['error'] = f'{type(exc).__name__}: {exc}'[:500]
+                self.store.event('设备方式测试失败：' + self.benchmark['error'], 'warning')
+            finally:
+                with self.lock:
+                    self.benchmark.update(running=False, progress='')
+                    if self.status == 'paused':
+                        self.status = previous
+                self.wake.set()
+
+        threading.Thread(target=worker, name=f'benchmark-{kind}', daemon=True).start()
+        self.store.event(f'开始{"截图" if kind == "screenshot" else "点击"}方式测试：{", ".join(methods)}')
+        return self.device_state()
+
     def close(self):
         self.stop_event.set()
         self.wake.set()
         self.thread.join(timeout=25)
+        if self.automation.native:
+            self.automation.native.stop('后台退出')
+        self.close_emulator()
         if not self.thread.is_alive():
             if self.adb:self.adb.close()
             self.store.close()

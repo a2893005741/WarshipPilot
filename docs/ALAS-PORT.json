@@ -29,5 +29,237 @@
     "sha256": "1fc846c23d18bdb0ca9aba8ddabf3a41238f063e2f6aa3a460eae1890527ca39",
     "destination": "backend/alas/pool.py",
     "component": "WORKER_POOL"
+  },
+  {
+    "source": "H:\\ALAS\\AzurPilot\\module\\base\\utils.py",
+    "commit": "83ccef80cac57a4ac6d8c339f038fe9a402aa3fe",
+    "sha256": "9e5c5d569076875e8cd4b7b554c6efdc9a49608e982d07e3fabaa26dc5811e01",
+    "component": "base utils",
+    "destination": "backend/emulator/base/utils.py",
+    "changes": "原样"
+  },
+  {
+    "source": "H:\\ALAS\\AzurPilot\\module\\base\\decorator.py",
+    "commit": "83ccef80cac57a4ac6d8c339f038fe9a402aa3fe",
+    "sha256": "e4d345e81df4dd4eabe98fe8de7e5a26e82d5bd66d0aa2b0db401b6f55a930c9",
+    "component": "cached_property / Config.when",
+    "destination": "backend/emulator/base/decorator.py",
+    "changes": "仅改导入路径"
+  },
+  {
+    "source": "H:\\ALAS\\AzurPilot\\module\\base\\timer.py",
+    "commit": "83ccef80cac57a4ac6d8c339f038fe9a402aa3fe",
+    "sha256": "3838b33f99182ac46a52eb247ffc5c914d63350b9a605ab8d94cc7b61bfe795f",
+    "component": "Timer",
+    "destination": "backend/emulator/base/timer.py",
+    "changes": "time_source.now 改为 datetime.now"
+  },
+  {
+    "source": "H:\\ALAS\\AzurPilot\\module\\device\\env.py",
+    "commit": "83ccef80cac57a4ac6d8c339f038fe9a402aa3fe",
+    "sha256": "221cc9c9e048276790706b8009075a9e598f926ea40c2f62f3d4c288389e5048",
+    "component": "IS_WINDOWS 等",
+    "destination": "backend/emulator/env.py",
+    "changes": "原样"
+  },
+  {
+    "source": "H:\\ALAS\\AzurPilot\\module\\device\\connection.py",
+    "commit": "83ccef80cac57a4ac6d8c339f038fe9a402aa3fe",
+    "sha256": "d4ce8bee2c7efbaff128c02719292e15985e1fc99fcdb3b1e4f4492b949cf8b0",
+    "component": "Connection（精简）",
+    "destination": "backend/emulator/connection.py",
+    "changes": "保留重试/重连、shell/nc/push/forward/reverse、方向与 MuMu 属性；删除碧蓝包名/服务器检测、蓝叠 Hyper-V、WSA、云手机、HTTP 模式与 ADB 自动下载；包名固定为舰R"
+  },
+  {
+    "source": "H:\\ALAS\\AzurPilot\\module\\device\\connection_attr.py",
+    "commit": "83ccef80cac57a4ac6d8c339f038fe9a402aa3fe",
+    "sha256": "205dad1326794c9a446d47333333849e5e6cffe8d30783574962fe527b846a0c",
+    "component": "ConnectionAttr（合并）",
+    "destination": "backend/emulator/connection.py",
+    "changes": "序列号修正与模拟器族判断合并进 Connection"
+  },
+  {
+    "source": "H:\\ALAS\\AzurPilot\\module\\device\\method\\adb.py",
+    "commit": "83ccef80cac57a4ac6d8c339f038fe9a402aa3fe",
+    "sha256": "424e45d2a739abd2f16dbbde554f9f6708e4fa3b995e09cedfdb9664d64f8ba0",
+    "component": "ADB / ADB_nc 截图与点击",
+    "destination": "backend/emulator/method/adb.py",
+    "changes": "仅改导入路径"
+  },
+  {
+    "source": "H:\\ALAS\\AzurPilot\\module\\device\\method\\droidcast.py",
+    "commit": "83ccef80cac57a4ac6d8c339f038fe9a402aa3fe",
+    "sha256": "fb2aa17a5240513f9dbd4aac1130b19044f7a8922913bfe149beded832e1edaf",
+    "component": "DroidCast / DroidCast_raw",
+    "destination": "backend/emulator/method/droidcast.py",
+    "changes": "仅改导入路径"
+  },
+  {
+    "source": "H:\\ALAS\\AzurPilot\\module\\device\\method\\maatouch.py",
+    "commit": "83ccef80cac57a4ac6d8c339f038fe9a402aa3fe",
+    "sha256": "e3a24bf639c96aacad5b22858d5d949bb78395620b79e79fec01eeb77ea9975e",
+    "component": "MaaTouch",
+    "destination": "backend/emulator/method/maatouch.py",
+    "changes": "仅改导入路径"
+  },
+  {
+    "source": "H:\\ALAS\\AzurPilot\\module\\device\\method\\minitouch.py",
+    "commit": "83ccef80cac57a4ac6d8c339f038fe9a402aa3fe",
+    "sha256": "0d3bddb38052977eb7752cbec83809da6609393e6d77cc8f6069b0fa2588fdb8",
+    "component": "minitouch",
+    "destination": "backend/emulator/method/minitouch.py",
+    "changes": "仅改导入路径"
+  },
+  {
+    "source": "H:\\ALAS\\AzurPilot\\module\\device\\method\\uiautomator_2.py",
+    "commit": "83ccef80cac57a4ac6d8c339f038fe9a402aa3fe",
+    "sha256": "b5231d40e34f24d61e3643540780fdab19b749007f777ccde47bcf7aa02226f5",
+    "component": "uiautomator2",
+    "destination": "backend/emulator/method/uiautomator_2.py",
+    "changes": "仅改导入路径"
+  },
+  {
+    "source": "H:\\ALAS\\AzurPilot\\module\\device\\method\\nemu_ipc.py",
+    "commit": "83ccef80cac57a4ac6d8c339f038fe9a402aa3fe",
+    "sha256": "e76b8fa2a535bb062cd238229af766c2a56e27abeee1101f8be7c2acc705d48b",
+    "component": "NemuIpcImpl + NemuIpc",
+    "destination": "backend/emulator/method/nemu_ipc.py",
+    "changes": "NemuIpcImpl 原样；NemuIpc 由继承 Platform 改为继承 Connection，MuMu 目录改由配置/环境变量/常见位置/注册表查找"
+  },
+  {
+    "source": "H:\\ALAS\\AzurPilot\\module\\device\\method\\pool.py",
+    "commit": "83ccef80cac57a4ac6d8c339f038fe9a402aa3fe",
+    "sha256": "1fc846c23d18bdb0ca9aba8ddabf3a41238f063e2f6aa3a460eae1890527ca39",
+    "component": "WORKER_POOL",
+    "destination": "backend/emulator/method/pool.py",
+    "changes": "仅改导入路径"
+  },
+  {
+    "source": "H:\\ALAS\\AzurPilot\\module\\device\\method\\retry.py",
+    "commit": "83ccef80cac57a4ac6d8c339f038fe9a402aa3fe",
+    "sha256": "f283ed6be78636a08a0c8147f59d2cf08580b8a8b66b173d48db82bf4b8e2d8b",
+    "component": "retry_backend",
+    "destination": "backend/emulator/method/retry.py",
+    "changes": "仅改导入路径"
+  },
+  {
+    "source": "H:\\ALAS\\AzurPilot\\module\\device\\method\\utils.py",
+    "commit": "83ccef80cac57a4ac6d8c339f038fe9a402aa3fe",
+    "sha256": "4fabf1d92eb577fef3203bd2993eaef725c659503500943fa55f525aa2163e2b",
+    "component": "设备工具/uiautomator2 补丁",
+    "destination": "backend/emulator/method/utils.py",
+    "changes": "module.base.http 改为基于 requests 的 backend/emulator/base/http.py"
+  },
+  {
+    "source": "H:\\ALAS\\AzurPilot\\module\\device\\method\\remove_warning.py",
+    "commit": "83ccef80cac57a4ac6d8c339f038fe9a402aa3fe",
+    "sha256": "ed7671c7ec19268e74d26da7b0752171a02b9937727931b26b636439baa0a0fd",
+    "component": "remove_shell_warning",
+    "destination": "backend/emulator/method/remove_warning.py",
+    "changes": "原样"
+  },
+  {
+    "source": "H:\\ALAS\\AzurPilot\\module\\device\\method\\scrcpy\\__init__.py",
+    "commit": "83ccef80cac57a4ac6d8c339f038fe9a402aa3fe",
+    "sha256": "f0e4b77fb5169266216a09e7bddb017496690077c406801e343e2d0e9c809713",
+    "component": "scrcpy",
+    "destination": "backend/emulator/method/scrcpy/__init__.py",
+    "changes": "仅改导入路径"
+  },
+  {
+    "source": "H:\\ALAS\\AzurPilot\\module\\device\\method\\scrcpy\\const.py",
+    "commit": "83ccef80cac57a4ac6d8c339f038fe9a402aa3fe",
+    "sha256": "e97fa6dc2fb4b837c4a741dc660b7163a2d58a4628403168e9563c5cb0042423",
+    "component": "scrcpy",
+    "destination": "backend/emulator/method/scrcpy/const.py",
+    "changes": "仅改导入路径"
+  },
+  {
+    "source": "H:\\ALAS\\AzurPilot\\module\\device\\method\\scrcpy\\control.py",
+    "commit": "83ccef80cac57a4ac6d8c339f038fe9a402aa3fe",
+    "sha256": "cbb2eb2e8d61d56b519f94534d29aed2cbb2e63cf6d1219122a3d74553559545",
+    "component": "scrcpy",
+    "destination": "backend/emulator/method/scrcpy/control.py",
+    "changes": "仅改导入路径"
+  },
+  {
+    "source": "H:\\ALAS\\AzurPilot\\module\\device\\method\\scrcpy\\core.py",
+    "commit": "83ccef80cac57a4ac6d8c339f038fe9a402aa3fe",
+    "sha256": "b39a6b9c2eab7da311a8c5be94d27686e620d4c2a21016f7533cc822026b40da",
+    "component": "scrcpy",
+    "destination": "backend/emulator/method/scrcpy/core.py",
+    "changes": "仅改导入路径"
+  },
+  {
+    "source": "H:\\ALAS\\AzurPilot\\module\\device\\method\\scrcpy\\options.py",
+    "commit": "83ccef80cac57a4ac6d8c339f038fe9a402aa3fe",
+    "sha256": "74e337cd4904eb9487dbce7a031c0ef4cb52ab14c53c6b1aaf5396ac8686fb6f",
+    "component": "scrcpy",
+    "destination": "backend/emulator/method/scrcpy/options.py",
+    "changes": "仅改导入路径"
+  },
+  {
+    "source": "H:\\ALAS\\AzurPilot\\module\\device\\method\\scrcpy\\scrcpy.py",
+    "commit": "83ccef80cac57a4ac6d8c339f038fe9a402aa3fe",
+    "sha256": "936ae4795b1dba1b95287f45e38f8174f34a379af5614f5e9dd86be8b3506f38",
+    "component": "scrcpy",
+    "destination": "backend/emulator/method/scrcpy/scrcpy.py",
+    "changes": "仅改导入路径"
+  },
+  {
+    "source": "H:\\ALAS\\AzurPilot\\module\\device\\screenshot.py",
+    "commit": "83ccef80cac57a4ac6d8c339f038fe9a402aa3fe",
+    "sha256": "e861a7d79db29a3b590304b82abdeb1376c879a971870393557a95d9294fd430",
+    "component": "Screenshot.screenshot_methods / 方向处理",
+    "destination": "backend/emulator/device.py",
+    "changes": "方法表与方向处理移植；非 1280×720 不缩放而报错（颜色规则需要原像素）"
+  },
+  {
+    "source": "H:\\ALAS\\AzurPilot\\module\\device\\control.py",
+    "commit": "83ccef80cac57a4ac6d8c339f038fe9a402aa3fe",
+    "sha256": "59e66a69e9e00e3a194d026d62cb2513e9cbf12a9cc82a3f2a10a53929e5a1da",
+    "component": "Control.click_methods",
+    "destination": "backend/emulator/device.py",
+    "changes": "方法表移植；去除 aScreenCap/ldopengl/WSA/Hermit/azurpilot_android"
+  },
+  {
+    "source": "H:\\ALAS\\AzurPilot\\module\\daemon\\benchmark.py",
+    "commit": "83ccef80cac57a4ac6d8c339f038fe9a402aa3fe",
+    "sha256": "eb185cf4f195357663d3a1955774293931f50790361453ef0c415dc47061dd80",
+    "component": "Benchmark",
+    "destination": "backend/emulator/benchmark.py",
+    "changes": "15 次取最快 80% 与评级移植；新增与 ADB 无损帧的颜色检查一致性比对、点击以出征标签切换验证游戏响应"
+  },
+  {
+    "source": "H:\\ALAS\\AzurPilot\\bin\\DroidCast\\DroidCast_raw-release-1.1.apk",
+    "commit": "83ccef80cac57a4ac6d8c339f038fe9a402aa3fe",
+    "sha256": "ddfe8ef2dd79f7e2d5eb18c76eae1437c270955ddf4bc2844b413f2a872f42cc",
+    "component": "DroidCast_raw APK",
+    "destination": "bin/DroidCast/DroidCast_raw-release-1.1.apk",
+    "changes": "原样"
+  },
+  {
+    "source": "H:\\ALAS\\AzurPilot\\bin\\MaaTouch\\maatouch",
+    "commit": "83ccef80cac57a4ac6d8c339f038fe9a402aa3fe",
+    "sha256": "4ea8590cd0349ce900f39ab16ef3751dad2356286b465b4293f80f9858c995d0",
+    "component": "MaaTouch",
+    "destination": "bin/MaaTouch/maatouch",
+    "changes": "原样"
+  },
+  {
+    "source": "H:\\ALAS\\AzurPilot\\bin\\MaaTouch\\maatouchsync",
+    "commit": "83ccef80cac57a4ac6d8c339f038fe9a402aa3fe",
+    "sha256": "0ed5dd22e14d78a0d072307c3e4fac13713fb539cdb9e56f078fdd093e9791b8",
+    "component": "MaaTouch",
+    "destination": "bin/MaaTouch/maatouchsync",
+    "changes": "原样"
+  },
+  {
+    "source": "H:\\ALAS\\AzurPilot\\bin\\scrcpy\\scrcpy-server-v1.20.jar",
+    "commit": "83ccef80cac57a4ac6d8c339f038fe9a402aa3fe",
+    "sha256": "b20aee4951f99b060c4a44000ba94de973f9604758ef62beb253b371aad3df34",
+    "component": "scrcpy server",
+    "destination": "bin/scrcpy/scrcpy-server-v1.20.jar",
+    "changes": "原样"
   }
 ]

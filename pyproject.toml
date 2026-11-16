@@ -1,7 +1,7 @@
 [project]
 name = "warshippilot"
-version = "0.4.0"
-description = "舰R助手：原Lua脚本电脑端远征与出征"
+version = "0.5.0"
+description = "舰R助手：战舰少女R 电脑端自动化（ALAS式）"
 requires-python = ">=3.14,<3.15"
 dependencies = [
     "starlette>=0.48,<1",
@@ -12,10 +12,25 @@ dependencies = [
     "opencv-python-headless>=4.12,<5",
     "wsproto>=1.3.2",
     "lupa>=2.6,<3",
+    # Device methods ported from AzurPilot (same pins as upstream)
+    "adbutils==0.11.0",
+    "uiautomator2==2.16.17",
+    "uiautomator2cache==0.3.0.1",
+    "lz4==4.4.5",
+    "requests>=2.32,<3",
+    "lxml>=6,<7",
+    "av>=17.1,<18",
 ]
 
 [dependency-groups]
 build = ["pyinstaller>=6.16,<7"]
+
+[tool.uv]
+override-dependencies = [
+    # uiautomator2 2.16.17 declares packaging~=20.3, whose 20.9 release
+    # imports the removed stdlib distutils module on Python 3.14 (as AzurPilot).
+    "packaging==24.2",
+]
 
 [[tool.uv.index]]
 url = "https://pypi.tuna.tsinghua.edu.cn/simple"

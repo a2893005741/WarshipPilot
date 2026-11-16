@@ -16,7 +16,7 @@ from backend.store import atomic_json
 
 
 def main():
-    parser = argparse.ArgumentParser(description="舰R助手 v0.4 · 原脚本远征与出征")
+    parser = argparse.ArgumentParser(description="舰R助手 · 原生远征与原脚本出征")
     parser.add_argument("--host", default="127.0.0.1")
     parser.add_argument("--port", type=int, default=22680)
     default_data = (Path(sys.executable).resolve().parent.parent / "WarshipPilot-data") if getattr(sys, "frozen", False) else Path(os.getenv("LOCALAPPDATA", str(Path.home()))) / "WarshipPilot"
@@ -56,6 +56,12 @@ def main():
         if server:
             server.should_exit = True
 
+    from backend.updater import Updater
+    runtime.updater = Updater(args.data_dir, {"port": args.port, "argv": sys.argv[1:]},
+                              busy=lambda: runtime.automation.busy or runtime.automation.scheduler
+                              or runtime.benchmark["running"],
+                              shutdown=shutdown, event=runtime.store.event)
+    runtime.updater.start_auto_check(runtime.stop_event)
     app = create_app(runtime, key, shutdown)
     # websockets-sansio is not required; use uvicorn's wsproto backend.
     server = uvicorn.Server(uvicorn.Config(app, host=args.host, port=args.port, access_log=False, log_config=None, ws="wsproto"))

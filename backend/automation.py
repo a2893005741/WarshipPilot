@@ -1,4 +1,5 @@
-"""Single input owner executing original Lua tasks inside the acquisition thread."""
+"""Single input owner: native Python tasks in a worker thread, original Lua tasks
+inside the acquisition thread (sortie, until it is rewritten natively)."""
 from collections import deque
 from copy import deepcopy
 from datetime import datetime, timezone, timedelta
@@ -6,19 +7,22 @@ import time
 import uuid
 
 from .legacy_vm import LegacyVM, identifier, text
+from .native import NATIVE_TASKS, NativeRun
 from .store import atomic_json, now
 from .task_settings import read_tasks
 
 SUPPORTED = ('expedition', 'sortie')
 NAMES = {'expedition': '远征收取与继续派遣', 'sortie': '原方案C · 6-1 · 第二舰队'}
+SOURCES = {'expedition': 'native', 'sortie': 'original_lua_functions'}
 
 
 class TaskController:
     def __init__(self, runtime):
         self.runtime = runtime
         self.vm = None
+        self.native = None
         self.scheduler = False
-        self.due = {}
+        self.due = self.load_due()
         self.delay_until = 0.
         self.first_resume = True
         self.needs_frame = True
@@ -31,8 +35,12 @@ class TaskController:
     def state(self):
         return deepcopy(self.result) | {'scheduler': self.scheduler, 'supported': list(SUPPORTED),
                                       'enabled': sum(v['enabled'] for k,v in read_tasks(self.runtime.store.root).items() if k in SUPPORTED),
-                                      'due': dict(self.due), 'source': 'original_lua_functions',
-                                      'plan': 'legacy-C', 'running': self.vm is not None}
+                                      'due': dict(self.due), 'source': SOURCES.get(self.result.get('task'), ''),
+                                      'plan': 'legacy-C', 'running': self.busy}
+
+    @property
+    def busy(self):
+        return self.vm is not None or self.native is not None
 
     def event(self, message):
         self.runtime.store.event('原脚本 · ' + message)
@@ -50,7 +58,7 @@ class TaskController:
                 (folder/f"{int(time.time()*1000)}.png").write_bytes(self.runtime.frame['png'])
 
     def start(self, task):
-        if self.vm:
+        if self.busy:
             raise ValueError('已有任务持有当前设备，请先停止或等待完成')
         if task not in SUPPORTED:
             raise ValueError('目前接入远征和原方案C出征，其他任务尚未适配')
@@ -58,6 +66,8 @@ class TaskController:
             raise ValueError('请先连接舰R并恢复实时画面')
         self.runtime.adb.ensure_input_ready(self.runtime.serial)
         settings = read_tasks(self.runtime.store.root)[task]
+        if task in NATIVE_TASKS:
+            return self.start_native(task, settings)
         if task == 'sortie' and (settings['stage'] not in ('','6-1') or settings['fleet'] != 2):
             raise ValueError('本轮实机选择是原方案C：6-1、第二舰队；请使用原方案参数')
         vm = LegacyVM(self.runtime.resources, self.runtime.store.root, task, settings, self.event, self.page)
@@ -74,6 +84,54 @@ class TaskController:
         self.event('开始：' + NAMES[task] + '；使用恢复的原Lua函数')
         self.persist()
 
+    def start_native(self, task, settings):
+        if self.runtime.emulator is None:
+            raise ValueError('设备的截图/控制方式尚未初始化，请在设备设置中重新连接')
+        run = NativeRun(self.runtime, task, settings, self.native_done)
+        self.result = {'status': 'running', 'task': task, 'name': NAMES[task], 'page': '', 'action': '启动原生任务',
+                       'inputs': 0, 'collected': 0, 'battles': 0, 'error': '',
+                       'id': uuid.uuid4().hex, 'started': now(), 'settings': settings,
+                       'methods': {'screenshot': self.runtime.emulator.config.Emulator_ScreenshotMethod,
+                                   'control': self.runtime.emulator.config.Emulator_ControlMethod}}
+        self.native = run
+        self.runtime.store.event(f'原生任务 · 开始：{NAMES[task]}（截图 {self.result["methods"]["screenshot"]} · '
+                                 f'控制 {self.result["methods"]["control"]}）')
+        run.start()
+        self.persist()
+
+    def native_done(self, run, status):
+        # Called from the worker thread.
+        with self.runtime.lock:
+            if run is not self.native:
+                return
+            self.native = None
+            self.mirror(run)
+            result = run.result
+            if status == 'completed':
+                self.result['collected'] = getattr(result, 'collected', 0)
+                self.result.update(status='completed', action='原生任务完成，已回港', ended=now())
+                task = self.result['task']
+                self.due[task] = (datetime.now(timezone.utc) +
+                                  timedelta(minutes=self.result['settings']['interval_minutes'])).isoformat()
+                self.save_due()
+                self.runtime.store.event(f'原生任务 · 完成：{NAMES[task]}，收取 {self.result["collected"]} 个远征')
+            elif status == 'stopped':
+                self.result.update(status='stopped', action=run.error or '任务已停止', ended=now())
+            else:
+                self.scheduler = False
+                self.result.update(status='fault', error=run.error, action='已停止输入', ended=now())
+                self.runtime.store.event('原生任务 · 停止：' + run.error, 'warning')
+            self.persist()
+        if status == 'fault':
+            self.runtime.save_fault('原生任务停止：' + run.error[:300])
+        self.runtime.wake.set()
+
+    def mirror(self, run):
+        self.result.update(page=run.page or self.result['page'], inputs=run.inputs,
+                           action=run.last_action or self.result['action'])
+        if run.worker is not None and getattr(run.worker, 'result', None) is not None:
+            self.result['collected'] = run.worker.result.collected
+
     def control(self, action, task=''):
         if action == 'start':
             self.start(task)
@@ -86,12 +144,14 @@ class TaskController:
             self.scheduler = False
             self.stop('调度器已停止')
         elif action == 'pause':
-            if not self.vm:raise ValueError('当前没有运行任务')
+            if not self.busy:raise ValueError('当前没有运行任务')
+            if self.native:self.native.paused.set()
             self.result['status'] = 'paused'
             self.event('已暂停，停止后续输入')
         elif action == 'resume':
-            if not self.vm:raise ValueError('当前没有可恢复任务')
+            if not self.busy:raise ValueError('当前没有可恢复任务')
             if self.runtime.status != 'live':raise ValueError('请先恢复实时画面')
+            if self.native:self.native.paused.clear()
             self.result['status'] = 'running'
             self.needs_frame = True
             self.page_time = time.monotonic()
@@ -106,17 +166,39 @@ class TaskController:
         return self.state()
 
     def stop(self, message):
+        if self.native:
+            # The worker stops at its next device call; it may finish an
+            # in-flight screenshot/click but sends nothing afterwards.
+            self.native.stop(message)
+            self.native.paused.clear()
+            self.result.update(status='stopping', action=message)
+            self.event(message)
+            self.persist()
+            return
         self.vm = None
         self.touch = None
         self.result.update(status='stopped', action=message)
         self.event(message)
         self.persist()
 
+    def load_due(self):
+        """Next run times survive a backend restart (data/scheduler.json)."""
+        import json
+        path = self.runtime.store.root / 'scheduler.json'
+        try:
+            due = json.loads(path.read_text(encoding='utf-8')).get('due', {})
+            return {k: v for k, v in due.items() if k in SUPPORTED and datetime.fromisoformat(v)}
+        except (OSError, ValueError, AttributeError):
+            return {}
+
+    def save_due(self):
+        atomic_json(self.runtime.store.root / 'scheduler.json', {'due': self.due})
+
     def persist(self):
         atomic_json(self.runtime.store.root/'automation-last-run.json', self.state())
 
     def schedule(self):
-        if not self.scheduler or self.vm:return
+        if not self.scheduler or self.busy:return
         tasks=read_tasks(self.runtime.store.root)
         current=datetime.now(timezone.utc)
         local=datetime.now().strftime('%H:%M')
@@ -197,12 +279,16 @@ class TaskController:
             raise RuntimeError('原函数已返回，但尚未达到出征次数，保留现场供核对')
         self.result.update(status='completed', action='原流程已回港，本轮完成', ended=now())
         self.due[task]=(datetime.now(timezone.utc)+timedelta(minutes=settings['interval_minutes'])).isoformat()
+        self.save_due()
         self.event('完成：'+NAMES[task])
         self.vm=None;self.persist()
 
     def tick(self, raw):
         try:
             self.schedule()
+            if self.native:
+                self.mirror(self.native)
+                return
             self.step(raw)
             if self.vm and self.result['status']=='running':
                 self.result['battles']=int(self.vm.globals[identifier('战斗次数C')] or 0)
