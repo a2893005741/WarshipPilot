@@ -27,6 +27,6 @@
 
 已部署到 DESKTOP-3F63TNA 的 D:\WarshipPilot，v0.6.0。确认便携 Python 的 sys.base_prefix 为 D:\WarshipPilot\.venv\python；自动连接 127.0.0.1:16416，nemu_ipc 截图 1280×720、ADB 控制，设备初始化无错误；调度开关与下次远征时间从实际 v0.5.2 数据目录恢复。
 
-首次现场检查发现并修正两项环境差异：远端 PowerShell 策略要求为本次脚本调用指定执行策略；复制的 Git 系统配置引用了开发电脑证书路径，现使用 Windows schannel 系统证书库。隐藏启动器需要等待 GUI 生命周期，避免计划任务提前结束。
+首次现场检查发现并修正两项环境差异：远端 PowerShell 策略要求为本次脚本调用指定执行策略；复制的 Git 系统配置引用了开发电脑证书路径，现使用 Windows schannel 系统证书库。隐藏启动器使用 PowerShell 包装并等待 GUI 生命周期，避免依赖远端脚本宿主的行为。
 
 后续补充了中断复制重试测试，目前 67 项回归通过。初次部署旧 D:\WarshipPilot 备份在 D:\WarshipPilot-source-backup-20261117-023744；实际 v0.5.2 安装和 data 保留原处。

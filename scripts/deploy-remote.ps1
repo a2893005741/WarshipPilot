@@ -115,8 +115,8 @@ c.save_deploy(d)
             if ($LASTEXITCODE) { throw 'Configuration migration failed' }
             $desktopUser = (Get-CimInstance Win32_ComputerSystem).UserName
             if (!$desktopUser) { throw 'MuMu IPC needs a logged-in desktop user' }
-            # WScript waits for BAT; installer --wait-gui keeps the task alive.
-            $action = New-ScheduledTaskAction -Execute 'wscript.exe' -Argument ('"'+$live+'\deploy\launcher\hidden.vbs" --no-browser') -WorkingDirectory $live
+            # The hidden PowerShell wrapper waits for BAT and its GUI lifetime.
+            $action = New-ScheduledTaskAction -Execute 'powershell.exe' -Argument ('-NoProfile -WindowStyle Hidden -ExecutionPolicy Bypass -File "'+$live+'\deploy\launcher\hidden.ps1" --no-browser') -WorkingDirectory $live
             $settings = New-ScheduledTaskSettingsSet -ExecutionTimeLimit ([TimeSpan]::Zero) -MultipleInstances IgnoreNew -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries
             $principal = New-ScheduledTaskPrincipal -UserId $desktopUser -LogonType Interactive -RunLevel Highest
             $trigger = New-ScheduledTaskTrigger -AtLogOn -User $desktopUser
@@ -132,8 +132,8 @@ c.save_deploy(d)
             if (!$healthy) { throw 'Source GUI failed to start' }
             $shell=New-Object -ComObject WScript.Shell
             $shortcut=$shell.CreateShortcut((Join-Path ([Environment]::GetFolderPath('Desktop')) 'WarshipPilot.lnk'))
-            $shortcut.TargetPath='wscript.exe'
-            $shortcut.Arguments='"'+$live+'\deploy\launcher\hidden.vbs"'
+            $shortcut.TargetPath='powershell.exe'
+            $shortcut.Arguments='-NoProfile -WindowStyle Hidden -ExecutionPolicy Bypass -File "'+$live+'\deploy\launcher\hidden.ps1"'
             $shortcut.WorkingDirectory=$live
             $shortcut.Save()
             [pscustomobject]@{Commit=$commit;Branch=$branch;Backup=$backup;Health=$health;DataSource=$oldData}
