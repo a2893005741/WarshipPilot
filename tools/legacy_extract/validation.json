@@ -1,0 +1,492 @@
+{
+ "agree": 81,
+ "frames": 81,
+ "results": [
+  {
+   "file": "evidence\\expedition-after-reward-transition.png",
+   "original": "港区",
+   "generated": "港区",
+   "taps": []
+  },
+  {
+   "file": "evidence\\expedition-chapter2.png",
+   "original": "单选确定",
+   "generated": "单选确定",
+   "taps": []
+  },
+  {
+   "file": "evidence\\expedition-collect-transition.png",
+   "original": "出征-远征",
+   "generated": "出征-远征",
+   "taps": []
+  },
+  {
+   "file": "evidence\\expedition-list-after-collect.png",
+   "original": "单选确定",
+   "generated": "单选确定",
+   "taps": []
+  },
+  {
+   "file": "evidence\\expedition-redeploy.png",
+   "original": "出征-远征",
+   "generated": "出征-远征",
+   "taps": []
+  },
+  {
+   "file": "evidence\\expedition-restarted-transition.png",
+   "original": null,
+   "generated": null,
+   "taps": []
+  },
+  {
+   "file": "evidence\\expedition-reward.png",
+   "original": "战斗结果",
+   "generated": "战斗结果",
+   "taps": []
+  },
+  {
+   "file": "evidence\\expedition-reward2-stable.png",
+   "original": "战斗结果",
+   "generated": "战斗结果",
+   "taps": []
+  },
+  {
+   "file": "evidence\\expedition-reward2.png",
+   "original": "出征-远征",
+   "generated": "出征-远征",
+   "taps": []
+  },
+  {
+   "file": "evidence\\expedition-running.png",
+   "original": "出征-远征",
+   "generated": "出征-远征",
+   "taps": []
+  },
+  {
+   "file": "evidence\\field-expedition\\fault.png",
+   "original": "单选确定",
+   "generated": "单选确定",
+   "taps": []
+  },
+  {
+   "file": "evidence\\field-expedition\\latest.png",
+   "original": "港区",
+   "generated": "港区",
+   "taps": []
+  },
+  {
+   "file": "evidence\\field-sortie\\fault.png",
+   "original": "战斗结果二",
+   "generated": "战斗结果二",
+   "taps": []
+  },
+  {
+   "file": "evidence\\field-sortie\\latest.png",
+   "original": "港区",
+   "generated": "港区",
+   "taps": []
+  },
+  {
+   "file": "evidence\\field-sortie\\runs\\419ea6c8b72b429ead9d1cca4764024a\\1794823412407.png",
+   "original": "出征-出征",
+   "generated": "出征-出征",
+   "taps": []
+  },
+  {
+   "file": "evidence\\field-sortie\\runs\\419ea6c8b72b429ead9d1cca4764024a\\1794823417720.png",
+   "original": "出征-远征",
+   "generated": "出征-远征",
+   "taps": []
+  },
+  {
+   "file": "evidence\\field-sortie\\runs\\419ea6c8b72b429ead9d1cca4764024a\\1794823430281.png",
+   "original": "港区",
+   "generated": "港区",
+   "taps": []
+  },
+  {
+   "file": "evidence\\field-sortie\\runs\\419ea6c8b72b429ead9d1cca4764024a\\1794823441971.png",
+   "original": "出征-出征",
+   "generated": "出征-出征",
+   "taps": []
+  },
+  {
+   "file": "evidence\\field-sortie\\runs\\419ea6c8b72b429ead9d1cca4764024a\\1794823484472.png",
+   "original": "出征准备",
+   "generated": "出征准备",
+   "taps": []
+  },
+  {
+   "file": "evidence\\field-sortie\\runs\\419ea6c8b72b429ead9d1cca4764024a\\1794823508172.png",
+   "original": "跳过带路条件",
+   "generated": "跳过带路条件",
+   "taps": []
+  },
+  {
+   "file": "evidence\\field-sortie\\runs\\419ea6c8b72b429ead9d1cca4764024a\\1794823511324.png",
+   "original": null,
+   "generated": null,
+   "taps": []
+  },
+  {
+   "file": "evidence\\field-sortie\\runs\\419ea6c8b72b429ead9d1cca4764024a\\1794823517808.png",
+   "original": "敌方阵型",
+   "generated": "敌方阵型",
+   "taps": []
+  },
+  {
+   "file": "evidence\\field-sortie\\runs\\419ea6c8b72b429ead9d1cca4764024a\\1794823528953.png",
+   "original": "选择阵型",
+   "generated": "选择阵型",
+   "taps": []
+  },
+  {
+   "file": "evidence\\field-sortie\\runs\\419ea6c8b72b429ead9d1cca4764024a\\1794823536565.png",
+   "original": null,
+   "generated": null,
+   "taps": []
+  },
+  {
+   "file": "evidence\\field-sortie\\runs\\419ea6c8b72b429ead9d1cca4764024a\\1794823539364.png",
+   "original": "战斗中",
+   "generated": "战斗中",
+   "taps": []
+  },
+  {
+   "file": "evidence\\field-sortie\\runs\\419ea6c8b72b429ead9d1cca4764024a\\1794823543826.png",
+   "original": null,
+   "generated": null,
+   "taps": []
+  },
+  {
+   "file": "evidence\\field-sortie\\runs\\419ea6c8b72b429ead9d1cca4764024a\\1794823546709.png",
+   "original": "战斗中",
+   "generated": "战斗中",
+   "taps": []
+  },
+  {
+   "file": "evidence\\field-sortie\\runs\\419ea6c8b72b429ead9d1cca4764024a\\1794823550369.png",
+   "original": null,
+   "generated": null,
+   "taps": []
+  },
+  {
+   "file": "evidence\\field-sortie\\runs\\419ea6c8b72b429ead9d1cca4764024a\\1794823553099.png",
+   "original": "战斗中",
+   "generated": "战斗中",
+   "taps": []
+  },
+  {
+   "file": "evidence\\field-sortie\\runs\\419ea6c8b72b429ead9d1cca4764024a\\1794823566735.png",
+   "original": "战斗结果",
+   "generated": "战斗结果",
+   "taps": []
+  },
+  {
+   "file": "evidence\\field-sortie\\runs\\419ea6c8b72b429ead9d1cca4764024a\\1794823574170.png",
+   "original": "战斗结果二",
+   "generated": "战斗结果二",
+   "taps": []
+  },
+  {
+   "file": "evidence\\field-sortie\\runs\\90ec8e22c0aa4e11b0ad219bee6dba19\\1794824277182.png",
+   "original": "战斗结果",
+   "generated": "战斗结果",
+   "taps": []
+  },
+  {
+   "file": "evidence\\field-sortie\\runs\\90ec8e22c0aa4e11b0ad219bee6dba19\\1794824286852.png",
+   "original": "战斗结果二",
+   "generated": "战斗结果二",
+   "taps": []
+  },
+  {
+   "file": "evidence\\field-sortie\\runs\\90ec8e22c0aa4e11b0ad219bee6dba19\\1794824293467.png",
+   "original": "重创回港",
+   "generated": "重创回港",
+   "taps": []
+  },
+  {
+   "file": "evidence\\field-sortie\\runs\\90ec8e22c0aa4e11b0ad219bee6dba19\\1794824297926.png",
+   "original": "出征-出征",
+   "generated": "出征-出征",
+   "taps": []
+  },
+  {
+   "file": "evidence\\field-sortie\\runs\\90ec8e22c0aa4e11b0ad219bee6dba19\\1794824311361.png",
+   "original": "出征-远征",
+   "generated": "出征-远征",
+   "taps": []
+  },
+  {
+   "file": "evidence\\field-sortie\\runs\\90ec8e22c0aa4e11b0ad219bee6dba19\\1794824325906.png",
+   "original": "港区",
+   "generated": "港区",
+   "taps": []
+  },
+  {
+   "file": "evidence\\field-sortie\\runs\\9455c61005b146fd80192bcf7c53552c\\1794823694561.png",
+   "original": "战斗结果二",
+   "generated": "战斗结果二",
+   "taps": []
+  },
+  {
+   "file": "evidence\\field-sortie\\runs\\9455c61005b146fd80192bcf7c53552c\\1794823700456.png",
+   "original": "捞到船",
+   "generated": "捞到船",
+   "taps": []
+  },
+  {
+   "file": "evidence\\field-sortie\\runs\\9455c61005b146fd80192bcf7c53552c\\1794823709249.png",
+   "original": "前进回港",
+   "generated": "前进回港",
+   "taps": []
+  },
+  {
+   "file": "evidence\\field-sortie\\runs\\9455c61005b146fd80192bcf7c53552c\\1794823718384.png",
+   "original": "敌方阵型",
+   "generated": "敌方阵型",
+   "taps": []
+  },
+  {
+   "file": "evidence\\field-sortie\\runs\\9455c61005b146fd80192bcf7c53552c\\1794823729037.png",
+   "original": "选择阵型",
+   "generated": "选择阵型",
+   "taps": []
+  },
+  {
+   "file": "evidence\\field-sortie\\runs\\9455c61005b146fd80192bcf7c53552c\\1794823739837.png",
+   "original": "战斗中",
+   "generated": "战斗中",
+   "taps": []
+  },
+  {
+   "file": "evidence\\field-sortie\\runs\\9455c61005b146fd80192bcf7c53552c\\1794823816873.png",
+   "original": "是否夜战",
+   "generated": "是否夜战",
+   "taps": []
+  },
+  {
+   "file": "evidence\\field-sortie\\runs\\9455c61005b146fd80192bcf7c53552c\\1794823828108.png",
+   "original": "战斗结果",
+   "generated": "战斗结果",
+   "taps": []
+  },
+  {
+   "file": "evidence\\field-sortie\\runs\\9455c61005b146fd80192bcf7c53552c\\1794823841220.png",
+   "original": "战斗结果二",
+   "generated": "战斗结果二",
+   "taps": []
+  },
+  {
+   "file": "evidence\\field-sortie\\runs\\9455c61005b146fd80192bcf7c53552c\\1794823849179.png",
+   "original": "大破进击",
+   "generated": "大破进击",
+   "taps": []
+  },
+  {
+   "file": "evidence\\field-sortie\\runs\\9455c61005b146fd80192bcf7c53552c\\1794823857936.png",
+   "original": "出征-出征",
+   "generated": "出征-出征",
+   "taps": []
+  },
+  {
+   "file": "evidence\\field-sortie\\runs\\9455c61005b146fd80192bcf7c53552c\\1794823877643.png",
+   "original": "出征准备",
+   "generated": "出征准备",
+   "taps": []
+  },
+  {
+   "file": "evidence\\field-sortie\\runs\\9455c61005b146fd80192bcf7c53552c\\1794823908325.png",
+   "original": "跳过带路条件",
+   "generated": "跳过带路条件",
+   "taps": []
+  },
+  {
+   "file": "evidence\\field-sortie\\runs\\9455c61005b146fd80192bcf7c53552c\\1794823910914.png",
+   "original": "遭遇敌方舰队",
+   "generated": "遭遇敌方舰队",
+   "taps": []
+  },
+  {
+   "file": "evidence\\field-sortie\\runs\\9455c61005b146fd80192bcf7c53552c\\1794823915731.png",
+   "original": "敌方阵型",
+   "generated": "敌方阵型",
+   "taps": []
+  },
+  {
+   "file": "evidence\\field-sortie\\runs\\997a2bf1843d4e13bf35a55b41b13e5c\\1794823237654.png",
+   "original": "港区",
+   "generated": "港区",
+   "taps": []
+  },
+  {
+   "file": "evidence\\field-sortie\\runs\\997a2bf1843d4e13bf35a55b41b13e5c\\1794823249258.png",
+   "original": "出征-出征",
+   "generated": "出征-出征",
+   "taps": []
+  },
+  {
+   "file": "evidence\\field-sortie\\runs\\d637c36cd2f246e9bd3b9b3c62f3a512\\1794823975400.png",
+   "original": "敌方阵型",
+   "generated": "敌方阵型",
+   "taps": []
+  },
+  {
+   "file": "evidence\\field-sortie\\runs\\d637c36cd2f246e9bd3b9b3c62f3a512\\1794823985417.png",
+   "original": "选择阵型",
+   "generated": "选择阵型",
+   "taps": []
+  },
+  {
+   "file": "evidence\\field-sortie\\runs\\d637c36cd2f246e9bd3b9b3c62f3a512\\1794823993121.png",
+   "original": "战斗中",
+   "generated": "战斗中",
+   "taps": []
+  },
+  {
+   "file": "evidence\\field-sortie\\runs\\d637c36cd2f246e9bd3b9b3c62f3a512\\1794824033488.png",
+   "original": "战斗结果",
+   "generated": "战斗结果",
+   "taps": []
+  },
+  {
+   "file": "evidence\\field-sortie\\runs\\d637c36cd2f246e9bd3b9b3c62f3a512\\1794824047637.png",
+   "original": "战斗结果二",
+   "generated": "战斗结果二",
+   "taps": []
+  },
+  {
+   "file": "evidence\\field-sortie\\runs\\d637c36cd2f246e9bd3b9b3c62f3a512\\1794824053775.png",
+   "original": "捞到船",
+   "generated": "捞到船",
+   "taps": []
+  },
+  {
+   "file": "evidence\\field-sortie\\runs\\d637c36cd2f246e9bd3b9b3c62f3a512\\1794824061838.png",
+   "original": "前进回港",
+   "generated": "前进回港",
+   "taps": []
+  },
+  {
+   "file": "evidence\\field-sortie\\runs\\d637c36cd2f246e9bd3b9b3c62f3a512\\1794824069226.png",
+   "original": "敌方阵型",
+   "generated": "敌方阵型",
+   "taps": []
+  },
+  {
+   "file": "evidence\\field-sortie\\runs\\d637c36cd2f246e9bd3b9b3c62f3a512\\1794824082181.png",
+   "original": "选择阵型",
+   "generated": "选择阵型",
+   "taps": []
+  },
+  {
+   "file": "evidence\\field-sortie\\runs\\d637c36cd2f246e9bd3b9b3c62f3a512\\1794824092587.png",
+   "original": "战斗中",
+   "generated": "战斗中",
+   "taps": []
+  },
+  {
+   "file": "evidence\\field-sortie\\runs\\d637c36cd2f246e9bd3b9b3c62f3a512\\1794824162590.png",
+   "original": "是否夜战",
+   "generated": "是否夜战",
+   "taps": []
+  },
+  {
+   "file": "evidence\\field-sortie\\runs\\fc8f1ef5a44e45ba94427ce62360c38e\\1794823321869.png",
+   "original": "出征-出征",
+   "generated": "出征-出征",
+   "taps": []
+  },
+  {
+   "file": "evidence\\field-sortie\\runs\\fc8f1ef5a44e45ba94427ce62360c38e\\1794823327014.png",
+   "original": "出征-远征",
+   "generated": "出征-远征",
+   "taps": []
+  },
+  {
+   "file": "evidence\\field-sortie\\runs\\fc8f1ef5a44e45ba94427ce62360c38e\\1794823340921.png",
+   "original": "港区",
+   "generated": "港区",
+   "taps": []
+  },
+  {
+   "file": "evidence\\field-sortie\\runs\\fc8f1ef5a44e45ba94427ce62360c38e\\1794823354672.png",
+   "original": "出征-出征",
+   "generated": "出征-出征",
+   "taps": []
+  },
+  {
+   "file": "evidence\\integration-before.png",
+   "original": "战备舰队获取",
+   "generated": "战备舰队获取",
+   "taps": []
+  },
+  {
+   "file": "evidence\\integration-live.png",
+   "original": "战备舰队获取",
+   "generated": "战备舰队获取",
+   "taps": []
+  },
+  {
+   "file": "evidence\\nav-sortie-after.png",
+   "original": "出征-远征",
+   "generated": "出征-远征",
+   "taps": []
+  },
+  {
+   "file": "evidence\\nav-sortie.png",
+   "original": "港区",
+   "generated": "港区",
+   "taps": []
+  },
+  {
+   "file": "evidence\\remote-first-frame.png",
+   "original": "港区",
+   "generated": "港区",
+   "taps": []
+  },
+  {
+   "file": "evidence\\remote-latest.png",
+   "original": "港区",
+   "generated": "港区",
+   "taps": []
+  },
+  {
+   "file": "evidence\\sortie-chapter-scroll.png",
+   "original": "出征-出征",
+   "generated": "出征-出征",
+   "taps": []
+  },
+  {
+   "file": "evidence\\sortie-map-transition.png",
+   "original": null,
+   "generated": null,
+   "taps": []
+  },
+  {
+   "file": "evidence\\sortie-map.png",
+   "original": "出征-出征",
+   "generated": "出征-出征",
+   "taps": []
+  },
+  {
+   "file": "evidence\\v0.4-before.png",
+   "original": "港区",
+   "generated": "港区",
+   "taps": []
+  },
+  {
+   "file": "evidence\\v0.4-exe-final.png",
+   "original": "港区",
+   "generated": "港区",
+   "taps": []
+  },
+  {
+   "file": "evidence\\v0.4-ipc-live.png",
+   "original": "港区",
+   "generated": "港区",
+   "taps": []
+  }
+ ]
+}
