@@ -7,6 +7,7 @@ from pathlib import Path
 import shutil
 import subprocess
 import sys
+import socket
 import time
 import urllib.error
 import urllib.request
@@ -34,14 +35,17 @@ def main():
     # shares it via a junction, keeping a full extra toolchain copy unnecessary.
     subprocess.run(['cmd.exe','/d','/c','mklink','/J',str(live/'.venv'),str(args.runtime.resolve()/'.venv')],check=True,capture_output=True)
     config=Config(live);config.ensure()
-    value=config.deploy();value['Git']['Branch']=branch;value['WebUI']['Port']=22684;value['Update']['AutoCheck']=False
+    with socket.socket() as probe:
+        probe.bind(('127.0.0.1',0))
+        port=probe.getsockname()[1]
+    value=config.deploy();value['Git']['Branch']=branch;value['WebUI']['Port']=port;value['Update']['AutoCheck']=False
     config.save_deploy(value)
     save_task(live,'expedition',TaskDraft(enabled=True))
     config.save_section('Scheduler',{'Enable':True,'NextRun':{'expedition':'2030-01-01T00:00:00+00:00'}})
     key=value['WebUI']['AccessCode']
     headers={'Authorization':'Bearer '+key,'Content-Type':'application/json'}
     def call(action,body=None):
-        request=urllib.request.Request('http://127.0.0.1:22684/'+action,data=json.dumps(body).encode() if body is not None else None,headers=headers)
+        request=urllib.request.Request(f'http://127.0.0.1:{port}/'+action,data=json.dumps(body).encode() if body is not None else None,headers=headers)
         with urllib.request.urlopen(request,timeout=15) as response:return json.load(response)
     def wait(check,seconds=60):
         deadline=time.monotonic()+seconds
@@ -82,6 +86,8 @@ def main():
     finally:
         try:call('api/shutdown',{})
         except OSError:pass
-        if process.poll() is None:process.terminate();process.wait(timeout=10)
+        if process.poll() is None:
+            try:process.wait(timeout=30)
+            except subprocess.TimeoutExpired:process.terminate();process.wait(timeout=10)
         output.close()
 if __name__=='__main__':main()
