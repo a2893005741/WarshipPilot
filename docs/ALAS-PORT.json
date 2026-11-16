@@ -1,0 +1,33 @@
+[
+  {
+    "source": "H:\\ALAS\\AzurPilot\\module\\base\\timer.py",
+    "sha256": "3838b33f99182ac46a52eb247ffc5c914d63350b9a605ab8d94cc7b61bfe795f",
+    "component": "Timer",
+    "destination": "backend\\alas\\timer.py"
+  },
+  {
+    "source": "H:\\ALAS\\AzurPilot\\module\\ui\\page.py",
+    "sha256": "6e0ae30597710107c7b512a673022791edcb023db496737c2bd3e484e12093d4",
+    "component": "Page",
+    "destination": "backend\\alas\\page.py"
+  },
+  {
+    "source": "H:\\ALAS\\AzurPilot\\module\\base\\button.py",
+    "sha256": "2380c93fe4f870aa4d0cbc159407ce74a119f237202de88f2ed684896cb4bb70",
+    "component": "Button.match",
+    "destination": "backend/alas/button.py"
+  },
+  {
+    "source": "H:\\ALAS\\AzurPilot\\module\\device\\method\\nemu_ipc.py",
+    "sha256": "e76b8fa2a535bb062cd238229af766c2a56e27abeee1101f8be7c2acc705d48b",
+    "destination": "backend/alas/nemu_ipc.py",
+    "component": "NemuIpcImpl, capture/error helpers",
+    "changes": "去除依赖ALAS应用的重试装饰器；原DLL选择、连接、取图与坐标逻辑保留；错误返回不重复调用DLL，交由设备层记录并回退ADB。"
+  },
+  {
+    "source": "H:\\ALAS\\AzurPilot\\module\\device\\method\\pool.py",
+    "sha256": "1fc846c23d18bdb0ca9aba8ddabf3a41238f063e2f6aa3a460eae1890527ca39",
+    "destination": "backend/alas/pool.py",
+    "component": "WORKER_POOL"
+  }
+]

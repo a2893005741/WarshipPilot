@@ -1,0 +1,877 @@
+[
+  {
+    "constant_index": 186,
+    "identifier": "ide782b9e587bbe68c89e992ae",
+    "decoded": "点击按钮"
+  },
+  {
+    "constant_index": 187,
+    "identifier": "ide694b6e8bf9ce5be81",
+    "decoded": "收远征"
+  },
+  {
+    "constant_index": 188,
+    "identifier": "ide68c82e8bf9ce5be81e6b3a1e6bea1",
+    "decoded": "挂远征泡澡"
+  },
+  {
+    "constant_index": 189,
+    "identifier": "ide6b3a1e6bea1",
+    "decoded": "泡澡"
+  },
+  {
+    "constant_index": 190,
+    "identifier": "ide68a93e7baa2e5bf83",
+    "decoded": "抓红心"
+  },
+  {
+    "constant_index": 191,
+    "identifier": "ide68993e68898e5bdb9",
+    "decoded": "打战役"
+  },
+  {
+    "constant_index": 192,
+    "identifier": "ide68993e6bc94e4b9a0",
+    "decoded": "打演习"
+  },
+  {
+    "constant_index": 193,
+    "identifier": "ide586b3e68898e68da2e7a5a8",
+    "decoded": "决战换票"
+  },
+  {
+    "constant_index": 194,
+    "identifier": "ide586b3e68898",
+    "decoded": "决战"
+  },
+  {
+    "constant_index": 195,
+    "identifier": "ide694b6e4bbbbe58aa1",
+    "decoded": "收任务"
+  },
+  {
+    "constant_index": 196,
+    "identifier": "ide587bae5be81e68898e69697",
+    "decoded": "出征战斗"
+  },
+  {
+    "constant_index": 197,
+    "identifier": "ide698afe590a6e6b3a1e6bea1",
+    "decoded": "是否泡澡"
+  },
+  {
+    "constant_index": 198,
+    "identifier": "ide698afe590a6e6bba1e7baa7",
+    "decoded": "是否满级"
+  },
+  {
+    "constant_index": 199,
+    "identifier": "ide5bcbae588b6e9878de590af",
+    "decoded": "强制重启"
+  },
+  {
+    "constant_index": 200,
+    "identifier": "ide58886e8a7a3",
+    "decoded": "分解"
+  },
+  {
+    "constant_index": 201,
+    "identifier": "ide782b9e4baaee6a087e7adbe",
+    "decoded": "点亮标签"
+  },
+  {
+    "constant_index": 202,
+    "identifier": "ide6a380e69fa5e4b88ae6a69ce8bdace8bf9ce5be81",
+    "decoded": "检查上榜转远征"
+  },
+  {
+    "constant_index": 203,
+    "identifier": "ide98089e68ba9e998b5e59e8b",
+    "decoded": "选择阵型"
+  },
+  {
+    "constant_index": 204,
+    "identifier": "ide5ae9ae697b6e9878de590af",
+    "decoded": "定时重启"
+  },
+  {
+    "constant_index": 205,
+    "identifier": "ide5819ae88f9c",
+    "decoded": "做菜"
+  },
+  {
+    "constant_index": 206,
+    "identifier": "ide6bc94e4b9a0e588b7e696b0e6aca1e695b0e698afe590a6e794a8e5ae8c",
+    "decoded": "演习刷新次数是否用完"
+  },
+  {
+    "constant_index": 207,
+    "identifier": "ide6bc94e4b9a0e698afe590a6e69c89e6bd9ce88987",
+    "decoded": "演习是否有潜艇"
+  },
+  {
+    "constant_index": 208,
+    "identifier": "ide68898e5bdb9e589a9e4bd99e6aca1e695b0",
+    "decoded": "战役剩余次数"
+  },
+  {
+    "constant_index": 209,
+    "identifier": "ide586b3e68898e689bee888b9",
+    "decoded": "决战找船"
+  },
+  {
+    "constant_index": 210,
+    "identifier": "ide7a59ee7a798e4b98be5bdb1e689bee888b9",
+    "decoded": "神秘之影找船"
+  },
+  {
+    "constant_index": 211,
+    "identifier": "ide689be553437",
+    "decoded": "找U47"
+  },
+  {
+    "constant_index": 212,
+    "identifier": "ide689be553831",
+    "decoded": "找U81"
+  },
+  {
+    "constant_index": 213,
+    "identifier": "ide689be553936",
+    "decoded": "找U96"
+  },
+  {
+    "constant_index": 214,
+    "identifier": "ide689be5531323036",
+    "decoded": "找U1206"
+  },
+  {
+    "constant_index": 215,
+    "identifier": "ide689be333531",
+    "decoded": "找351"
+  },
+  {
+    "constant_index": 216,
+    "identifier": "ide689bee9b9a6e9b989e89eba",
+    "decoded": "找鹦鹉螺"
+  },
+  {
+    "constant_index": 217,
+    "identifier": "ide689be5531343035",
+    "decoded": "找U1405"
+  },
+  {
+    "constant_index": 218,
+    "identifier": "ide689bee9b283e9b1bc",
+    "decoded": "找鲃鱼"
+  },
+  {
+    "constant_index": 219,
+    "identifier": "ide7a5a8e794a8e5ae8ce4ba86e6b2a1",
+    "decoded": "票用完了没"
+  },
+  {
+    "constant_index": 220,
+    "identifier": "ide588a4e696ade888b9e59e8b4558",
+    "decoded": "判断船型EX"
+  },
+  {
+    "constant_index": 221,
+    "identifier": "ide588a4e696ade888b9e59e8b",
+    "decoded": "判断船型"
+  },
+  {
+    "constant_index": 222,
+    "identifier": "ide8bdace68da2",
+    "decoded": "转换"
+  },
+  {
+    "constant_index": 223,
+    "identifier": "ide5b08fe88c83e59bb4e68a93e782b9",
+    "decoded": "小范围抓点"
+  },
+  {
+    "constant_index": 224,
+    "identifier": "ide69c80e5bcbae4b98be8889fe7acace587a0e59bbe",
+    "decoded": "最强之舟第几图"
+  },
+  {
+    "constant_index": 225,
+    "identifier": "ide58886e8bea8e78e87e6a380e6b58b",
+    "decoded": "分辨率检测"
+  },
+  {
+    "constant_index": 226,
+    "identifier": "ide5bd93e5898de697a5e69c9f",
+    "decoded": "当前日期"
+  },
+  {
+    "constant_index": 227,
+    "identifier": "ide59bbae5ae9ae5bbb6e697b6e782b9e587bb",
+    "decoded": "固定延时点击"
+  },
+  {
+    "constant_index": 228,
+    "identifier": "ide99a8fe69cbae782b9e587bb",
+    "decoded": "随机点击"
+  },
+  {
+    "constant_index": 229,
+    "identifier": "ide78eb0e59ca8e59cb0e59bbe",
+    "decoded": "现在地图"
+  },
+  {
+    "constant_index": 230,
+    "identifier": "ide78eb0e59ca8e586b3e68898e59cb0e59bbe",
+    "decoded": "现在决战地图"
+  },
+  {
+    "constant_index": 231,
+    "identifier": "ide5a49ae782b9e689bee889b2",
+    "decoded": "多点找色"
+  },
+  {
+    "constant_index": 232,
+    "identifier": "ide58cbae59f9fe689bee889b2",
+    "decoded": "区域找色"
+  },
+  {
+    "constant_index": 233,
+    "identifier": "ide7ab8be4bd93e5bcbae8a2ade7aba0e88a82",
+    "decoded": "立体强袭章节"
+  },
+  {
+    "constant_index": 234,
+    "identifier": "ide98089e9a1b9e58da1e4bd8de7bdae",
+    "decoded": "选项卡位置"
+  },
+  {
+    "constant_index": 235,
+    "identifier": "ide8bf94e59b9ee994ae",
+    "decoded": "返回键"
+  },
+  {
+    "constant_index": 236,
+    "identifier": "ide7aba0e88a82e58589e6a087",
+    "decoded": "章节光标"
+  },
+  {
+    "constant_index": 237,
+    "identifier": "ide59586e59f8ee789b9e5be81",
+    "decoded": "商城特征"
+  },
+  {
+    "constant_index": 238,
+    "identifier": "ide888b9e59d9ee789b9e5be81",
+    "decoded": "船坞特征"
+  },
+  {
+    "constant_index": 239,
+    "identifier": "ide4bbbbe58aa1e789b9e5be81",
+    "decoded": "任务特征"
+  },
+  {
+    "constant_index": 240,
+    "identifier": "ide68898e588a9e59381e789b9e5be81",
+    "decoded": "战利品特征"
+  },
+  {
+    "constant_index": 241,
+    "identifier": "ide698afe590a6e68d9ee5ae8ce88396e6aca1",
+    "decoded": "是否捞完胖次"
+  },
+  {
+    "constant_index": 242,
+    "identifier": "ide698afe590a6353030e888b9",
+    "decoded": "是否500船"
+  },
+  {
+    "constant_index": 243,
+    "identifier": "ide5bfabe4bfaee794a8e9878f",
+    "decoded": "快修用量"
+  },
+  {
+    "constant_index": 244,
+    "identifier": "ide5afb9e99da2e998b5e59e8b",
+    "decoded": "对面阵型"
+  },
+  {
+    "constant_index": 245,
+    "identifier": "ide588a4e696ade5afbce9a9b1e998b2e9a9b1",
+    "decoded": "判断导驱防驱"
+  },
+  {
+    "constant_index": 246,
+    "identifier": "id53574950454558",
+    "decoded": "SWIPEEX"
+  },
+  {
+    "constant_index": 247,
+    "identifier": "id4b4545504341505455524550524f",
+    "decoded": "KEEPCAPTUREPRO"
+  },
+  {
+    "constant_index": 248,
+    "identifier": "ide9809ae4bfa1e68ea5e58fa3",
+    "decoded": "通信接口"
+  },
+  {
+    "constant_index": 249,
+    "identifier": "ide6b3a8e5868ce7a081e799bbe5bd95",
+    "decoded": "注册码登录"
+  },
+  {
+    "constant_index": 250,
+    "identifier": "ide6a380e69fa5e589a9e4bd99e697b6e997b4",
+    "decoded": "检查剩余时间"
+  },
+  {
+    "constant_index": 251,
+    "identifier": "ide88eb7e58f96e6b3a8e5868ce7a081e5a487e6b3a8",
+    "decoded": "获取注册码备注"
+  },
+  {
+    "constant_index": 252,
+    "identifier": "ide9aa8ce8af81e4bba3e7a081",
+    "decoded": "验证代码"
+  },
+  {
+    "constant_index": 253,
+    "identifier": "ide69e81e698bce7aa81e8a2ad",
+    "decoded": "极昼突袭"
+  },
+  {
+    "constant_index": 254,
+    "identifier": "ide698afe590a6e69c89e6b3a1e6bea1",
+    "decoded": "是否有泡澡"
+  },
+  {
+    "constant_index": 255,
+    "identifier": "ide7bd91e7bb9ce697a5e5bf97",
+    "decoded": "网络日志"
+  },
+  {
+    "constant_index": 256,
+    "identifier": "ide78eb0e59ca8e794bbe99da2",
+    "decoded": "现在画面"
+  },
+  {
+    "constant_index": 708,
+    "identifier": "ide69c89e794a8",
+    "decoded": "有用"
+  },
+  {
+    "constant_index": 712,
+    "identifier": "ide78eb0e59ca8e696b9e6a188",
+    "decoded": "现在方案"
+  },
+  {
+    "constant_index": 715,
+    "identifier": "ide68c82e8bf9ce5be81e58e9fe59ba0",
+    "decoded": "挂远征原因"
+  },
+  {
+    "constant_index": 728,
+    "identifier": "ide6b3a1e6bea1e697b6e997b4e688b3",
+    "decoded": "泡澡时间戳"
+  },
+  {
+    "constant_index": 729,
+    "identifier": "ide68898e5bdb9e6b3a1e6bea1e697b6e997b4e688b3",
+    "decoded": "战役泡澡时间戳"
+  },
+  {
+    "constant_index": 737,
+    "identifier": "ide6bc94e4b9a0e585b3e997ade58aa0e9809f",
+    "decoded": "演习关闭加速"
+  },
+  {
+    "constant_index": 759,
+    "identifier": "id494e5458",
+    "decoded": "INTX"
+  },
+  {
+    "constant_index": 760,
+    "identifier": "id494e5459",
+    "decoded": "INTY"
+  },
+  {
+    "constant_index": 766,
+    "identifier": "ide68993e68898e5bdb9e697b6e997b4e688b3",
+    "decoded": "打战役时间戳"
+  },
+  {
+    "constant_index": 767,
+    "identifier": "ide68898e5bdb9e6b3a1e6bea1e697b6e997b4e688b3",
+    "decoded": "战役泡澡时间戳"
+  },
+  {
+    "constant_index": 769,
+    "identifier": "ide68898e69697e6aca1e695b0",
+    "decoded": "战斗次数"
+  },
+  {
+    "constant_index": 802,
+    "identifier": "ide6aca1e695b0e997b4e99a94",
+    "decoded": "次数间隔"
+  },
+  {
+    "constant_index": 808,
+    "identifier": "ide6b8a0e98193e69c8d",
+    "decoded": "渠道服"
+  },
+  {
+    "constant_index": 809,
+    "identifier": "ide98089e68ba9e58c85e5908d",
+    "decoded": "选择包名"
+  },
+  {
+    "constant_index": 811,
+    "identifier": "ide794bbe99da2e4b88de58aa8e8aea1e695b0",
+    "decoded": "画面不动计数"
+  },
+  {
+    "constant_index": 816,
+    "identifier": "ide9a1b6e58fb7e6a380e6b58b",
+    "decoded": "顶号检测"
+  },
+  {
+    "constant_index": 819,
+    "identifier": "ide68993e6bc94e4b9a0e697b6e997b4e688b3",
+    "decoded": "打演习时间戳"
+  },
+  {
+    "constant_index": 836,
+    "identifier": "ide5bfabe4bfaee6aca1e695b0",
+    "decoded": "快修次数"
+  },
+  {
+    "constant_index": 840,
+    "identifier": "ide6bc94e4b9a0e588b7e696b0e6aca1e695b0e698afe590a6e794a8e5ae8c",
+    "decoded": "演习刷新次数是否用完"
+  },
+  {
+    "constant_index": 841,
+    "identifier": "ide6bc94e4b9a0e698afe590a6e69c89e6bd9ce88987",
+    "decoded": "演习是否有潜艇"
+  },
+  {
+    "constant_index": 849,
+    "identifier": "ide586b3e68898e68da2e7a5a8e697b6e997b4e688b3",
+    "decoded": "决战换票时间戳"
+  },
+  {
+    "constant_index": 857,
+    "identifier": "ide586b3e68898e697b6e997b4e688b3",
+    "decoded": "决战时间戳"
+  },
+  {
+    "constant_index": 859,
+    "identifier": "id5441424c45",
+    "decoded": "TABLE"
+  },
+  {
+    "constant_index": 866,
+    "identifier": "ide698afe590a6e4bb93e6bba1e8bdace8bf9ce5be81",
+    "decoded": "是否仓满转远征"
+  },
+  {
+    "constant_index": 1001,
+    "identifier": "ide586b3e68898e5bfabe4bfaee6aca1e695b0",
+    "decoded": "决战快修次数"
+  },
+  {
+    "constant_index": 1006,
+    "identifier": "ide9858de7bdaee69a82e5ad9831",
+    "decoded": "配置暂存1"
+  },
+  {
+    "constant_index": 1007,
+    "identifier": "ide9858de7bdaee69a82e5ad9832",
+    "decoded": "配置暂存2"
+  },
+  {
+    "constant_index": 1012,
+    "identifier": "ide68898e69697e7bb93e69e9c",
+    "decoded": "战斗结果"
+  },
+  {
+    "constant_index": 1127,
+    "identifier": "ide59b9ee6b8af",
+    "decoded": "回港"
+  },
+  {
+    "constant_index": 1129,
+    "identifier": "ide8af95e794a8",
+    "decoded": "试用"
+  },
+  {
+    "constant_index": 1141,
+    "identifier": "ide698afe590a6e4bb93e6bba1e8bdace8bf9ce5be81",
+    "decoded": "是否仓满转远征"
+  },
+  {
+    "constant_index": 1143,
+    "identifier": "ide68898e69697e6aca1e695b042",
+    "decoded": "战斗次数B"
+  },
+  {
+    "constant_index": 1144,
+    "identifier": "ide68898e69697e6aca1e695b043",
+    "decoded": "战斗次数C"
+  },
+  {
+    "constant_index": 1145,
+    "identifier": "ide5bfabe4bfaee6aca1e695b042",
+    "decoded": "快修次数B"
+  },
+  {
+    "constant_index": 1146,
+    "identifier": "ide5bfabe4bfaee6aca1e695b043",
+    "decoded": "快修次数C"
+  },
+  {
+    "constant_index": 1159,
+    "identifier": "ide88eb7e5be97e8b584e6ba90",
+    "decoded": "获得资源"
+  },
+  {
+    "constant_index": 1162,
+    "identifier": "ide6b4bbe58aa8e697b6e997b4e688b3",
+    "decoded": "活动时间戳"
+  },
+  {
+    "constant_index": 1169,
+    "identifier": "ide590afe58aa8e8849ae69cace68f90e7a4ba",
+    "decoded": "启动脚本提示"
+  },
+  {
+    "constant_index": 1202,
+    "identifier": "ide69c80e5bcbae4b98be8889fe7acace587a0e59bbe",
+    "decoded": "最强之舟第几图"
+  },
+  {
+    "constant_index": 1285,
+    "identifier": "ide68da2e888b9e6aca1e695b0",
+    "decoded": "换船次数"
+  },
+  {
+    "constant_index": 1286,
+    "identifier": "ide68da2e888b9e6aca1e695b042",
+    "decoded": "换船次数B"
+  },
+  {
+    "constant_index": 1287,
+    "identifier": "ide68da2e888b9e6aca1e695b043",
+    "decoded": "换船次数C"
+  },
+  {
+    "constant_index": 1338,
+    "identifier": "ide68da2e888b9e6a087e8aeb0",
+    "decoded": "换船标记"
+  },
+  {
+    "constant_index": 1340,
+    "identifier": "ide58994e999a4e6a087e8aeb0e5b7b2e5ae8ce68890",
+    "decoded": "剔除标记已完成"
+  },
+  {
+    "constant_index": 1359,
+    "identifier": "ide68898e69697e6aca1e695b0e7bc93e5ad98",
+    "decoded": "战斗次数缓存"
+  },
+  {
+    "constant_index": 1361,
+    "identifier": "ide68da2e7bc96e9989fe5ae8ce68890",
+    "decoded": "换编队完成"
+  },
+  {
+    "constant_index": 1362,
+    "identifier": "ide68da2e9a284e8aebee6a2afe9989fe8aeb0e58fb7",
+    "decoded": "换预设梯队记号"
+  },
+  {
+    "constant_index": 1364,
+    "identifier": "ide68898e69697e6aca1e695b0e7bc93e5ad9842",
+    "decoded": "战斗次数缓存B"
+  },
+  {
+    "constant_index": 1367,
+    "identifier": "ide68898e69697e6aca1e695b0e7bc93e5ad9843",
+    "decoded": "战斗次数缓存C"
+  },
+  {
+    "constant_index": 1376,
+    "identifier": "ide4b8b4e697b6e58f98e998b5",
+    "decoded": "临时变阵"
+  },
+  {
+    "constant_index": 1502,
+    "identifier": "id534ce58e9fe59ba0",
+    "decoded": "SL原因"
+  },
+  {
+    "constant_index": 1711,
+    "identifier": "ide4b88ae6a69ce8bdace8bf9ce5be81",
+    "decoded": "上榜转远征"
+  },
+  {
+    "constant_index": 1722,
+    "identifier": "ide5ae9ae697b6e9878de590afe697b6e997b4e688b3",
+    "decoded": "定时重启时间戳"
+  },
+  {
+    "constant_index": 1729,
+    "identifier": "ide5819ae88f9ce697b6e997b4e688b3",
+    "decoded": "做菜时间戳"
+  },
+  {
+    "constant_index": 1855,
+    "identifier": "id58e69a82e5ad98",
+    "decoded": "X暂存"
+  },
+  {
+    "constant_index": 1856,
+    "identifier": "id59e69a82e5ad98",
+    "decoded": "Y暂存"
+  },
+  {
+    "constant_index": 1857,
+    "identifier": "ide782b9e587bbe697b6e997b4",
+    "decoded": "点击时间"
+  },
+  {
+    "constant_index": 1996,
+    "identifier": "ide5bf83e8b7b3e697b6e997b4e688b3",
+    "decoded": "心跳时间戳"
+  },
+  {
+    "constant_index": 1999,
+    "identifier": "ide58faae698bee7a4bae4b880e6aca1",
+    "decoded": "只显示一次"
+  },
+  {
+    "constant_index": 2009,
+    "identifier": "ide586b3e68898e68da2e7a5a8e697b6e997b4e688b3",
+    "decoded": "决战换票时间戳"
+  },
+  {
+    "constant_index": 2010,
+    "identifier": "ide7a59ee7a798e4b98be5bdb1e697b6e997b4e688b3",
+    "decoded": "神秘之影时间戳"
+  },
+  {
+    "constant_index": 2011,
+    "identifier": "ide7a59ee7a798e4b98be5bdb1e68da2e585b5e7898ce697b6e997b4e688b3",
+    "decoded": "神秘之影换兵牌时间戳"
+  },
+  {
+    "constant_index": 2012,
+    "identifier": "ide9a29ce889b231",
+    "decoded": "颜色1"
+  },
+  {
+    "constant_index": 2013,
+    "identifier": "ide9a29ce889b232",
+    "decoded": "颜色2"
+  },
+  {
+    "constant_index": 2015,
+    "identifier": "ide58da1e6adbbe6aca1e695b0",
+    "decoded": "卡死次数"
+  },
+  {
+    "constant_index": 2016,
+    "identifier": "ide5b18fe894bde7bd91e7bb9ce9809ae8aeaf",
+    "decoded": "屏蔽网络通讯"
+  },
+  {
+    "constant_index": 2019,
+    "identifier": "ide585a8e5b1805fe4ba91e5ba94e794a8544f4b454e",
+    "decoded": "全局_云应用TOKEN"
+  },
+  {
+    "constant_index": 2030,
+    "identifier": "ide585a8e5b1805fe69cbae599a8e7a081e695b0e68dae",
+    "decoded": "全局_机器码数据"
+  },
+  {
+    "constant_index": 2031,
+    "identifier": "ide585a8e5b1805fe6b3a8e5868ce7a081e695b0e68dae",
+    "decoded": "全局_注册码数据"
+  },
+  {
+    "constant_index": 2033,
+    "identifier": "ide585a8e5b1805fe9a1b9e79baee5908de7a7b0",
+    "decoded": "全局_项目名称"
+  },
+  {
+    "constant_index": 2038,
+    "identifier": "ide585a8e5b1805fe8aebfe997aee4bba4e7898c",
+    "decoded": "全局_访问令牌"
+  },
+  {
+    "constant_index": 2040,
+    "identifier": "ide585a8e5b1805fe69cbae599a8e7a081e695b0e68dae",
+    "decoded": "全局_机器码数据"
+  },
+  {
+    "constant_index": 2041,
+    "identifier": "ide585a8e5b1805fe6b3a8e5868ce7a081e695b0e68dae",
+    "decoded": "全局_注册码数据"
+  },
+  {
+    "constant_index": 2050,
+    "identifier": "ide88eb7e58f96e6b3a8e5868ce7a081e5a487e6b3a8",
+    "decoded": "获取注册码备注"
+  },
+  {
+    "constant_index": 2055,
+    "identifier": "ide585a8e5b1805fe69cbae599a8e7a081e695b0e68dae",
+    "decoded": "全局_机器码数据"
+  },
+  {
+    "constant_index": 2056,
+    "identifier": "ide585a8e5b1805fe6b3a8e5868ce7a081e695b0e68dae",
+    "decoded": "全局_注册码数据"
+  },
+  {
+    "constant_index": 2091,
+    "identifier": "ide698afe590a6e5b0b1e4bd8d",
+    "decoded": "是否就位"
+  },
+  {
+    "constant_index": 2121,
+    "identifier": "ide68898e69697e697b6e997b4e688b3",
+    "decoded": "战斗时间戳"
+  },
+  {
+    "constant_index": 2302,
+    "identifier": "ide8be93e585a5e5af86e7a081e5ae8ce68890",
+    "decoded": "输入密码完成"
+  },
+  {
+    "constant_index": 2344,
+    "identifier": "ide585a8e5b1805fe6b3a8e5868ce7a081e695b0e68dae",
+    "decoded": "全局_注册码数据"
+  },
+  {
+    "constant_index": 2348,
+    "identifier": "ide585a8e5b1805fe4ba91e5ba94e794a8544f4b454e",
+    "decoded": "全局_云应用TOKEN"
+  },
+  {
+    "constant_index": 2350,
+    "identifier": "ide585a8e5b1805fe8bdafe4bbb6e78988e69cace58fb7",
+    "decoded": "全局_软件版本号"
+  },
+  {
+    "constant_index": 2351,
+    "identifier": "ide585a8e5b1805fe69cbae599a8e7a081e695b0e68dae",
+    "decoded": "全局_机器码数据"
+  },
+  {
+    "constant_index": 2353,
+    "identifier": "ide585a8e5b1805fe99499e8afafe4bfa1e681af",
+    "decoded": "全局_错误信息"
+  },
+  {
+    "constant_index": 2354,
+    "identifier": "ide585a8e5b1805fe4b88ae6aca1e9aa8ce8af81e697b6e997b4",
+    "decoded": "全局_上次验证时间"
+  },
+  {
+    "constant_index": 2355,
+    "identifier": "ide585a8e5b1805fe6b3a8e5868ce7a081e589a9e4bd99e697b6e997b4",
+    "decoded": "全局_注册码剩余时间"
+  },
+  {
+    "constant_index": 2356,
+    "identifier": "ide585a8e5b1805fe5aeb9e99499e5a484e79086e6aca1e695b0",
+    "decoded": "全局_容错处理次数"
+  },
+  {
+    "constant_index": 2357,
+    "identifier": "ide585a8e5b1805fe6b3a8e5868ce7babfe7a88b",
+    "decoded": "全局_注册线程"
+  },
+  {
+    "constant_index": 2358,
+    "identifier": "ide9aa8ce8af81e697b6e997b4e688b3",
+    "decoded": "验证时间戳"
+  },
+  {
+    "constant_index": 2359,
+    "identifier": "ide794a8e5bfabe4bfaee697b6e997b4e688b3",
+    "decoded": "用快修时间戳"
+  },
+  {
+    "constant_index": 2360,
+    "identifier": "ide5ae9ae697b6e9878de590afe697b6e997b4e688b3",
+    "decoded": "定时重启时间戳"
+  },
+  {
+    "constant_index": 2361,
+    "identifier": "ide586b3e68898e68da2e7a5a8e697b6e997b4e688b3",
+    "decoded": "决战换票时间戳"
+  },
+  {
+    "constant_index": 2362,
+    "identifier": "ide7a59ee7a798e4b98be5bdb1e697b6e997b4e688b3",
+    "decoded": "神秘之影时间戳"
+  },
+  {
+    "constant_index": 2363,
+    "identifier": "ide7a59ee7a798e4b98be5bdb1e68da2e585b5e7898ce697b6e997b4e688b3",
+    "decoded": "神秘之影换兵牌时间戳"
+  },
+  {
+    "constant_index": 2364,
+    "identifier": "ide698afe590a6e4bb93e6bba1e8bdace8bf9ce5be81",
+    "decoded": "是否仓满转远征"
+  },
+  {
+    "constant_index": 2365,
+    "identifier": "ide58994e999a4e6a087e8aeb0e5b7b2e5ae8ce68890",
+    "decoded": "剔除标记已完成"
+  },
+  {
+    "constant_index": 2366,
+    "identifier": "id52",
+    "decoded": "R"
+  },
+  {
+    "constant_index": 2367,
+    "identifier": "ide68da2e9a284e8aebee6a2afe9989fe8aeb0e58fb7",
+    "decoded": "换预设梯队记号"
+  },
+  {
+    "constant_index": 2368,
+    "identifier": "ide78684e5b18fe697b6e997b4e688b3",
+    "decoded": "熄屏时间戳"
+  },
+  {
+    "constant_index": 2369,
+    "identifier": "ide7baa2e6898be68c87",
+    "decoded": "红手指"
+  },
+  {
+    "constant_index": 2370,
+    "identifier": "ide7baa2e6898be68c87e697b6e997b4e688b3",
+    "decoded": "红手指时间戳"
+  },
+  {
+    "constant_index": 2371,
+    "identifier": "ide68898e5bdb9e6b3a1e6bea1e697b6e997b4e688b3",
+    "decoded": "战役泡澡时间戳"
+  },
+  {
+    "constant_index": 2372,
+    "identifier": "ide697b6e997b4e5af84e5ad98",
+    "decoded": "时间寄存"
+  },
+  {
+    "constant_index": 2415,
+    "identifier": "ide6a380e69fa5e4b88ae6a69ce8bdace8bf9ce5be81",
+    "decoded": "检查上榜转远征"
+  }
+]

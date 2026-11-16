@@ -1,0 +1,53 @@
+{
+  "source_sha256": "9fe7667b481ca6a75080bc3f6f451f2a81274b52d721afaaf630a0bca0dc4c51",
+  "decoded_sha256": "ac12f521af8b966ad6559f9e95e9f499557c84a58711951aab043f869f17e0ec",
+  "crc32": "40204e3e",
+  "fields": [
+    {
+      "field": 1,
+      "value": "Jun  5 2026 16:29:04"
+    },
+    {
+      "field": 3,
+      "file": "main.mlc",
+      "size": 777035
+    },
+    {
+      "field": 4,
+      "value": 0
+    },
+    {
+      "field": 7,
+      "file": "ui.mlc",
+      "size": 215999
+    },
+    {
+      "field": 8,
+      "value": {
+        "bv": "5.0.0.403474",
+        "fl": {
+          "1": 1
+        },
+        "mk": "4557430888798830399",
+        "olh": "630214c32fb4a38def5f36918bcddd06",
+        "pt": 1,
+        "ts": "1793461184",
+        "ver": 1
+      }
+    },
+    {
+      "field": 9,
+      "file": "extra.mlc",
+      "size": 241
+    }
+  ],
+  "extraction_stats": {
+    "string_constants": 2416,
+    "decoded_identifiers": 175,
+    "point_expressions": 624,
+    "points": 3414,
+    "color_groups": 46,
+    "needs_review": 1,
+    "help_images": 4
+  }
+}

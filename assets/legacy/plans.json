@@ -1,0 +1,98 @@
+{
+  "plans": [
+    {
+      "id": "legacy-A",
+      "name": "原脚本方案A",
+      "source": "舰娘肝帝6.7.7 script.cfg + script.uip",
+      "chapter": "最强之舟",
+      "map": 11,
+      "fleet": 2,
+      "entry": "α",
+      "battle_limit": 1,
+      "formation": [
+        "复纵",
+        "复纵",
+        "复纵",
+        "复纵",
+        "复纵",
+        "复纵",
+        "复纵"
+      ],
+      "night": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "retreat": "索敌成功后回港",
+      "allow_heavy_damage": false,
+      "enabled": false
+    },
+    {
+      "id": "legacy-B",
+      "name": "原脚本方案B",
+      "source": "舰娘肝帝6.7.7 script.cfg + script.uip",
+      "chapter": 2,
+      "map": 1,
+      "fleet": 1,
+      "entry": "α",
+      "battle_limit": 1,
+      "formation": [
+        "复纵",
+        "复纵",
+        "复纵",
+        "复纵",
+        "复纵",
+        "复纵",
+        "复纵"
+      ],
+      "night": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "retreat": "索敌成功后回港",
+      "allow_heavy_damage": false,
+      "enabled": false
+    },
+    {
+      "id": "legacy-C",
+      "name": "原脚本方案C",
+      "source": "舰娘肝帝6.7.7 script.cfg + script.uip",
+      "chapter": 6,
+      "map": 1,
+      "fleet": 2,
+      "entry": "α",
+      "battle_limit": 1,
+      "formation": [
+        "单横",
+        "复纵",
+        "复纵",
+        "复纵",
+        "复纵",
+        "复纵",
+        "复纵"
+      ],
+      "night": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "retreat": "索敌成功后回港",
+      "allow_heavy_damage": false,
+      "enabled": true
+    }
+  ],
+  "user_selected": "legacy-C"
+}

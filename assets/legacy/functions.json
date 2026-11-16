@@ -1,0 +1,2802 @@
+[
+  {
+    "path": "main",
+    "name": "",
+    "params": 0,
+    "instructions": 742,
+    "constants": 262
+  },
+  {
+    "path": "main.0",
+    "name": "TempPath",
+    "params": 0,
+    "instructions": 13,
+    "constants": 4
+  },
+  {
+    "path": "main.0.0",
+    "name": "",
+    "params": 0,
+    "instructions": 8,
+    "constants": 4
+  },
+  {
+    "path": "main.1",
+    "name": "TempFile",
+    "params": 1,
+    "instructions": 20,
+    "constants": 5
+  },
+  {
+    "path": "main.2",
+    "name": "execute",
+    "params": 1,
+    "instructions": 15,
+    "constants": 5
+  },
+  {
+    "path": "main.2.0",
+    "name": "",
+    "params": 0,
+    "instructions": 25,
+    "constants": 8
+  },
+  {
+    "path": "main.3",
+    "name": "temppath",
+    "params": 0,
+    "instructions": 8,
+    "constants": 4
+  },
+  {
+    "path": "main.4",
+    "name": "CopyTable",
+    "params": 1,
+    "instructions": 10,
+    "constants": 1
+  },
+  {
+    "path": "main.5",
+    "name": "CopyArray",
+    "params": 1,
+    "instructions": 10,
+    "constants": 1
+  },
+  {
+    "path": "main.6",
+    "name": "print",
+    "params": 0,
+    "instructions": 5,
+    "constants": 2
+  },
+  {
+    "path": "main.7",
+    "name": "match",
+    "params": 2,
+    "instructions": 5,
+    "constants": 1
+  },
+  {
+    "path": "main.8",
+    "name": "gsub",
+    "params": 3,
+    "instructions": 6,
+    "constants": 1
+  },
+  {
+    "path": "main.9",
+    "name": "sh_init",
+    "params": 0,
+    "instructions": 8,
+    "constants": 5
+  },
+  {
+    "path": "main.9.0",
+    "name": "",
+    "params": 0,
+    "instructions": 1,
+    "constants": 0
+  },
+  {
+    "path": "main.10",
+    "name": "LTrimEx",
+    "params": 2,
+    "instructions": 15,
+    "constants": 5
+  },
+  {
+    "path": "main.10.0",
+    "name": "",
+    "params": 0,
+    "instructions": 32,
+    "constants": 8
+  },
+  {
+    "path": "main.11",
+    "name": "RTrimEx",
+    "params": 2,
+    "instructions": 15,
+    "constants": 5
+  },
+  {
+    "path": "main.11.0",
+    "name": "",
+    "params": 0,
+    "instructions": 32,
+    "constants": 8
+  },
+  {
+    "path": "main.12",
+    "name": "TrimEx",
+    "params": 2,
+    "instructions": 14,
+    "constants": 3
+  },
+  {
+    "path": "main.13",
+    "name": "{'prototype': 'main.12'}.DelPartStr",
+    "params": 3,
+    "instructions": 15,
+    "constants": 5
+  },
+  {
+    "path": "main.13.0",
+    "name": "",
+    "params": 0,
+    "instructions": 19,
+    "constants": 4
+  },
+  {
+    "path": "main.14",
+    "name": "{'prototype': 'main.12'}.DelFilStr",
+    "params": 2,
+    "instructions": 15,
+    "constants": 5
+  },
+  {
+    "path": "main.14.0",
+    "name": "",
+    "params": 0,
+    "instructions": 35,
+    "constants": 6
+  },
+  {
+    "path": "main.15",
+    "name": "{'prototype': 'main.12'}.CountStr",
+    "params": 2,
+    "instructions": 15,
+    "constants": 5
+  },
+  {
+    "path": "main.15.0",
+    "name": "",
+    "params": 0,
+    "instructions": 12,
+    "constants": 4
+  },
+  {
+    "path": "main.16",
+    "name": "{'prototype': 'main.12'}.LeftDel",
+    "params": 2,
+    "instructions": 15,
+    "constants": 5
+  },
+  {
+    "path": "main.16.0",
+    "name": "",
+    "params": 0,
+    "instructions": 8,
+    "constants": 3
+  },
+  {
+    "path": "main.17",
+    "name": "{'prototype': 'main.12'}.RightDel",
+    "params": 2,
+    "instructions": 15,
+    "constants": 5
+  },
+  {
+    "path": "main.17.0",
+    "name": "",
+    "params": 0,
+    "instructions": 11,
+    "constants": 3
+  },
+  {
+    "path": "main.18",
+    "name": "{'prototype': 'main.19'}.XmlToTable",
+    "params": 0,
+    "instructions": 15,
+    "constants": 5
+  },
+  {
+    "path": "main.18.0",
+    "name": "",
+    "params": 0,
+    "instructions": 48,
+    "constants": 15
+  },
+  {
+    "path": "main.19",
+    "name": "XmlToTable",
+    "params": 1,
+    "instructions": 15,
+    "constants": 5
+  },
+  {
+    "path": "main.19.0",
+    "name": "",
+    "params": 0,
+    "instructions": 22,
+    "constants": 4
+  },
+  {
+    "path": "main.20",
+    "name": "{'prototype': 'main.19'}.FindXmlKey",
+    "params": 4,
+    "instructions": 13,
+    "constants": 4
+  },
+  {
+    "path": "main.20.0",
+    "name": "",
+    "params": 0,
+    "instructions": 28,
+    "constants": 6
+  },
+  {
+    "path": "main.21",
+    "name": "{'prototype': 'main.19'}.FindXmlKeyA",
+    "params": 4,
+    "instructions": 13,
+    "constants": 4
+  },
+  {
+    "path": "main.21.0",
+    "name": "",
+    "params": 0,
+    "instructions": 37,
+    "constants": 8
+  },
+  {
+    "path": "main.22",
+    "name": "FindXmlKeyEx",
+    "params": 3,
+    "instructions": 15,
+    "constants": 5
+  },
+  {
+    "path": "main.22.0",
+    "name": "",
+    "params": 0,
+    "instructions": 1,
+    "constants": 0
+  },
+  {
+    "path": "main.23",
+    "name": "{'prototype': 'main.22'}.UrlToChar",
+    "params": 1,
+    "instructions": 15,
+    "constants": 5
+  },
+  {
+    "path": "main.23.0",
+    "name": "",
+    "params": 0,
+    "instructions": 10,
+    "constants": 4
+  },
+  {
+    "path": "main.23.0.0",
+    "name": "",
+    "params": 1,
+    "instructions": 9,
+    "constants": 4
+  },
+  {
+    "path": "main.24",
+    "name": "{'prototype': 'main.22'}.CharToUrl",
+    "params": 1,
+    "instructions": 15,
+    "constants": 5
+  },
+  {
+    "path": "main.24.0",
+    "name": "",
+    "params": 0,
+    "instructions": 15,
+    "constants": 6
+  },
+  {
+    "path": "main.24.0.0",
+    "name": "",
+    "params": 1,
+    "instructions": 10,
+    "constants": 4
+  },
+  {
+    "path": "main.25",
+    "name": "{'prototype': 'main.22'}.Filter",
+    "params": 3,
+    "instructions": 14,
+    "constants": 4
+  },
+  {
+    "path": "main.25.0",
+    "name": "",
+    "params": 0,
+    "instructions": 39,
+    "constants": 6
+  },
+  {
+    "path": "main.26",
+    "name": "{'prototype': 'main.22'}.Sort",
+    "params": 2,
+    "instructions": 14,
+    "constants": 4
+  },
+  {
+    "path": "main.26.0",
+    "name": "",
+    "params": 0,
+    "instructions": 28,
+    "constants": 6
+  },
+  {
+    "path": "main.27",
+    "name": "{'prototype': 'main.22'}.Remove",
+    "params": 2,
+    "instructions": 14,
+    "constants": 4
+  },
+  {
+    "path": "main.27.0",
+    "name": "",
+    "params": 0,
+    "instructions": 13,
+    "constants": 5
+  },
+  {
+    "path": "main.28",
+    "name": "{'prototype': 'main.22'}.insert",
+    "params": 3,
+    "instructions": 14,
+    "constants": 4
+  },
+  {
+    "path": "main.28.0",
+    "name": "",
+    "params": 0,
+    "instructions": 14,
+    "constants": 5
+  },
+  {
+    "path": "main.29",
+    "name": "{'prototype': 'main.22'}.RemoveDup",
+    "params": 1,
+    "instructions": 15,
+    "constants": 5
+  },
+  {
+    "path": "main.29.0",
+    "name": "",
+    "params": 0,
+    "instructions": 22,
+    "constants": 5
+  },
+  {
+    "path": "main.30",
+    "name": "{'prototype': 'main.22'}.ChangePos",
+    "params": 3,
+    "instructions": 15,
+    "constants": 5
+  },
+  {
+    "path": "main.30.0",
+    "name": "",
+    "params": 0,
+    "instructions": 19,
+    "constants": 4
+  },
+  {
+    "path": "main.31",
+    "name": "{'prototype': 'main.22'}.RndEx",
+    "params": 2,
+    "instructions": 15,
+    "constants": 5
+  },
+  {
+    "path": "main.31.0",
+    "name": "",
+    "params": 0,
+    "instructions": 7,
+    "constants": 2
+  },
+  {
+    "path": "main.32",
+    "name": "{'prototype': 'main.22'}.RndBool",
+    "params": 0,
+    "instructions": 15,
+    "constants": 5
+  },
+  {
+    "path": "main.32.0",
+    "name": "",
+    "params": 0,
+    "instructions": 13,
+    "constants": 5
+  },
+  {
+    "path": "main.33",
+    "name": "{'prototype': 'main.22'}.RandArray",
+    "params": 1,
+    "instructions": 15,
+    "constants": 5
+  },
+  {
+    "path": "main.33.0",
+    "name": "",
+    "params": 0,
+    "instructions": 11,
+    "constants": 3
+  },
+  {
+    "path": "main.34",
+    "name": "{'prototype': 'main.22'}.RanDiffarr",
+    "params": 2,
+    "instructions": 15,
+    "constants": 5
+  },
+  {
+    "path": "main.34.0",
+    "name": "",
+    "params": 0,
+    "instructions": 33,
+    "constants": 6
+  },
+  {
+    "path": "main.35",
+    "name": "ReadFile",
+    "params": 2,
+    "instructions": 13,
+    "constants": 4
+  },
+  {
+    "path": "main.35.0",
+    "name": "",
+    "params": 0,
+    "instructions": 23,
+    "constants": 10
+  },
+  {
+    "path": "main.36",
+    "name": "ReadFileLines",
+    "params": 2,
+    "instructions": 13,
+    "constants": 4
+  },
+  {
+    "path": "main.36.0",
+    "name": "",
+    "params": 0,
+    "instructions": 31,
+    "constants": 11
+  },
+  {
+    "path": "main.37",
+    "name": "WriteFile",
+    "params": 3,
+    "instructions": 13,
+    "constants": 4
+  },
+  {
+    "path": "main.37.0",
+    "name": "",
+    "params": 0,
+    "instructions": 26,
+    "constants": 8
+  },
+  {
+    "path": "main.38",
+    "name": "FileExist",
+    "params": 1,
+    "instructions": 13,
+    "constants": 3
+  },
+  {
+    "path": "main.39",
+    "name": "{'prototype': 'main.38'}.GetFileType",
+    "params": 1,
+    "instructions": 15,
+    "constants": 5
+  },
+  {
+    "path": "main.39.0",
+    "name": "",
+    "params": 0,
+    "instructions": 21,
+    "constants": 9
+  },
+  {
+    "path": "main.40",
+    "name": "{'prototype': 'main.38'}.GetFileName",
+    "params": 1,
+    "instructions": 15,
+    "constants": 5
+  },
+  {
+    "path": "main.40.0",
+    "name": "",
+    "params": 0,
+    "instructions": 16,
+    "constants": 4
+  },
+  {
+    "path": "main.41",
+    "name": "{'prototype': 'main.38'}.GetTempFile",
+    "params": 4,
+    "instructions": 15,
+    "constants": 5
+  },
+  {
+    "path": "main.41.0",
+    "name": "",
+    "params": 0,
+    "instructions": 35,
+    "constants": 8
+  },
+  {
+    "path": "main.42",
+    "name": "{'prototype': 'main.38'}.ScanPath",
+    "params": 2,
+    "instructions": 15,
+    "constants": 5
+  },
+  {
+    "path": "main.42.0",
+    "name": "",
+    "params": 0,
+    "instructions": 102,
+    "constants": 25
+  },
+  {
+    "path": "main.43",
+    "name": "{'prototype': 'main.38'}.ScanPathEx",
+    "params": 1,
+    "instructions": 15,
+    "constants": 5
+  },
+  {
+    "path": "main.43.0",
+    "name": "",
+    "params": 0,
+    "instructions": 74,
+    "constants": 26
+  },
+  {
+    "path": "main.44",
+    "name": "{'prototype': 'main.45'}.ChmodEx",
+    "params": 2,
+    "instructions": 23,
+    "constants": 8
+  },
+  {
+    "path": "main.45",
+    "name": "ChmodEx",
+    "params": 2,
+    "instructions": 12,
+    "constants": 5
+  },
+  {
+    "path": "main.46",
+    "name": "{'prototype': 'main.45'}.WriteFileLine",
+    "params": 3,
+    "instructions": 15,
+    "constants": 5
+  },
+  {
+    "path": "main.46.0",
+    "name": "",
+    "params": 0,
+    "instructions": 75,
+    "constants": 14
+  },
+  {
+    "path": "main.47",
+    "name": "{'prototype': 'main.48'}.ReplaceFile",
+    "params": 2,
+    "instructions": 11,
+    "constants": 5
+  },
+  {
+    "path": "main.48",
+    "name": "ReplaceFile",
+    "params": 3,
+    "instructions": 15,
+    "constants": 5
+  },
+  {
+    "path": "main.48.0",
+    "name": "",
+    "params": 0,
+    "instructions": 26,
+    "constants": 6
+  },
+  {
+    "path": "main.49",
+    "name": "{'prototype': 'main.48'}.ReadFileBase",
+    "params": 1,
+    "instructions": 15,
+    "constants": 5
+  },
+  {
+    "path": "main.49.0",
+    "name": "",
+    "params": 0,
+    "instructions": 44,
+    "constants": 19
+  },
+  {
+    "path": "main.49.0.0",
+    "name": "",
+    "params": 1,
+    "instructions": 24,
+    "constants": 9
+  },
+  {
+    "path": "main.49.0.1",
+    "name": "",
+    "params": 1,
+    "instructions": 30,
+    "constants": 7
+  },
+  {
+    "path": "main.50",
+    "name": "{'prototype': 'main.48'}.ReadFileSize",
+    "params": 1,
+    "instructions": 15,
+    "constants": 5
+  },
+  {
+    "path": "main.50.0",
+    "name": "",
+    "params": 0,
+    "instructions": 1,
+    "constants": 0
+  },
+  {
+    "path": "main.51",
+    "name": "{'prototype': 'main.48'}.ReadFileSize",
+    "params": 1,
+    "instructions": 15,
+    "constants": 5
+  },
+  {
+    "path": "main.51.0",
+    "name": "",
+    "params": 0,
+    "instructions": 18,
+    "constants": 6
+  },
+  {
+    "path": "main.52",
+    "name": "Init",
+    "params": 0,
+    "instructions": 13,
+    "constants": 4
+  },
+  {
+    "path": "main.52.0",
+    "name": "",
+    "params": 0,
+    "instructions": 35,
+    "constants": 16
+  },
+  {
+    "path": "main.53",
+    "name": "{'prototype': 'main.52'}.AddLog",
+    "params": 2,
+    "instructions": 15,
+    "constants": 5
+  },
+  {
+    "path": "main.53.0",
+    "name": "",
+    "params": 0,
+    "instructions": 65,
+    "constants": 19
+  },
+  {
+    "path": "main.54",
+    "name": "{'prototype': 'main.52'}.Save",
+    "params": 1,
+    "instructions": 15,
+    "constants": 5
+  },
+  {
+    "path": "main.54.0",
+    "name": "",
+    "params": 0,
+    "instructions": 32,
+    "constants": 11
+  },
+  {
+    "path": "main.55",
+    "name": "{'prototype': 'main.52'}.AutoSave",
+    "params": 1,
+    "instructions": 4,
+    "constants": 0
+  },
+  {
+    "path": "main.56",
+    "name": "{'prototype': 'main.52'}.SetTemplet",
+    "params": 1,
+    "instructions": 11,
+    "constants": 5
+  },
+  {
+    "path": "main.57",
+    "name": "{'prototype': 'main.52'}.GetTemplet",
+    "params": 0,
+    "instructions": 5,
+    "constants": 1
+  },
+  {
+    "path": "main.58",
+    "name": "{'prototype': 'main.52'}.GetMAC",
+    "params": 0,
+    "instructions": 15,
+    "constants": 5
+  },
+  {
+    "path": "main.58.0",
+    "name": "",
+    "params": 0,
+    "instructions": 34,
+    "constants": 11
+  },
+  {
+    "path": "main.59",
+    "name": "{'prototype': 'main.52'}.SetIME",
+    "params": 1,
+    "instructions": 15,
+    "constants": 5
+  },
+  {
+    "path": "main.59.0",
+    "name": "",
+    "params": 0,
+    "instructions": 21,
+    "constants": 14
+  },
+  {
+    "path": "main.60",
+    "name": "{'prototype': 'main.52'}.Install",
+    "params": 1,
+    "instructions": 13,
+    "constants": 7
+  },
+  {
+    "path": "main.61",
+    "name": "{'prototype': 'main.52'}.Uninstall",
+    "params": 1,
+    "instructions": 13,
+    "constants": 7
+  },
+  {
+    "path": "main.62",
+    "name": "{'prototype': 'main.52'}.GetNotification",
+    "params": 1,
+    "instructions": 15,
+    "constants": 5
+  },
+  {
+    "path": "main.62.0",
+    "name": "",
+    "params": 0,
+    "instructions": 53,
+    "constants": 13
+  },
+  {
+    "path": "main.63",
+    "name": "{'prototype': 'main.52'}.GetIP",
+    "params": 0,
+    "instructions": 15,
+    "constants": 5
+  },
+  {
+    "path": "main.63.0",
+    "name": "",
+    "params": 0,
+    "instructions": 25,
+    "constants": 10
+  },
+  {
+    "path": "main.64",
+    "name": "{'prototype': 'main.65'}.GetAppList",
+    "params": 1,
+    "instructions": 34,
+    "constants": 10
+  },
+  {
+    "path": "main.65",
+    "name": "GetAppList",
+    "params": 1,
+    "instructions": 15,
+    "constants": 5
+  },
+  {
+    "path": "main.65.0",
+    "name": "",
+    "params": 0,
+    "instructions": 33,
+    "constants": 11
+  },
+  {
+    "path": "main.66",
+    "name": "{'prototype': 'main.65'}.ControlWifi",
+    "params": 1,
+    "instructions": 14,
+    "constants": 5
+  },
+  {
+    "path": "main.67",
+    "name": "{'prototype': 'main.65'}.ControlData",
+    "params": 1,
+    "instructions": 14,
+    "constants": 5
+  },
+  {
+    "path": "main.68",
+    "name": "{'prototype': 'main.65'}.IsConnectWifi",
+    "params": 0,
+    "instructions": 15,
+    "constants": 5
+  },
+  {
+    "path": "main.68.0",
+    "name": "",
+    "params": 0,
+    "instructions": 16,
+    "constants": 4
+  },
+  {
+    "path": "main.69",
+    "name": "{'prototype': 'main.65'}.GetAndroidVer",
+    "params": 0,
+    "instructions": 7,
+    "constants": 3
+  },
+  {
+    "path": "main.70",
+    "name": "{'prototype': 'main.65'}.Reboot",
+    "params": 0,
+    "instructions": 7,
+    "constants": 4
+  },
+  {
+    "path": "main.71",
+    "name": "{'prototype': 'main.65'}.ShutDown",
+    "params": 0,
+    "instructions": 7,
+    "constants": 4
+  },
+  {
+    "path": "main.72",
+    "name": "{'prototype': 'main.65'}.IsVM",
+    "params": 0,
+    "instructions": 15,
+    "constants": 4
+  },
+  {
+    "path": "main.72.0",
+    "name": "",
+    "params": 0,
+    "instructions": 24,
+    "constants": 6
+  },
+  {
+    "path": "main.73",
+    "name": "{'prototype': 'main.65'}.GetBatteryState",
+    "params": 0,
+    "instructions": 15,
+    "constants": 5
+  },
+  {
+    "path": "main.73.0",
+    "name": "",
+    "params": 0,
+    "instructions": 43,
+    "constants": 15
+  },
+  {
+    "path": "main.74",
+    "name": "{'prototype': 'main.65'}.IsBluetooth",
+    "params": 0,
+    "instructions": 15,
+    "constants": 4
+  },
+  {
+    "path": "main.74.0",
+    "name": "",
+    "params": 0,
+    "instructions": 11,
+    "constants": 3
+  },
+  {
+    "path": "main.75",
+    "name": "{'prototype': 'main.65'}.RunUrl",
+    "params": 2,
+    "instructions": 36,
+    "constants": 18
+  },
+  {
+    "path": "main.76",
+    "name": "{'prototype': 'main.65'}.WeiXinUrl",
+    "params": 2,
+    "instructions": 12,
+    "constants": 6
+  },
+  {
+    "path": "main.77",
+    "name": "{'prototype': 'main.65'}.OpenWeb",
+    "params": 1,
+    "instructions": 21,
+    "constants": 9
+  },
+  {
+    "path": "main.78",
+    "name": "{'prototype': 'main.65'}.ExistApp",
+    "params": 1,
+    "instructions": 15,
+    "constants": 4
+  },
+  {
+    "path": "main.78.0",
+    "name": "",
+    "params": 0,
+    "instructions": 14,
+    "constants": 3
+  },
+  {
+    "path": "main.79",
+    "name": "{'prototype': 'main.65'}.SetTime",
+    "params": 2,
+    "instructions": 11,
+    "constants": 5
+  },
+  {
+    "path": "main.80",
+    "name": "{'prototype': 'main.65'}.DisableApp",
+    "params": 1,
+    "instructions": 9,
+    "constants": 4
+  },
+  {
+    "path": "main.81",
+    "name": "{'prototype': 'main.65'}.EnableApp",
+    "params": 1,
+    "instructions": 9,
+    "constants": 4
+  },
+  {
+    "path": "main.82",
+    "name": "{'prototype': 'main.65'}.GetNavigationBar",
+    "params": 0,
+    "instructions": 15,
+    "constants": 5
+  },
+  {
+    "path": "main.82.0",
+    "name": "",
+    "params": 0,
+    "instructions": 16,
+    "constants": 6
+  },
+  {
+    "path": "main.83",
+    "name": "{'prototype': 'main.65'}.GetStatusBar",
+    "params": 0,
+    "instructions": 15,
+    "constants": 5
+  },
+  {
+    "path": "main.83.0",
+    "name": "",
+    "params": 0,
+    "instructions": 17,
+    "constants": 7
+  },
+  {
+    "path": "main.84",
+    "name": "{'prototype': 'main.65'}.GetScreen",
+    "params": 1,
+    "instructions": 15,
+    "constants": 5
+  },
+  {
+    "path": "main.84.0",
+    "name": "",
+    "params": 0,
+    "instructions": 23,
+    "constants": 9
+  },
+  {
+    "path": "main.85",
+    "name": "{'prototype': 'main.65'}.GetRAM",
+    "params": 0,
+    "instructions": 15,
+    "constants": 5
+  },
+  {
+    "path": "main.85.0",
+    "name": "",
+    "params": 0,
+    "instructions": 49,
+    "constants": 17
+  },
+  {
+    "path": "main.86",
+    "name": "{'prototype': 'main.65'}.AppVersion",
+    "params": 1,
+    "instructions": 14,
+    "constants": 7
+  },
+  {
+    "path": "main.87",
+    "name": "{'prototype': 'main.65'}.AppFirstInstallTime",
+    "params": 1,
+    "instructions": 14,
+    "constants": 7
+  },
+  {
+    "path": "main.88",
+    "name": "{'prototype': 'main.65'}.AppLastUpdateTime",
+    "params": 1,
+    "instructions": 14,
+    "constants": 7
+  },
+  {
+    "path": "main.89",
+    "name": "{'prototype': 'main.65'}.UpdatePicture",
+    "params": 1,
+    "instructions": 9,
+    "constants": 4
+  },
+  {
+    "path": "main.90",
+    "name": "{'prototype': 'main.65'}.IsScreenOn",
+    "params": 0,
+    "instructions": 19,
+    "constants": 7
+  },
+  {
+    "path": "main.91",
+    "name": "{'prototype': 'main.65'}.OpenAirplane",
+    "params": 0,
+    "instructions": 11,
+    "constants": 5
+  },
+  {
+    "path": "main.92",
+    "name": "{'prototype': 'main.65'}.CloseAirplane",
+    "params": 0,
+    "instructions": 11,
+    "constants": 5
+  },
+  {
+    "path": "main.93",
+    "name": "{'prototype': 'main.65'}.IsAutoBrightness",
+    "params": 0,
+    "instructions": 18,
+    "constants": 6
+  },
+  {
+    "path": "main.94",
+    "name": "{'prototype': 'main.65'}.SetAutoBrightness",
+    "params": 1,
+    "instructions": 16,
+    "constants": 7
+  },
+  {
+    "path": "main.95",
+    "name": "{'prototype': 'main.65'}.GetBrightness",
+    "params": 0,
+    "instructions": 15,
+    "constants": 6
+  },
+  {
+    "path": "main.96",
+    "name": "{'prototype': 'main.65'}.SetBrightness",
+    "params": 1,
+    "instructions": 9,
+    "constants": 4
+  },
+  {
+    "path": "main.97",
+    "name": "{'prototype': 'main.65'}.GetScreenSleep",
+    "params": 0,
+    "instructions": 16,
+    "constants": 7
+  },
+  {
+    "path": "main.98",
+    "name": "{'prototype': 'main.65'}.SetScreenSleep",
+    "params": 1,
+    "instructions": 9,
+    "constants": 5
+  },
+  {
+    "path": "main.99",
+    "name": "{'prototype': 'main.65'}.SetNavigationBar",
+    "params": 1,
+    "instructions": 15,
+    "constants": 5
+  },
+  {
+    "path": "main.99.0",
+    "name": "",
+    "params": 0,
+    "instructions": 68,
+    "constants": 17
+  },
+  {
+    "path": "main.100",
+    "name": "{'prototype': 'main.65'}.GetSIMState",
+    "params": 0,
+    "instructions": 15,
+    "constants": 4
+  },
+  {
+    "path": "main.100.0",
+    "name": "",
+    "params": 0,
+    "instructions": 15,
+    "constants": 5
+  },
+  {
+    "path": "main.101",
+    "name": "KillClean",
+    "params": 1,
+    "instructions": 84,
+    "constants": 27
+  },
+  {
+    "path": "main.102",
+    "name": "{'prototype': 'main.101'}.KillClean",
+    "params": 1,
+    "instructions": 15,
+    "constants": 4
+  },
+  {
+    "path": "main.102.0",
+    "name": "",
+    "params": 0,
+    "instructions": 30,
+    "constants": 7
+  },
+  {
+    "path": "main.103",
+    "name": "{'prototype': 'main.101'}.AppClean",
+    "params": 1,
+    "instructions": 10,
+    "constants": 5
+  },
+  {
+    "path": "main.104",
+    "name": "{'prototype': 'main.101'}.CallState",
+    "params": 0,
+    "instructions": 15,
+    "constants": 6
+  },
+  {
+    "path": "main.105",
+    "name": "{'prototype': 'main.101'}.CallIncomingNumber",
+    "params": 0,
+    "instructions": 15,
+    "constants": 6
+  },
+  {
+    "path": "main.106",
+    "name": "{'prototype': 'main.101'}.GetUpTime",
+    "params": 0,
+    "instructions": 23,
+    "constants": 9
+  },
+  {
+    "path": "main.107",
+    "name": "{'prototype': 'main.101'}.GetIME",
+    "params": 0,
+    "instructions": 21,
+    "constants": 8
+  },
+  {
+    "path": "main.108",
+    "name": "{'prototype': 'main.101'}.KeepScreenOn",
+    "params": 1,
+    "instructions": 15,
+    "constants": 5
+  },
+  {
+    "path": "main.108.0",
+    "name": "",
+    "params": 0,
+    "instructions": 13,
+    "constants": 4
+  },
+  {
+    "path": "main.109",
+    "name": "{'prototype': 'main.101'}.GetHttp",
+    "params": 3,
+    "instructions": 42,
+    "constants": 13
+  },
+  {
+    "path": "main.110",
+    "name": "{'prototype': 'main.101'}.GetHttpFile",
+    "params": 3,
+    "instructions": 25,
+    "constants": 8
+  },
+  {
+    "path": "main.111",
+    "name": "{'prototype': 'main.101'}.PostHttp",
+    "params": 4,
+    "instructions": 44,
+    "constants": 13
+  },
+  {
+    "path": "main.112",
+    "name": "{'prototype': 'main.101'}.PostHttpC",
+    "params": 5,
+    "instructions": 44,
+    "constants": 13
+  },
+  {
+    "path": "main.113",
+    "name": "{'prototype': 'main.101'}.GetHttpC",
+    "params": 4,
+    "instructions": 42,
+    "constants": 13
+  },
+  {
+    "path": "main.114",
+    "name": "{'prototype': 'main.101'}.RegexFind",
+    "params": 2,
+    "instructions": 15,
+    "constants": 5
+  },
+  {
+    "path": "main.114.0",
+    "name": "",
+    "params": 0,
+    "instructions": 16,
+    "constants": 4
+  },
+  {
+    "path": "main.115",
+    "name": "{'prototype': 'main.117'}.SQLInsert",
+    "params": 2,
+    "instructions": 36,
+    "constants": 8
+  },
+  {
+    "path": "main.116",
+    "name": "SQLSelect",
+    "params": 5,
+    "instructions": 15,
+    "constants": 5
+  },
+  {
+    "path": "main.116.0",
+    "name": "",
+    "params": 0,
+    "instructions": 57,
+    "constants": 8
+  },
+  {
+    "path": "main.117",
+    "name": "SQLInsert",
+    "params": 3,
+    "instructions": 15,
+    "constants": 5
+  },
+  {
+    "path": "main.117.0",
+    "name": "",
+    "params": 0,
+    "instructions": 53,
+    "constants": 9
+  },
+  {
+    "path": "main.118",
+    "name": "{'prototype': 'main.117'}.SQLUpdate",
+    "params": 4,
+    "instructions": 15,
+    "constants": 5
+  },
+  {
+    "path": "main.118.0",
+    "name": "",
+    "params": 0,
+    "instructions": 62,
+    "constants": 11
+  },
+  {
+    "path": "main.119",
+    "name": "{'prototype': 'main.117'}.SQLDelete",
+    "params": 3,
+    "instructions": 15,
+    "constants": 5
+  },
+  {
+    "path": "main.119.0",
+    "name": "",
+    "params": 0,
+    "instructions": 34,
+    "constants": 7
+  },
+  {
+    "path": "main.120",
+    "name": "{'prototype': 'main.117'}.LastSMS",
+    "params": 0,
+    "instructions": 15,
+    "constants": 5
+  },
+  {
+    "path": "main.120.0",
+    "name": "",
+    "params": 0,
+    "instructions": 10,
+    "constants": 6
+  },
+  {
+    "path": "main.121",
+    "name": "{'prototype': 'main.117'}.GetSMS",
+    "params": 1,
+    "instructions": 15,
+    "constants": 5
+  },
+  {
+    "path": "main.121.0",
+    "name": "",
+    "params": 0,
+    "instructions": 21,
+    "constants": 9
+  },
+  {
+    "path": "main.122",
+    "name": "{'prototype': 'main.117'}.AppendPhone",
+    "params": 1,
+    "instructions": 15,
+    "constants": 5
+  },
+  {
+    "path": "main.122.0",
+    "name": "",
+    "params": 0,
+    "instructions": 96,
+    "constants": 23
+  },
+  {
+    "path": "main.123",
+    "name": "{'prototype': 'main.117'}.type",
+    "params": 1,
+    "instructions": 7,
+    "constants": 2
+  },
+  {
+    "path": "main.124",
+    "name": "{'prototype': 'main.117'}.GetVer",
+    "params": 0,
+    "instructions": 5,
+    "constants": 1
+  },
+  {
+    "path": "main.125",
+    "name": "{'prototype': 'main.117'}.IsDisplayChange",
+    "params": 6,
+    "instructions": 61,
+    "constants": 15
+  },
+  {
+    "path": "main.126",
+    "name": "{'prototype': 'main.117'}.iif",
+    "params": 3,
+    "instructions": 10,
+    "constants": 3
+  },
+  {
+    "path": "main.127",
+    "name": "{'prototype': 'main.117'}.Eqv",
+    "params": 2,
+    "instructions": 55,
+    "constants": 11
+  },
+  {
+    "path": "main.128",
+    "name": "{'prototype': 'main.117'}.Xor",
+    "params": 2,
+    "instructions": 18,
+    "constants": 4
+  },
+  {
+    "path": "main.129",
+    "name": "{'prototype': 'main.128'}.LogPath",
+    "params": 2,
+    "instructions": 8,
+    "constants": 4
+  },
+  {
+    "path": "main.130",
+    "name": "{'prototype': 'main.131'}.Mount",
+    "params": 2,
+    "instructions": 28,
+    "constants": 15
+  },
+  {
+    "path": "main.131",
+    "name": "Mount",
+    "params": 1,
+    "instructions": 27,
+    "constants": 7
+  },
+  {
+    "path": "main.131.0",
+    "name": "",
+    "params": 0,
+    "instructions": 25,
+    "constants": 10
+  },
+  {
+    "path": "main.132",
+    "name": "Mount",
+    "params": 1,
+    "instructions": 15,
+    "constants": 4
+  },
+  {
+    "path": "main.132.0",
+    "name": "",
+    "params": 0,
+    "instructions": 64,
+    "constants": 11
+  },
+  {
+    "path": "main.133",
+    "name": "{'prototype': 'main.132'}.GetUIXml",
+    "params": 0,
+    "instructions": 15,
+    "constants": 5
+  },
+  {
+    "path": "main.133.0",
+    "name": "",
+    "params": 0,
+    "instructions": 12,
+    "constants": 6
+  },
+  {
+    "path": "main.134",
+    "name": "{'prototype': 'main.133'}.TimeSign",
+    "params": 1,
+    "instructions": 7,
+    "constants": 3
+  },
+  {
+    "path": "main.135",
+    "name": "{'prototype': 'main.133'}.Timer",
+    "params": 2,
+    "instructions": 19,
+    "constants": 3
+  },
+  {
+    "path": "main.136",
+    "name": "{'prototype': 'main.133'}.Base64En",
+    "params": 1,
+    "instructions": 25,
+    "constants": 11
+  },
+  {
+    "path": "main.136.0",
+    "name": "",
+    "params": 1,
+    "instructions": 24,
+    "constants": 9
+  },
+  {
+    "path": "main.136.1",
+    "name": "",
+    "params": 1,
+    "instructions": 30,
+    "constants": 7
+  },
+  {
+    "path": "main.137",
+    "name": "{'prototype': 'main.133'}.Base64De",
+    "params": 1,
+    "instructions": 23,
+    "constants": 9
+  },
+  {
+    "path": "main.137.0",
+    "name": "",
+    "params": 1,
+    "instructions": 31,
+    "constants": 10
+  },
+  {
+    "path": "main.137.1",
+    "name": "",
+    "params": 1,
+    "instructions": 29,
+    "constants": 9
+  },
+  {
+    "path": "main.138",
+    "name": "{'prototype': 'main.133'}.Coordinate",
+    "params": 3,
+    "instructions": 160,
+    "constants": 38
+  },
+  {
+    "path": "main.139",
+    "name": "",
+    "params": 2,
+    "instructions": 74,
+    "constants": 13
+  },
+  {
+    "path": "main.140",
+    "name": "",
+    "params": 2,
+    "instructions": 53,
+    "constants": 11
+  },
+  {
+    "path": "main.141",
+    "name": "",
+    "params": 2,
+    "instructions": 8,
+    "constants": 3
+  },
+  {
+    "path": "main.141.0",
+    "name": "",
+    "params": 1,
+    "instructions": 14,
+    "constants": 5
+  },
+  {
+    "path": "main.142",
+    "name": "",
+    "params": 1,
+    "instructions": 6,
+    "constants": 2
+  },
+  {
+    "path": "main.142.0",
+    "name": "",
+    "params": 1,
+    "instructions": 9,
+    "constants": 4
+  },
+  {
+    "path": "main.143",
+    "name": "?.Unicode2Utf8",
+    "params": 1,
+    "instructions": 35,
+    "constants": 17
+  },
+  {
+    "path": "main.143.0",
+    "name": "",
+    "params": 1,
+    "instructions": 125,
+    "constants": 21
+  },
+  {
+    "path": "main.143.0.0",
+    "name": "",
+    "params": 1,
+    "instructions": 9,
+    "constants": 4
+  },
+  {
+    "path": "main.144",
+    "name": "?.Utf82Unicode",
+    "params": 2,
+    "instructions": 37,
+    "constants": 12
+  },
+  {
+    "path": "main.144.0",
+    "name": "",
+    "params": 1,
+    "instructions": 66,
+    "constants": 13
+  },
+  {
+    "path": "main.144.1",
+    "name": "",
+    "params": 1,
+    "instructions": 134,
+    "constants": 22
+  },
+  {
+    "path": "main.145",
+    "name": "?.ToTime",
+    "params": 2,
+    "instructions": 15,
+    "constants": 5
+  },
+  {
+    "path": "main.145.0",
+    "name": "",
+    "params": 0,
+    "instructions": 41,
+    "constants": 13
+  },
+  {
+    "path": "main.146",
+    "name": "?.SecToDay",
+    "params": 1,
+    "instructions": 15,
+    "constants": 5
+  },
+  {
+    "path": "main.146.0",
+    "name": "",
+    "params": 0,
+    "instructions": 41,
+    "constants": 10
+  },
+  {
+    "path": "main.147",
+    "name": "?.GetDistance",
+    "params": 4,
+    "instructions": 59,
+    "constants": 11
+  },
+  {
+    "path": "main.147.0",
+    "name": "",
+    "params": 1,
+    "instructions": 6,
+    "constants": 3
+  },
+  {
+    "path": "main.148",
+    "name": "?.CompareTime",
+    "params": 6,
+    "instructions": 38,
+    "constants": 17
+  },
+  {
+    "path": "main.149",
+    "name": "?.LateTime",
+    "params": 4,
+    "instructions": 33,
+    "constants": 12
+  },
+  {
+    "path": "main.150",
+    "name": "?.GetNetTime",
+    "params": 0,
+    "instructions": 15,
+    "constants": 5
+  },
+  {
+    "path": "main.150.0",
+    "name": "",
+    "params": 0,
+    "instructions": 60,
+    "constants": 41
+  },
+  {
+    "path": "main.151",
+    "name": "?.Eval",
+    "params": 1,
+    "instructions": 15,
+    "constants": 5
+  },
+  {
+    "path": "main.151.0",
+    "name": "",
+    "params": 0,
+    "instructions": 10,
+    "constants": 3
+  },
+  {
+    "path": "main.152",
+    "name": "QMPlugin",
+    "params": 3,
+    "instructions": 15,
+    "constants": 5
+  },
+  {
+    "path": "main.152.0",
+    "name": "",
+    "params": 0,
+    "instructions": 76,
+    "constants": 15
+  },
+  {
+    "path": "main.153",
+    "name": "{'prototype': 'main.152'}.GetUnixTime",
+    "params": 1,
+    "instructions": 27,
+    "constants": 13
+  },
+  {
+    "path": "main.154",
+    "name": "",
+    "params": 0,
+    "instructions": 40,
+    "constants": 11
+  },
+  {
+    "path": "main.155",
+    "name": "",
+    "params": 3,
+    "instructions": 38,
+    "constants": 10
+  },
+  {
+    "path": "main.156",
+    "name": "",
+    "params": 1,
+    "instructions": 6,
+    "constants": 2
+  },
+  {
+    "path": "main.157",
+    "name": "",
+    "params": 2,
+    "instructions": 7,
+    "constants": 2
+  },
+  {
+    "path": "main.158",
+    "name": "",
+    "params": 1,
+    "instructions": 8,
+    "constants": 2
+  },
+  {
+    "path": "main.159",
+    "name": "",
+    "params": 1,
+    "instructions": 47,
+    "constants": 14
+  },
+  {
+    "path": "main.160",
+    "name": "",
+    "params": 2,
+    "instructions": 68,
+    "constants": 24
+  },
+  {
+    "path": "main.161",
+    "name": "{'prototype': 'main.152'}.Year",
+    "params": 1,
+    "instructions": 12,
+    "constants": 2
+  },
+  {
+    "path": "main.162",
+    "name": "{'prototype': 'main.152'}.Month",
+    "params": 1,
+    "instructions": 12,
+    "constants": 2
+  },
+  {
+    "path": "main.163",
+    "name": "{'prototype': 'main.152'}.Day",
+    "params": 1,
+    "instructions": 12,
+    "constants": 2
+  },
+  {
+    "path": "main.164",
+    "name": "{'prototype': 'main.152'}.Hour",
+    "params": 1,
+    "instructions": 12,
+    "constants": 2
+  },
+  {
+    "path": "main.165",
+    "name": "{'prototype': 'main.152'}.Minute",
+    "params": 1,
+    "instructions": 12,
+    "constants": 2
+  },
+  {
+    "path": "main.166",
+    "name": "{'prototype': 'main.152'}.Second",
+    "params": 1,
+    "instructions": 12,
+    "constants": 2
+  },
+  {
+    "path": "main.167",
+    "name": "{'prototype': 'main.152'}.WeekDay",
+    "params": 1,
+    "instructions": 14,
+    "constants": 2
+  },
+  {
+    "path": "main.168",
+    "name": "{'prototype': 'main.152'}.YearDay",
+    "params": 1,
+    "instructions": 12,
+    "constants": 2
+  },
+  {
+    "path": "main.169",
+    "name": "{'prototype': 'main.152'}.Format",
+    "params": 2,
+    "instructions": 14,
+    "constants": 1
+  },
+  {
+    "path": "main.170",
+    "name": "{'prototype': 'main.152'}.WeekOfMonth",
+    "params": 2,
+    "instructions": 7,
+    "constants": 2
+  },
+  {
+    "path": "main.170.0",
+    "name": "",
+    "params": 0,
+    "instructions": 105,
+    "constants": 18
+  },
+  {
+    "path": "main.171",
+    "name": "{'prototype': 'main.152'}.WeekOfYear",
+    "params": 2,
+    "instructions": 6,
+    "constants": 1
+  },
+  {
+    "path": "main.171.0",
+    "name": "",
+    "params": 0,
+    "instructions": 87,
+    "constants": 16
+  },
+  {
+    "path": "main.172",
+    "name": "{'prototype': 'main.152'}.ParseTime",
+    "params": 2,
+    "instructions": 7,
+    "constants": 2
+  },
+  {
+    "path": "main.172.0",
+    "name": "",
+    "params": 0,
+    "instructions": 39,
+    "constants": 11
+  },
+  {
+    "path": "main.173",
+    "name": "{'prototype': 'main.152'}.TimeDiff",
+    "params": 3,
+    "instructions": 7,
+    "constants": 2
+  },
+  {
+    "path": "main.173.0",
+    "name": "",
+    "params": 0,
+    "instructions": 52,
+    "constants": 18
+  },
+  {
+    "path": "main.174",
+    "name": "QMPlugin",
+    "params": 3,
+    "instructions": 7,
+    "constants": 2
+  },
+  {
+    "path": "main.174.0",
+    "name": "",
+    "params": 0,
+    "instructions": 40,
+    "constants": 17
+  },
+  {
+    "path": "main.175",
+    "name": "",
+    "params": 0,
+    "instructions": 40,
+    "constants": 11
+  },
+  {
+    "path": "main.176",
+    "name": "",
+    "params": 3,
+    "instructions": 38,
+    "constants": 10
+  },
+  {
+    "path": "main.177",
+    "name": "{'prototype': 'main.174'}.Encode",
+    "params": 1,
+    "instructions": 7,
+    "constants": 2
+  },
+  {
+    "path": "main.177.0",
+    "name": "",
+    "params": 0,
+    "instructions": 8,
+    "constants": 3
+  },
+  {
+    "path": "main.178",
+    "name": "QMPlugin",
+    "params": 1,
+    "instructions": 7,
+    "constants": 2
+  },
+  {
+    "path": "main.178.0",
+    "name": "",
+    "params": 0,
+    "instructions": 15,
+    "constants": 6
+  },
+  {
+    "path": "main.179",
+    "name": "",
+    "params": 0,
+    "instructions": 40,
+    "constants": 11
+  },
+  {
+    "path": "main.180",
+    "name": "",
+    "params": 3,
+    "instructions": 40,
+    "constants": 12
+  },
+  {
+    "path": "main.181",
+    "name": "",
+    "params": 1,
+    "instructions": 7,
+    "constants": 2
+  },
+  {
+    "path": "main.181.0",
+    "name": "",
+    "params": 0,
+    "instructions": 16,
+    "constants": 7
+  },
+  {
+    "path": "main.182",
+    "name": "",
+    "params": 1,
+    "instructions": 7,
+    "constants": 2
+  },
+  {
+    "path": "main.182.0",
+    "name": "",
+    "params": 0,
+    "instructions": 31,
+    "constants": 12
+  },
+  {
+    "path": "main.183",
+    "name": "",
+    "params": 2,
+    "instructions": 7,
+    "constants": 2
+  },
+  {
+    "path": "main.183.0",
+    "name": "",
+    "params": 0,
+    "instructions": 17,
+    "constants": 5
+  },
+  {
+    "path": "main.184",
+    "name": "",
+    "params": 2,
+    "instructions": 7,
+    "constants": 2
+  },
+  {
+    "path": "main.184.0",
+    "name": "",
+    "params": 0,
+    "instructions": 25,
+    "constants": 7
+  },
+  {
+    "path": "main.185",
+    "name": "",
+    "params": 2,
+    "instructions": 7,
+    "constants": 2
+  },
+  {
+    "path": "main.185.0",
+    "name": "",
+    "params": 0,
+    "instructions": 21,
+    "constants": 5
+  },
+  {
+    "path": "main.186",
+    "name": "",
+    "params": 1,
+    "instructions": 7,
+    "constants": 2
+  },
+  {
+    "path": "main.186.0",
+    "name": "",
+    "params": 0,
+    "instructions": 16,
+    "constants": 7
+  },
+  {
+    "path": "main.187",
+    "name": "",
+    "params": 1,
+    "instructions": 44,
+    "constants": 12
+  },
+  {
+    "path": "main.188",
+    "name": "{'prototype': 'main.178'}.Read",
+    "params": 1,
+    "instructions": 5,
+    "constants": 0
+  },
+  {
+    "path": "main.189",
+    "name": "{'prototype': 'main.178'}.ReadLines",
+    "params": 1,
+    "instructions": 5,
+    "constants": 0
+  },
+  {
+    "path": "main.190",
+    "name": "{'prototype': 'main.178'}.ReadLine",
+    "params": 2,
+    "instructions": 18,
+    "constants": 4
+  },
+  {
+    "path": "main.191",
+    "name": "{'prototype': 'main.178'}.LinesNumber",
+    "params": 1,
+    "instructions": 10,
+    "constants": 1
+  },
+  {
+    "path": "main.192",
+    "name": "{'prototype': 'main.178'}.Write",
+    "params": 1,
+    "instructions": 12,
+    "constants": 2
+  },
+  {
+    "path": "main.193",
+    "name": "{'prototype': 'main.178'}.WriteLine",
+    "params": 3,
+    "instructions": 24,
+    "constants": 4
+  },
+  {
+    "path": "main.194",
+    "name": "{'prototype': 'main.178'}.WriteLines",
+    "params": 2,
+    "instructions": 6,
+    "constants": 0
+  },
+  {
+    "path": "main.195",
+    "name": "{'prototype': 'main.178'}.Append",
+    "params": 1,
+    "instructions": 12,
+    "constants": 2
+  },
+  {
+    "path": "main.196",
+    "name": "{'prototype': 'main.178'}.DeleteLine",
+    "params": 2,
+    "instructions": 23,
+    "constants": 2
+  },
+  {
+    "path": "main.197",
+    "name": "{'prototype': 'main.178'}.Bytes",
+    "params": 1,
+    "instructions": 5,
+    "constants": 0
+  },
+  {
+    "path": "main.198",
+    "name": "Help",
+    "params": 1,
+    "instructions": 8,
+    "constants": 0
+  },
+  {
+    "path": "main.199",
+    "name": "{'prototype': 'main.198'}.Ver",
+    "params": 0,
+    "instructions": 3,
+    "constants": 1
+  },
+  {
+    "path": "main.200",
+    "name": "{'prototype': 'main.198'}.decodeURI",
+    "params": 1,
+    "instructions": 8,
+    "constants": 3
+  },
+  {
+    "path": "main.200.0",
+    "name": "",
+    "params": 1,
+    "instructions": 9,
+    "constants": 4
+  },
+  {
+    "path": "main.201",
+    "name": "{'prototype': 'main.198'}.encodeURI",
+    "params": 1,
+    "instructions": 15,
+    "constants": 5
+  },
+  {
+    "path": "main.201.0",
+    "name": "",
+    "params": 1,
+    "instructions": 10,
+    "constants": 4
+  },
+  {
+    "path": "main.202",
+    "name": "{'prototype': 'main.198'}.Cmd",
+    "params": 1,
+    "instructions": 5,
+    "constants": 2
+  },
+  {
+    "path": "main.203",
+    "name": "{'prototype': 'main.198'}.DownLoadFile",
+    "params": 2,
+    "instructions": 10,
+    "constants": 5
+  },
+  {
+    "path": "main.204",
+    "name": "{'prototype': 'main.198'}.InstallApp",
+    "params": 1,
+    "instructions": 7,
+    "constants": 3
+  },
+  {
+    "path": "main.205",
+    "name": "{'prototype': 'main.198'}.GetIP",
+    "params": 0,
+    "instructions": 12,
+    "constants": 4
+  },
+  {
+    "path": "main.205.0",
+    "name": "",
+    "params": 0,
+    "instructions": 25,
+    "constants": 10
+  },
+  {
+    "path": "main.206",
+    "name": "点击按钮",
+    "params": 1,
+    "instructions": 142,
+    "constants": 39
+  },
+  {
+    "path": "main.207",
+    "name": "收远征",
+    "params": 0,
+    "instructions": 390,
+    "constants": 55
+  },
+  {
+    "path": "main.208",
+    "name": "挂远征泡澡",
+    "params": 0,
+    "instructions": 113,
+    "constants": 23
+  },
+  {
+    "path": "main.209",
+    "name": "泡澡",
+    "params": 2,
+    "instructions": 823,
+    "constants": 111
+  },
+  {
+    "path": "main.209.0",
+    "name": "",
+    "params": 0,
+    "instructions": 17,
+    "constants": 12
+  },
+  {
+    "path": "main.209.1",
+    "name": "",
+    "params": 0,
+    "instructions": 17,
+    "constants": 12
+  },
+  {
+    "path": "main.210",
+    "name": "抓红心",
+    "params": 2,
+    "instructions": 22,
+    "constants": 7
+  },
+  {
+    "path": "main.211",
+    "name": "打战役",
+    "params": 0,
+    "instructions": 1013,
+    "constants": 131
+  },
+  {
+    "path": "main.211.0",
+    "name": "",
+    "params": 0,
+    "instructions": 17,
+    "constants": 12
+  },
+  {
+    "path": "main.211.1",
+    "name": "",
+    "params": 0,
+    "instructions": 17,
+    "constants": 12
+  },
+  {
+    "path": "main.212",
+    "name": "打演习",
+    "params": 0,
+    "instructions": 753,
+    "constants": 117
+  },
+  {
+    "path": "main.212.0",
+    "name": "",
+    "params": 0,
+    "instructions": 17,
+    "constants": 12
+  },
+  {
+    "path": "main.212.1",
+    "name": "",
+    "params": 0,
+    "instructions": 17,
+    "constants": 12
+  },
+  {
+    "path": "main.212.2",
+    "name": "",
+    "params": 0,
+    "instructions": 17,
+    "constants": 12
+  },
+  {
+    "path": "main.212.3",
+    "name": "",
+    "params": 0,
+    "instructions": 17,
+    "constants": 12
+  },
+  {
+    "path": "main.213",
+    "name": "决战换票",
+    "params": 0,
+    "instructions": 195,
+    "constants": 44
+  },
+  {
+    "path": "main.214",
+    "name": "决战",
+    "params": 0,
+    "instructions": 6234,
+    "constants": 432
+  },
+  {
+    "path": "main.214.0",
+    "name": "",
+    "params": 0,
+    "instructions": 17,
+    "constants": 12
+  },
+  {
+    "path": "main.214.1",
+    "name": "",
+    "params": 0,
+    "instructions": 17,
+    "constants": 12
+  },
+  {
+    "path": "main.215",
+    "name": "收任务",
+    "params": 0,
+    "instructions": 84,
+    "constants": 26
+  },
+  {
+    "path": "main.216",
+    "name": "出征战斗",
+    "params": 0,
+    "instructions": 29889,
+    "constants": 850
+  },
+  {
+    "path": "main.216.0",
+    "name": "",
+    "params": 0,
+    "instructions": 17,
+    "constants": 12
+  },
+  {
+    "path": "main.217",
+    "name": "是否泡澡",
+    "params": 1,
+    "instructions": 66,
+    "constants": 17
+  },
+  {
+    "path": "main.218",
+    "name": "是否满级",
+    "params": 1,
+    "instructions": 66,
+    "constants": 17
+  },
+  {
+    "path": "main.219",
+    "name": "强制重启",
+    "params": 0,
+    "instructions": 101,
+    "constants": 27
+  },
+  {
+    "path": "main.220",
+    "name": "分解",
+    "params": 1,
+    "instructions": 2592,
+    "constants": 235
+  },
+  {
+    "path": "main.221",
+    "name": "点亮标签",
+    "params": 0,
+    "instructions": 523,
+    "constants": 64
+  },
+  {
+    "path": "main.222",
+    "name": "检查上榜转远征",
+    "params": 0,
+    "instructions": 179,
+    "constants": 46
+  },
+  {
+    "path": "main.223",
+    "name": "选择阵型",
+    "params": 1,
+    "instructions": 37,
+    "constants": 12
+  },
+  {
+    "path": "main.224",
+    "name": "定时重启",
+    "params": 0,
+    "instructions": 200,
+    "constants": 44
+  },
+  {
+    "path": "main.225",
+    "name": "做菜",
+    "params": 0,
+    "instructions": 181,
+    "constants": 47
+  },
+  {
+    "path": "main.226",
+    "name": "演习刷新次数是否用完",
+    "params": 0,
+    "instructions": 30,
+    "constants": 12
+  },
+  {
+    "path": "main.227",
+    "name": "演习是否有潜艇",
+    "params": 1,
+    "instructions": 272,
+    "constants": 41
+  },
+  {
+    "path": "main.228",
+    "name": "战役剩余次数",
+    "params": 0,
+    "instructions": 64,
+    "constants": 17
+  },
+  {
+    "path": "main.229",
+    "name": "决战找船",
+    "params": 1,
+    "instructions": 108,
+    "constants": 29
+  },
+  {
+    "path": "main.230",
+    "name": "神秘之影找船",
+    "params": 0,
+    "instructions": 469,
+    "constants": 40
+  },
+  {
+    "path": "main.231",
+    "name": "找U47",
+    "params": 1,
+    "instructions": 238,
+    "constants": 36
+  },
+  {
+    "path": "main.232",
+    "name": "找U81",
+    "params": 1,
+    "instructions": 178,
+    "constants": 31
+  },
+  {
+    "path": "main.233",
+    "name": "找U96",
+    "params": 1,
+    "instructions": 178,
+    "constants": 31
+  },
+  {
+    "path": "main.234",
+    "name": "找U1206",
+    "params": 1,
+    "instructions": 178,
+    "constants": 31
+  },
+  {
+    "path": "main.235",
+    "name": "找351",
+    "params": 1,
+    "instructions": 108,
+    "constants": 29
+  },
+  {
+    "path": "main.236",
+    "name": "找鹦鹉螺",
+    "params": 1,
+    "instructions": 108,
+    "constants": 29
+  },
+  {
+    "path": "main.237",
+    "name": "找U1405",
+    "params": 1,
+    "instructions": 178,
+    "constants": 31
+  },
+  {
+    "path": "main.238",
+    "name": "找鲃鱼",
+    "params": 1,
+    "instructions": 238,
+    "constants": 36
+  },
+  {
+    "path": "main.239",
+    "name": "票用完了没",
+    "params": 0,
+    "instructions": 41,
+    "constants": 19
+  },
+  {
+    "path": "main.240",
+    "name": "判断船型EX",
+    "params": 1,
+    "instructions": 167,
+    "constants": 42
+  },
+  {
+    "path": "main.241",
+    "name": "判断船型",
+    "params": 2,
+    "instructions": 48,
+    "constants": 20
+  },
+  {
+    "path": "main.242",
+    "name": "转换",
+    "params": 1,
+    "instructions": 58,
+    "constants": 28
+  },
+  {
+    "path": "main.243",
+    "name": "小范围抓点",
+    "params": 4,
+    "instructions": 10,
+    "constants": 2
+  },
+  {
+    "path": "main.243.0",
+    "name": "",
+    "params": 0,
+    "instructions": 21,
+    "constants": 6
+  },
+  {
+    "path": "main.244",
+    "name": "最强之舟第几图",
+    "params": 0,
+    "instructions": 64,
+    "constants": 17
+  },
+  {
+    "path": "main.245",
+    "name": "分辨率检测",
+    "params": 0,
+    "instructions": 290,
+    "constants": 33
+  },
+  {
+    "path": "main.246",
+    "name": "当前日期",
+    "params": 0,
+    "instructions": 87,
+    "constants": 32
+  },
+  {
+    "path": "main.247",
+    "name": "固定延时点击",
+    "params": 3,
+    "instructions": 25,
+    "constants": 9
+  },
+  {
+    "path": "main.248",
+    "name": "随机点击",
+    "params": 2,
+    "instructions": 77,
+    "constants": 21
+  },
+  {
+    "path": "main.249",
+    "name": "现在地图",
+    "params": 0,
+    "instructions": 460,
+    "constants": 96
+  },
+  {
+    "path": "main.250",
+    "name": "现在决战地图",
+    "params": 0,
+    "instructions": 64,
+    "constants": 17
+  },
+  {
+    "path": "main.251",
+    "name": "多点找色",
+    "params": 8,
+    "instructions": 26,
+    "constants": 7
+  },
+  {
+    "path": "main.252",
+    "name": "区域找色",
+    "params": 7,
+    "instructions": 14,
+    "constants": 4
+  },
+  {
+    "path": "main.252.0",
+    "name": "",
+    "params": 0,
+    "instructions": 17,
+    "constants": 5
+  },
+  {
+    "path": "main.253",
+    "name": "立体强袭章节",
+    "params": 0,
+    "instructions": 64,
+    "constants": 17
+  },
+  {
+    "path": "main.254",
+    "name": "选项卡位置",
+    "params": 0,
+    "instructions": 52,
+    "constants": 14
+  },
+  {
+    "path": "main.255",
+    "name": "返回键",
+    "params": 0,
+    "instructions": 30,
+    "constants": 9
+  },
+  {
+    "path": "main.256",
+    "name": "章节光标",
+    "params": 0,
+    "instructions": 14,
+    "constants": 7
+  },
+  {
+    "path": "main.257",
+    "name": "商城特征",
+    "params": 0,
+    "instructions": 14,
+    "constants": 7
+  },
+  {
+    "path": "main.258",
+    "name": "船坞特征",
+    "params": 0,
+    "instructions": 14,
+    "constants": 7
+  },
+  {
+    "path": "main.259",
+    "name": "任务特征",
+    "params": 0,
+    "instructions": 14,
+    "constants": 7
+  },
+  {
+    "path": "main.260",
+    "name": "战利品特征",
+    "params": 0,
+    "instructions": 14,
+    "constants": 7
+  },
+  {
+    "path": "main.261",
+    "name": "是否捞完胖次",
+    "params": 0,
+    "instructions": 14,
+    "constants": 7
+  },
+  {
+    "path": "main.262",
+    "name": "是否500船",
+    "params": 0,
+    "instructions": 31,
+    "constants": 10
+  },
+  {
+    "path": "main.263",
+    "name": "快修用量",
+    "params": 0,
+    "instructions": 84,
+    "constants": 21
+  },
+  {
+    "path": "main.264",
+    "name": "对面阵型",
+    "params": 0,
+    "instructions": 52,
+    "constants": 14
+  },
+  {
+    "path": "main.265",
+    "name": "判断导驱防驱",
+    "params": 0,
+    "instructions": 145,
+    "constants": 23
+  },
+  {
+    "path": "main.266",
+    "name": "SWIPEEX",
+    "params": 5,
+    "instructions": 30,
+    "constants": 6
+  },
+  {
+    "path": "main.267",
+    "name": "KEEPCAPTUREPRO",
+    "params": 0,
+    "instructions": 574,
+    "constants": 71
+  },
+  {
+    "path": "main.268",
+    "name": "通信接口",
+    "params": 1,
+    "instructions": 152,
+    "constants": 31
+  },
+  {
+    "path": "main.269",
+    "name": "注册码登录",
+    "params": 0,
+    "instructions": 203,
+    "constants": 43
+  },
+  {
+    "path": "main.270",
+    "name": "检查剩余时间",
+    "params": 0,
+    "instructions": 203,
+    "constants": 52
+  },
+  {
+    "path": "main.271",
+    "name": "获取注册码备注",
+    "params": 0,
+    "instructions": 28,
+    "constants": 14
+  },
+  {
+    "path": "main.272",
+    "name": "验证代码",
+    "params": 0,
+    "instructions": 102,
+    "constants": 30
+  },
+  {
+    "path": "main.273",
+    "name": "极昼突袭",
+    "params": 0,
+    "instructions": 124,
+    "constants": 29
+  },
+  {
+    "path": "main.274",
+    "name": "是否有泡澡",
+    "params": 1,
+    "instructions": 130,
+    "constants": 21
+  },
+  {
+    "path": "main.275",
+    "name": "网络日志",
+    "params": 1,
+    "instructions": 83,
+    "constants": 20
+  },
+  {
+    "path": "main.276",
+    "name": "现在画面",
+    "params": 0,
+    "instructions": 4045,
+    "constants": 498
+  },
+  {
+    "path": "main.277",
+    "name": "main",
+    "params": 0,
+    "instructions": 1718,
+    "constants": 275
+  }
+]
