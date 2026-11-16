@@ -40,18 +40,33 @@ def parse_version(text):
 
 
 APPLY_SCRIPT = r'''param([int]$OldPid, [string]$Live, [string]$Stage, [string]$Backup, [string]$Failed,
-      [string]$Exe, [string]$ArgsJson, [string]$Health, [string]$Expected, [string]$Log)
+      [string]$Exe, [string]$ArgsB64, [string]$Health, [string]$Expected, [string]$Log)
 $ErrorActionPreference = 'Stop'
 function Note($text) { Add-Content -LiteralPath $Log -Value ("{0:s} {1}" -f (Get-Date), $text) -Encoding UTF8 }
-$arguments = @(ConvertFrom-Json $ArgsJson)
-function Start-App { if ($arguments.Count) { Start-Process -FilePath $Exe -ArgumentList $arguments -WorkingDirectory $Live } else { Start-Process -FilePath $Exe -WorkingDirectory $Live } }
+Note "updater started (target $Expected)"
+# Never sit inside the program folder: a process's current directory blocks renaming it.
+Set-Location -LiteralPath (Split-Path -Parent $Log)
+function Move-Retry($from, $to) {
+    for ($i = 0; $i -lt 30; $i++) {
+        try { Move-Item -LiteralPath $from -Destination $to; return } catch { Start-Sleep -Seconds 1 }
+    }
+    Move-Item -LiteralPath $from -Destination $to
+}
+$arguments = @()
+function Start-App {
+    if ($arguments.Count) { Start-Process -FilePath $Exe -ArgumentList $arguments -WorkingDirectory $Live }
+    else { Start-Process -FilePath $Exe -WorkingDirectory $Live }
+}
 try {
+    # Arguments travel as base64 JSON: no quoting through the Windows command line.
+    $json = [Text.Encoding]::UTF8.GetString([Convert]::FromBase64String($ArgsB64))
+    $arguments = @((ConvertFrom-Json $json) | ForEach-Object { [string]$_ })
     Note "waiting for pid $OldPid"
     $old = Get-Process -Id $OldPid -ErrorAction SilentlyContinue
     if ($old -and !$old.WaitForExit(60000)) { throw 'old process did not exit' }
     Start-Sleep -Milliseconds 500
-    Move-Item -LiteralPath $Live -Destination $Backup
-    Move-Item -LiteralPath $Stage -Destination $Live
+    Move-Retry $Live $Backup
+    Move-Retry $Stage $Live
     Note "swapped; starting new version"
     Start-App
     $ok = $false
@@ -67,8 +82,8 @@ try {
         Get-Process | Where-Object { $_.Path -eq $Exe } | Stop-Process -Force -ErrorAction SilentlyContinue
         Start-Sleep -Milliseconds 500
         if (Test-Path -LiteralPath $Backup) {
-            if (Test-Path -LiteralPath $Live) { Move-Item -LiteralPath $Live -Destination $Failed }
-            Move-Item -LiteralPath $Backup -Destination $Live
+            if (Test-Path -LiteralPath $Live) { Move-Retry $Live $Failed }
+            Move-Retry $Backup $Live
         }
         Start-App
         Note "rolled back and restarted previous version"
@@ -207,7 +222,8 @@ class Updater:
 
     def _handover(self, stage, version):
         live = Path(sys.executable).resolve().parent
-        stamp = now().replace(':', '').replace('-', '')[:15]
+        from datetime import datetime
+        stamp = datetime.now().strftime('%Y%m%d-%H%M%S')  # local time, readable in Explorer
         backup = live.with_name(f'{live.name}-backup-{stamp}')
         failed = live.with_name(f'{live.name}-failed-{stamp}')
         # Stage must be on the same volume as the program folder for a rename.
@@ -218,14 +234,22 @@ class Updater:
         script = self.data / 'updates' / 'apply-update.ps1'
         script.write_text(APPLY_SCRIPT, encoding='utf-8-sig')
         log = self.data / 'updates' / 'update.log'
-        args = json.dumps(self.launch.get('argv', []), ensure_ascii=False)
+        import base64
+        args = base64.b64encode(json.dumps(self.launch.get('argv', [])).encode()).decode()
         health = f'http://127.0.0.1:{self.launch.get("port", 22680)}/health'
-        flags = 0x00000008 | 0x00000200 | 0x08000000  # DETACHED | NEW_PROCESS_GROUP | NO_WINDOW
-        subprocess.Popen(['powershell.exe', '-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', str(script),
+        command = ['powershell.exe', '-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', str(script),
                           '-OldPid', str(os.getpid()), '-Live', str(live), '-Stage', str(stage),
                           '-Backup', str(backup), '-Failed', str(failed), '-Exe', str(live / 'WarshipPilot.exe'),
-                          '-ArgsJson', args, '-Health', health, '-Expected', version, '-Log', str(log)],
-                         creationflags=flags, close_fds=True)
+                          '-ArgsB64', args, '-Health', health, '-Expected', version, '-Log', str(log)]
+        # CREATE_NO_WINDOW | NEW_PROCESS_GROUP. Not DETACHED_PROCESS: powershell.exe
+        # silently does nothing without a console.
+        flags = 0x08000000 | 0x00000200
+        try:
+            # Leave the parent's job object (scheduled task / console) so the
+            # updater survives this process exiting.
+            subprocess.Popen(command, creationflags=flags | 0x01000000, close_fds=True, cwd=log.parent)
+        except OSError:
+            subprocess.Popen(command, creationflags=flags, close_fds=True, cwd=log.parent)
         self._prune_backups(live)
         with self.lock:
             self.status.update(state='restarting', progress='')

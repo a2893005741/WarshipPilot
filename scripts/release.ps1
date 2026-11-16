@@ -1,5 +1,5 @@
 [CmdletBinding()]
-param([string]$Notes = '', [switch]$Draft)
+param([string]$Notes = '', [switch]$Draft, [switch]$SkipNpmCi)
 # Build the EXE, package it and publish a GitHub Release that the built-in
 # updater picks up (asset name must stay WarshipPilot-<version>-win-x64.zip).
 # Requires: clean, pushed working tree; gh logged in with access to the repo.
@@ -17,7 +17,7 @@ try {
     gh release view $tag 2>$null | Out-Null
     if ($LASTEXITCODE -eq 0) { throw "Release $tag already exists; bump backend/version.py" }
 
-    & "$PSScriptRoot/build.ps1" -OutputRoot dist
+    & "$PSScriptRoot/build.ps1" -OutputRoot dist -SkipNpmCi:$SkipNpmCi
     $release = Join-Path $projectRoot 'dist\WarshipPilot'
     $zip = Join-Path $projectRoot "dist\WarshipPilot-$version-win-x64.zip"
     $source = Join-Path $projectRoot "dist\WarshipPilot-$version-source.zip"
