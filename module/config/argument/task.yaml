@@ -1,0 +1,94 @@
+menu:
+  Warship:
+    name: 舰R设置
+    tasks:
+      general:
+      - Runtime
+      - Repair
+      - Retirement
+      - Drop
+      - General
+      control:
+      - Control
+  DailyMission:
+    name: 日常任务
+    tasks:
+      expedition:
+      - Scheduler
+      - Expedition
+      campaign:
+      - Scheduler
+      - Campaign
+      exercise:
+      - Scheduler
+      - Exercise
+  Farm:
+    name: 出征方案
+    tasks:
+      sortie_a:
+      - Scheduler
+      - Map
+      - Fleet
+      - Repair
+      - Battle
+      - Enemy
+      - Sortie
+      sortie_b:
+      - Scheduler
+      - Map
+      - Fleet
+      - Repair
+      - Battle
+      - Enemy
+      - Sortie
+      sortie:
+      - Scheduler
+      - Map
+      - Fleet
+      - Repair
+      - Battle
+      - Enemy
+      - Sortie
+  Decisive:
+    name: 决战任务
+    tasks:
+      decisive:
+      - Scheduler
+      - Decisive
+tasks:
+  general:
+    name: 通用设置
+    executable: false
+    help: 原脚本的修理、舰船处理与记录设置，保留配置供后续任务接入。
+  control:
+    name: 功能控制台
+    executable: false
+    help: 原脚本的前后方案与远征开关，保留配置供后续任务接入。
+  expedition:
+    name: 远征
+    executable: true
+    help: 收取已完成远征，并由原舰队继续派遣。
+  campaign:
+    name: 战役
+    executable: false
+    help: 保存原脚本战役参数；本版尚未接入执行。
+  exercise:
+    name: 演习
+    executable: false
+    help: 保存原脚本演习参数；本版尚未接入执行。
+  sortie_a:
+    name: 方案 A
+    executable: false
+    help: 保存原脚本方案 A 参数；本版尚未接入执行。
+  sortie_b:
+    name: 方案 B
+    executable: false
+    help: 保存原脚本方案 B 参数；本版尚未接入执行。
+  sortie:
+    name: 方案 C
+    executable: true
+    help: 使用原脚本方案 C 执行出征，修改的方案参数在下次任务启动时使用。
+  decisive:
+    name: 决战
+    executable: false
+    help: 保存原脚本决战参数；本版尚未接入执行。

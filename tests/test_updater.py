@@ -8,7 +8,7 @@ from unittest.mock import patch
 
 from deploy.git import Git
 from module.config.config import Config
-from module.webui.updater import Updater
+from module.api.update_service import Updater
 
 
 def git(root,*args):

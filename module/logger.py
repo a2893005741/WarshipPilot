@@ -1,4 +1,5 @@
 import json
+import logging
 from pathlib import Path
 import sqlite3
 import threading
@@ -58,3 +59,23 @@ class Store:
 
     def close(self):
         self.db.close()
+
+
+_log = logging.getLogger("warship.device")
+
+class _Logger:
+    """AzurPilot logger surface: info/warning/... plus attr() and hr()."""
+
+    def __getattr__(self, name):
+        return getattr(_log, name)
+
+    @staticmethod
+    def attr(name, text):
+        _log.info('[%s] %s', name, text)
+
+    @staticmethod
+    def hr(title, level=3):
+        _log.info('==== %s ====', title)
+
+
+logger = _Logger()

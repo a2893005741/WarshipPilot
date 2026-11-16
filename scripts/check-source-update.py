@@ -63,8 +63,8 @@ def main():
         cwd=live,stdout=output,stderr=output,creationflags=getattr(subprocess,'CREATE_NO_WINDOW',0))
     try:
         fingerprint=live/'.venv/.warship-lock'
-        fingerprint_time=fingerprint.stat().st_mtime_ns
         old=wait(lambda:call('health'))
+        fingerprint_time=fingerprint.stat().st_mtime_ns
         git(author,'config','user.email','smoke@example.invalid');git(author,'config','user.name','Source Update Smoke')
         (author/'docs/source-update-smoke.txt').write_text('Integration update marker\n',encoding='utf-8')
         git(author,'add','docs/source-update-smoke.txt');git(author,'commit','-m','Verify source update handover')

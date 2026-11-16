@@ -14,8 +14,9 @@ from alas import Runtime
 from deploy.lock import instance_lock
 from module.config.config import Config
 from module.config.migration import migrate
-from module.webui.api import create_app
-from module.webui.updater import Updater
+from module.api.app import create_app
+from module.api.update_service import Updater
+from module.config.task_settings import normalize_tasks
 
 APP_DIR = Path(__file__).resolve().parent
 
@@ -30,6 +31,7 @@ def main():
     root = args.root.resolve()
     with instance_lock(root):
         migrated = migrate(root)
+        normalize_tasks(root)
         config = Config(root)
         deployment = config.deploy()['WebUI']
         host, port = args.host or deployment['Host'], args.port or deployment['Port']
@@ -67,7 +69,7 @@ def main():
         runtime.updater.start_auto_check(runtime.stop_event)
         app = create_app(runtime, key, shutdown)
         server = uvicorn.Server(uvicorn.Config(app, host=host, port=port,
-            access_log=False, log_config=None, ws='wsproto'))
+            access_log=False, log_config=None, ws='wsproto', timeout_graceful_shutdown=10))
         (root / 'log' / 'console-url.txt').write_text(url, encoding='utf-8')
 
         def open_when_ready():

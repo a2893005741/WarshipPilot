@@ -1,0 +1,75 @@
+{
+  "Warship": {
+    "name": "舰R设置",
+    "tasks": {
+      "general": [
+        "Runtime",
+        "Repair",
+        "Retirement",
+        "Drop",
+        "General"
+      ],
+      "control": [
+        "Control"
+      ]
+    }
+  },
+  "DailyMission": {
+    "name": "日常任务",
+    "tasks": {
+      "expedition": [
+        "Scheduler",
+        "Expedition"
+      ],
+      "campaign": [
+        "Scheduler",
+        "Campaign"
+      ],
+      "exercise": [
+        "Scheduler",
+        "Exercise"
+      ]
+    }
+  },
+  "Farm": {
+    "name": "出征方案",
+    "tasks": {
+      "sortie_a": [
+        "Scheduler",
+        "Map",
+        "Fleet",
+        "Repair",
+        "Battle",
+        "Enemy",
+        "Sortie"
+      ],
+      "sortie_b": [
+        "Scheduler",
+        "Map",
+        "Fleet",
+        "Repair",
+        "Battle",
+        "Enemy",
+        "Sortie"
+      ],
+      "sortie": [
+        "Scheduler",
+        "Map",
+        "Fleet",
+        "Repair",
+        "Battle",
+        "Enemy",
+        "Sortie"
+      ]
+    }
+  },
+  "Decisive": {
+    "name": "决战任务",
+    "tasks": {
+      "decisive": [
+        "Scheduler",
+        "Decisive"
+      ]
+    }
+  }
+}

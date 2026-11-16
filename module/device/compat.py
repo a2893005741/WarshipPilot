@@ -5,39 +5,8 @@ replaced by small local equivalents so module.device carries no Azur Lane
 configuration. Values mirror AzurPilot module/base/runtime_params.py and
 module/config/config_manual.py at the ported revision (see docs/ALAS-PORT.json).
 """
-import logging
-
-_log = logging.getLogger('warship.device')
-
-
-class _Logger:
-    """AzurPilot logger surface: info/warning/... plus attr() and hr()."""
-
-    def __getattr__(self, name):
-        return getattr(_log, name)
-
-    @staticmethod
-    def attr(name, text):
-        _log.info('[%s] %s', name, text)
-
-    @staticmethod
-    def hr(title, level=3):
-        _log.info('==== %s ====', title)
-
-
-logger = _Logger()
-
-
-class RequestHumanTakeover(Exception):
-    """The device/method cannot continue without the user."""
-
-
-class EmulatorNotRunningError(Exception):
-    pass
-
-
-class ScriptError(Exception):
-    pass
+from module.logger import logger
+from module.exception import RequestHumanTakeover, EmulatorNotRunningError, ScriptError
 
 
 # module/base/runtime_params.py

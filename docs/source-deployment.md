@@ -30,3 +30,18 @@
 首次现场检查发现并修正两项环境差异：远端 PowerShell 策略要求为本次脚本调用指定执行策略；复制的 Git 系统配置引用了开发电脑证书路径，现使用 Windows schannel 系统证书库。隐藏启动器使用 PowerShell 包装并等待 GUI 生命周期，避免依赖远端脚本宿主的行为。
 
 后续补充了中断复制重试测试，目前 67 项回归通过。初次部署旧 D:\WarshipPilot 备份在 D:\WarshipPilot-source-backup-20261117-023744；实际 v0.5.2 安装和 data 保留原处。
+
+## 第二阶段：ALAS WebUI 与配置（v0.7.0）
+
+按照用户维护的 H:\ALAS\AzurPilot（dev，83ccef80）适配 WebUI。原仓库未修改。
+
+- 复用其现代样式模块、整体网格、实例栏、树状任务导航、监控分段控件与参数卡/目录/调度三列结构，保留来源清单 docs/ALAS-WEBUI-PORT.json。
+- 前端 app/pages/components/api/config/styles 分层；后端 module/api 与 module/runtime 分层，共用 logger/exception。
+- 任务、菜单和参数从 task.yaml/argument.yaml/default.yaml/override.yaml/gui.yaml 生成 args.json、menu.json、schema.json 与 config/template.json；API 协议导出 frontend/src/api/contract.json 和 generated.ts。
+- 从原脚本提取 506 个业务字段，保留枚举顺序、默认值和出处；敏感注册/令牌等字段不迁移。
+- 实例配置为 Tasks.<任务>.<参数组>.<参数>。旧扁平配置可读，启动时规范化，调度和旧参数保持。
+- 方案 C 的原始参数传给原 Lua 执行器，大破出征/进击固定关闭；尚未执行的任务保留配置并禁用调度。
+- 字段自动保存，编辑串行提交；运行前等待保存。业务请求使用 /api/v1/ws，HTTP 兼容入口及图片下载保留。
+- Python 74 项回归通过，生产构建通过，真实 Chromium 验证桌面/手机/深色、参数目录、配置刷新持久化、非法值提示与恢复、只读安全项和版本化 WebSocket，无页面异常。
+
+布局截图和浏览器结果位于 .deployment/alas-webui-preview。后续经源码更新器部署，保留原访问码和调度计划。

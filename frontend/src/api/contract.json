@@ -1,0 +1,85 @@
+{
+  "version": 1,
+  "path": "/api/v1/ws",
+  "request": {
+    "additionalProperties": false,
+    "properties": {
+      "v": {
+        "const": 1,
+        "default": 1,
+        "title": "V",
+        "type": "integer"
+      },
+      "type": {
+        "const": "request",
+        "default": "request",
+        "title": "Type",
+        "type": "string"
+      },
+      "id": {
+        "anyOf": [
+          {
+            "type": "integer"
+          },
+          {
+            "type": "string"
+          }
+        ],
+        "title": "Id"
+      },
+      "method": {
+        "maxLength": 80,
+        "minLength": 1,
+        "title": "Method",
+        "type": "string"
+      },
+      "params": {
+        "additionalProperties": true,
+        "title": "Params",
+        "type": "object"
+      }
+    },
+    "required": [
+      "id",
+      "method"
+    ],
+    "title": "RequestEnvelope",
+    "type": "object"
+  },
+  "methods": [
+    "benchmark",
+    "config",
+    "config-field",
+    "config.get",
+    "config.schema",
+    "config.set",
+    "connect-adb",
+    "control",
+    "device-config",
+    "devices",
+    "events",
+    "fault",
+    "legacy-catalog",
+    "legacy-check",
+    "legacy-report",
+    "legacy-rule",
+    "legacy-settings",
+    "runtime.get",
+    "sample",
+    "sample-delete",
+    "samples",
+    "schema",
+    "select",
+    "serial",
+    "session-start",
+    "session-stop",
+    "shutdown",
+    "state",
+    "task-config",
+    "task-configs",
+    "task-control",
+    "update-check",
+    "update-install",
+    "update-settings"
+  ]
+}

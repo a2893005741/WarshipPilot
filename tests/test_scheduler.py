@@ -6,7 +6,7 @@ import threading
 from pathlib import Path
 import unittest
 
-from module.scheduler.controller import TaskController
+from module.runtime.controller import TaskController
 from module.config.task_settings import TaskDraft, save_task
 from module.config.config import Config
 

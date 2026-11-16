@@ -1,0 +1,57 @@
+/** Real WebUI rendering and configuration persistence against an isolated backend. */
+import {chromium} from 'playwright';
+import {readFile,mkdir,writeFile} from 'node:fs/promises';
+import {resolve} from 'node:path';
+
+const root=resolve(import.meta.dirname,'../..');
+const preview=resolve(root,'.deployment/alas-webui-preview');
+const deployment=await readFile(resolve(preview,'config/deploy.yaml'),'utf8');
+const key=deployment.match(/^  AccessCode: (.+)$/m)[1].trim();
+const output=resolve(root,'.deployment/alas-webui-preview/screenshots');
+await mkdir(output,{recursive:true});
+const browser=await chromium.launch({headless:true});
+const page=await browser.newPage({viewport:{width:1600,height:1000}});
+const errors=[];page.on('pageerror',error=>errors.push(error.message));
+const sockets=[];page.on('websocket',socket=>sockets.push(socket.url()));
+const get=async task=>{const response=await page.request.get(`http://127.0.0.1:22685/api/config?task=${task}`,{headers:{Authorization:'Bearer '+key}});return response.json()};
+try{
+ await page.goto('http://127.0.0.1:22685/#key='+encodeURIComponent(key));
+ await page.getByRole('link',{name:'方案 C',exact:true}).waitFor();
+ await page.screenshot({path:resolve(output,'overview-desktop.png')});
+ await page.getByRole('link',{name:'方案 C',exact:true}).click();
+ await page.getByLabel('出征舰队',{exact:true}).waitFor();
+ const field=page.getByLabel('快修输入框',{exact:true});
+ await field.fill('2');await field.press('Tab');
+ await page.waitForFunction(async()=>{const r=await fetch('/api/config?task=sortie',{headers:{Authorization:'Bearer '+localStorage.getItem('wp-key')}});return (await r.json()).values.Repair['快修输入框C']==='2'});
+ await page.getByLabel('优先级',{exact:true}).fill('0');await page.getByLabel('优先级',{exact:true}).press('Tab');
+ await page.getByRole('alert').filter({hasText:'范围'}).waitFor();
+ await page.getByLabel('优先级',{exact:true}).fill('2');await page.getByLabel('优先级',{exact:true}).press('Tab');
+ await page.waitForFunction(async()=>{const r=await fetch('/api/config?task=sortie',{headers:{Authorization:'Bearer '+localStorage.getItem('wp-key')}});return (await r.json()).values.Scheduler.Priority===2});
+ if(!(await page.getByRole('switch',{name:'大破出征',exact:true}).isDisabled()))throw new Error('Fixed safety option is editable');
+ await page.getByRole('link',{name:'修理设置',exact:true}).click();
+ await page.waitForFunction(()=>{const r=document.getElementById('group-Repair')?.getBoundingClientRect();return r&&r.y>=90&&r.y<=220},{},{timeout:4000});
+ await page.screenshot({path:resolve(output,'task-desktop.png')});
+ await page.getByRole('button',{name:'切换深色主题',exact:true}).click();
+ await page.waitForTimeout(300);
+ await page.screenshot({path:resolve(output,'task-dark.png')});
+ await page.getByRole('button',{name:'切换浅色主题',exact:true}).click();
+ await page.reload();await page.getByLabel('快修输入框',{exact:true}).waitFor();
+ if(await page.getByLabel('快修输入框',{exact:true}).inputValue()!=='2')throw new Error('Original script option did not survive reload');
+ await page.setViewportSize({width:1280,height:800});
+ await page.screenshot({path:resolve(output,'task-1280.png')});
+ const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1);
+ if(overflow)throw new Error('Desktop viewport has horizontal overflow');
+ await page.setViewportSize({width:390,height:844});
+ await page.waitForTimeout(220);
+ const drawer=await page.locator('.sidebar').boundingBox();if(drawer&&drawer.x+drawer.width>1)throw new Error('Mobile navigation is open by default');
+ await page.screenshot({path:resolve(output,'task-mobile.png')});
+ await page.getByRole('button',{name:'展开导航',exact:true}).click();
+ await page.getByRole('link',{name:'战役',exact:true}).click();
+ await page.getByLabel('战役章节',{exact:true}).waitFor();
+ if(!(await page.getByRole('switch',{name:'启用任务',exact:true}).isDisabled()))throw new Error('Unimplemented task can be scheduled');
+ if(errors.length)throw new Error(errors.join('\n'));
+ if(!sockets.some(url=>url.endsWith('/api/v1/ws')))throw new Error('Versioned WebSocket API is not used');
+ const result={desktop:true,mobile:true,original_options_saved:true,validation_error_recovered:true,safety_readonly:true,unsupported_task_disabled:true,versioned_websocket:true,errors};
+ await writeFile(resolve(preview,'browser-result.json'),JSON.stringify(result,null,2));
+ console.log(JSON.stringify(result));
+}finally{await browser.close()}

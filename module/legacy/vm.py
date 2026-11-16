@@ -37,6 +37,7 @@ class LegacyVM:
         self.continue_templates = [(390,190,template('expedition-continue-title.png')),
                                    (515,315,template('expedition-continue-question.png'))]
         self.config = json.loads((resources / 'assets/legacy/task-defaults.json').read_text(encoding='utf-8'))
+        self.config.update(settings.get('legacy', {}))
         self.config.update({'前方案A': False, '前方案B': False,
                             '前方案C': True, '后方案A': False, '后方案B': False, '后方案C': False,
                             '网络日志': False, '保持加速': False, '大破出征C': False, '大破进击C': False,

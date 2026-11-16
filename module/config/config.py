@@ -44,7 +44,10 @@ class Config:
                 if not isinstance(value, dict):
                     raise ValueError('warship.json 必须是 JSON 对象')
                 return value
-            return {'schema_version': 1, 'Device': {}, 'Tasks': {},
+            template = Path(__file__).resolve().parents[2] / 'config/template.json'
+            if template.exists():
+                return json.loads(template.read_text(encoding='utf-8'))
+            return {'schema_version': 2, 'Device': {}, 'Tasks': {},
                     'Scheduler': {'Enable': False, 'NextRun': {}}}
 
     def section(self, name):
@@ -54,6 +57,12 @@ class Config:
         with self.lock:
             current = self.instance()
             current[name] = deepcopy(value)
+            if name == 'Tasks' and any('Scheduler' in task for task in value.values()):
+                current['schema_version'] = 2
+            if name == 'Scheduler':
+                for task, fields in current.get('Tasks', {}).items():
+                    if 'Scheduler' in fields:
+                        fields['Scheduler']['NextRun'] = value.get('NextRun', {}).get(task, '')
             atomic_json(self.instance_file, current)
 
     def deploy(self):

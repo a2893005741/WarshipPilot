@@ -13,7 +13,7 @@ import time
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
-from module.scheduler.controller import TaskController
+from module.runtime.controller import TaskController
 from module.legacy.vm import identifier
 from module.logger import Store, atomic_json
 

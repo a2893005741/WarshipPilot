@@ -1,0 +1,8475 @@
+general:
+  Retirement:
+    养成次数:
+      name: 养成次数
+      type: input
+      value: '1'
+      storage: legacy
+      key: 养成次数
+      source:
+        page: 全局和环境
+        ui_line: 75
+    拆船方式:
+      name: 拆船方式
+      type: select
+      value: 0
+      storage: legacy
+      key: 拆船方式
+      source:
+        page: 其他设置
+        ui_line: 1226
+      option:
+      - value: 0
+        label: 智能强化
+      - value: 1
+        label: 自动拆解
+      - value: 2
+        label: 仓满停止出征
+      - value: 3
+        label: 仓满反复尝试出征
+    拆船保留装备:
+      name: 拆船保留装备
+      type: checkbox
+      value: true
+      storage: legacy
+      key: 拆船保留装备
+      source:
+        page: 其他设置
+        ui_line: 1227
+    强化选择:
+      name: 强化选择
+      type: select
+      value: 0
+      storage: legacy
+      key: 强化选择
+      source:
+        page: 其他设置
+        ui_line: 1233
+      option:
+      - value: 0
+        label: 所有船(等级降序)
+      - value: 1
+        label: 标记船
+    标记船强化满了转拆解:
+      name: 标记船强化满了转拆解
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 标记船强化满了转拆解
+      source:
+        page: 其他设置
+        ui_line: 1237
+    强化一次就升级一次技能:
+      name: 强化一次就升级一次技能
+      type: checkbox
+      value: true
+      storage: legacy
+      key: 强化一次就升级一次技能
+      source:
+        page: 其他设置
+        ui_line: 1238
+    缺狗粮时:
+      name: 缺狗粮时
+      type: select
+      value: 0
+      storage: legacy
+      key: 缺狗粮时
+      source:
+        page: 其他设置
+        ui_line: 1249
+      option:
+      - value: 0
+        label: 换个船强化
+      - value: 1
+        label: 转拆解
+    拆船快选:
+      name: 拆船快选
+      type: select
+      value: 0
+      storage: legacy
+      key: 拆船快选
+      source:
+        page: 其他设置
+        ui_line: 1256
+      option:
+      - value: 0
+        label: 快速拆船
+      - value: 1
+        label: 一次14条按稀有度升序
+      - value: 2
+        label: 一次14条按获得时间升序
+      - value: 3
+        label: 一次14条按获得时间降序
+      - value: 4
+        label: 一次14条按稀有度降序
+    拆航母:
+      name: 拆航母
+      type: checkbox
+      value: true
+      storage: legacy
+      key: 拆航母
+      source:
+        page: 其他设置
+        ui_line: 1261
+    拆轻母:
+      name: 拆轻母
+      type: checkbox
+      value: true
+      storage: legacy
+      key: 拆轻母
+      source:
+        page: 其他设置
+        ui_line: 1262
+    拆装母:
+      name: 拆装母
+      type: checkbox
+      value: true
+      storage: legacy
+      key: 拆装母
+      source:
+        page: 其他设置
+        ui_line: 1263
+    拆战列:
+      name: 拆战列
+      type: checkbox
+      value: true
+      storage: legacy
+      key: 拆战列
+      source:
+        page: 其他设置
+        ui_line: 1264
+    拆航战:
+      name: 拆航战
+      type: checkbox
+      value: true
+      storage: legacy
+      key: 拆航战
+      source:
+        page: 其他设置
+        ui_line: 1265
+    拆战巡:
+      name: 拆战巡
+      type: checkbox
+      value: true
+      storage: legacy
+      key: 拆战巡
+      source:
+        page: 其他设置
+        ui_line: 1269
+    拆重巡:
+      name: 拆重巡
+      type: checkbox
+      value: true
+      storage: legacy
+      key: 拆重巡
+      source:
+        page: 其他设置
+        ui_line: 1270
+    拆航巡:
+      name: 拆航巡
+      type: checkbox
+      value: true
+      storage: legacy
+      key: 拆航巡
+      source:
+        page: 其他设置
+        ui_line: 1271
+    拆雷巡:
+      name: 拆雷巡
+      type: checkbox
+      value: true
+      storage: legacy
+      key: 拆雷巡
+      source:
+        page: 其他设置
+        ui_line: 1272
+    拆轻巡:
+      name: 拆轻巡
+      type: checkbox
+      value: true
+      storage: legacy
+      key: 拆轻巡
+      source:
+        page: 其他设置
+        ui_line: 1273
+    拆重炮:
+      name: 拆重炮
+      type: checkbox
+      value: true
+      storage: legacy
+      key: 拆重炮
+      source:
+        page: 其他设置
+        ui_line: 1277
+    拆驱逐:
+      name: 拆驱逐
+      type: checkbox
+      value: true
+      storage: legacy
+      key: 拆驱逐
+      source:
+        page: 其他设置
+        ui_line: 1278
+    拆潜母:
+      name: 拆潜母
+      type: checkbox
+      value: true
+      storage: legacy
+      key: 拆潜母
+      source:
+        page: 其他设置
+        ui_line: 1279
+    拆潜艇:
+      name: 拆潜艇
+      type: checkbox
+      value: true
+      storage: legacy
+      key: 拆潜艇
+      source:
+        page: 其他设置
+        ui_line: 1280
+    拆炮潜:
+      name: 拆炮潜
+      type: checkbox
+      value: true
+      storage: legacy
+      key: 拆炮潜
+      source:
+        page: 其他设置
+        ui_line: 1281
+    拆补给:
+      name: 拆补给
+      type: checkbox
+      value: true
+      storage: legacy
+      key: 拆补给
+      source:
+        page: 其他设置
+        ui_line: 1285
+    拆导驱:
+      name: 拆导驱
+      type: checkbox
+      value: true
+      storage: legacy
+      key: 拆导驱
+      source:
+        page: 其他设置
+        ui_line: 1286
+    拆防驱:
+      name: 拆防驱
+      type: checkbox
+      value: true
+      storage: legacy
+      key: 拆防驱
+      source:
+        page: 其他设置
+        ui_line: 1287
+    拆导巡:
+      name: 拆导巡
+      type: checkbox
+      value: true
+      storage: legacy
+      key: 拆导巡
+      source:
+        page: 其他设置
+        ui_line: 1288
+    拆防巡:
+      name: 拆防巡
+      type: checkbox
+      value: true
+      storage: legacy
+      key: 拆防巡
+      source:
+        page: 其他设置
+        ui_line: 1289
+    拆大巡:
+      name: 拆大巡
+      type: checkbox
+      value: true
+      storage: legacy
+      key: 拆大巡
+      source:
+        page: 其他设置
+        ui_line: 1293
+    拆导战:
+      name: 拆导战
+      type: checkbox
+      value: true
+      storage: legacy
+      key: 拆导战
+      source:
+        page: 其他设置
+        ui_line: 1294
+  General:
+    换船前剔除标记:
+      name: 换船前剔除标记
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 换船前剔除标记
+      source:
+        page: 全局和环境
+        ui_line: 80
+    战况选择:
+      name: 战况选择
+      type: select
+      value: 0
+      storage: legacy
+      key: 战况选择
+      source:
+        page: 其他设置
+        ui_line: 1369
+      option:
+      - value: 0
+        label: 正中
+      - value: 1
+        label: 左上
+      - value: 2
+        label: 左下
+      - value: 3
+        label: 右上
+      - value: 4
+        label: 右下
+    上榜转远征:
+      name: 上榜转远征
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 上榜转远征
+      source:
+        page: 其他设置
+        ui_line: 1381
+  Drop:
+    捞船截图:
+      name: 捞船截图
+      type: select
+      value: 1
+      storage: legacy
+      key: 捞船截图
+      source:
+        page: 其他设置
+        ui_line: 1309
+      option:
+      - value: 0
+        label: 每次捞船截图
+      - value: 1
+        label: 新船才截图
+      - value: 2
+        label: 不截图
+    图鉴新船:
+      name: 图鉴新船
+      type: select
+      value: 2
+      storage: legacy
+      key: 图鉴新船
+      source:
+        page: 其他设置
+        ui_line: 1314
+      option:
+      - value: 0
+        label: 新船上锁继续
+      - value: 1
+        label: 新船上锁停止
+      - value: 2
+        label: 新船上锁远征
+    捞U1206:
+      name: 捞U1206
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 捞U1206
+      source:
+        page: 其他设置
+        ui_line: 1319
+    捞鞍山:
+      name: 捞鞍山
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 捞鞍山
+      source:
+        page: 其他设置
+        ui_line: 1320
+    捞U96:
+      name: 捞U96
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 捞U96
+      source:
+        page: 其他设置
+        ui_line: 1321
+    捞U1405:
+      name: 捞U1405
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 捞U1405
+      source:
+        page: 其他设置
+        ui_line: 1322
+    捞U81:
+      name: 捞U81
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 捞U81
+      source:
+        page: 其他设置
+        ui_line: 1323
+    捞芝加哥:
+      name: 捞芝加哥
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 捞芝加哥
+      source:
+        page: 其他设置
+        ui_line: 1324
+    捞导驱防驱:
+      name: 捞导驱防驱
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 捞导驱防驱
+      source:
+        page: 其他设置
+        ui_line: 1325
+    捞空想:
+      name: 捞空想
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 捞空想
+      source:
+        page: 其他设置
+        ui_line: 1326
+    捞U47:
+      name: 捞U47
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 捞U47
+      source:
+        page: 其他设置
+        ui_line: 1327
+    捞CV16:
+      name: 捞CV16
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 捞CV16
+      source:
+        page: 其他设置
+        ui_line: 1328
+    捞波尔扎诺:
+      name: 捞波尔扎诺
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 捞波尔扎诺
+      source:
+        page: 其他设置
+        ui_line: 1329
+    捞基阿特:
+      name: 捞基阿特
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 捞基阿特
+      source:
+        page: 其他设置
+        ui_line: 1330
+    捞欧根:
+      name: 捞欧根
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 捞欧根
+      source:
+        page: 其他设置
+        ui_line: 1331
+    捞萤火虫:
+      name: 捞萤火虫
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 捞萤火虫
+      source:
+        page: 其他设置
+        ui_line: 1332
+    捞U505:
+      name: 捞U505
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 捞U505
+      source:
+        page: 其他设置
+        ui_line: 1333
+    捞加里波第:
+      name: 捞加里波第
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 捞加里波第
+      source:
+        page: 其他设置
+        ui_line: 1334
+    捞密苏里:
+      name: 捞密苏里
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 捞密苏里
+      source:
+        page: 其他设置
+        ui_line: 1335
+    捞贝亚恩:
+      name: 捞贝亚恩
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 捞贝亚恩
+      source:
+        page: 其他设置
+        ui_line: 1336
+    捞85工程:
+      name: 捞85工程
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 捞85工程
+      source:
+        page: 其他设置
+        ui_line: 1337
+    捞阿拉斯加:
+      name: 捞阿拉斯加
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 捞阿拉斯加
+      source:
+        page: 其他设置
+        ui_line: 1338
+    捞CNT:
+      name: 捞CNT
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 捞CNT
+      source:
+        page: 其他设置
+        ui_line: 1339
+    捞捷尔任斯基:
+      name: 捞捷尔任斯基
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 捞捷尔任斯基
+      source:
+        page: 其他设置
+        ui_line: 1340
+    捞日丹诺夫:
+      name: 捞日丹诺夫
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 捞日丹诺夫
+      source:
+        page: 其他设置
+        ui_line: 1341
+    捞埃塞克斯:
+      name: 捞埃塞克斯
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 捞埃塞克斯
+      source:
+        page: 其他设置
+        ui_line: 1342
+    捞胜利:
+      name: 捞胜利
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 捞胜利
+      source:
+        page: 其他设置
+        ui_line: 1343
+  Repair:
+    快修防呆:
+      name: 快修防呆
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 快修防呆
+      source:
+        page: 其他设置
+        ui_line: 1349
+    大破泡澡顺道修中破:
+      name: 大破泡澡顺道修中破
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 大破泡澡顺道修中破
+      source:
+        page: 其他设置
+        ui_line: 1354
+    慢修搓澡:
+      name: 慢修搓澡
+      type: checkbox
+      value: true
+      storage: legacy
+      key: 慢修搓澡
+      source:
+        page: 其他设置
+        ui_line: 1356
+    快修用量限制:
+      name: 快修用量限制
+      type: input
+      value: '99999'
+      storage: legacy
+      key: 快修用量限制
+      source:
+        page: 其他设置
+        ui_line: 1376
+  Runtime:
+    顶号开关:
+      name: 顶号开关
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 顶号开关
+      source:
+        page: 其他设置
+        ui_line: 1361
+    顶号等待:
+      name: 顶号等待
+      type: select
+      value: 2
+      storage: legacy
+      key: 顶号等待
+      source:
+        page: 其他设置
+        ui_line: 1363
+      option:
+      - value: 0
+        label: '5'
+      - value: 1
+        label: '10'
+      - value: 2
+        label: '15'
+      - value: 3
+        label: '20'
+      - value: 4
+        label: '25'
+      - value: 5
+        label: '30'
+    战斗次数限制:
+      name: 战斗次数限制
+      type: input
+      value: '10000'
+      storage: legacy
+      key: 战斗次数限制
+      source:
+        page: 其他设置
+        ui_line: 1374
+    定时重启:
+      name: 定时重启
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 定时重启
+      source:
+        page: 其他设置
+        ui_line: 1386
+    定时重启间隔:
+      name: 定时重启间隔
+      type: select
+      value: 0
+      storage: legacy
+      key: 定时重启间隔
+      source:
+        page: 其他设置
+        ui_line: 1388
+      option:
+      - value: 0
+        label: 半小时
+      - value: 1
+        label: 一个半小时
+      - value: 2
+        label: 两个半小时
+      - value: 3
+        label: 三个半小时
+    休息模式:
+      name: 休息模式
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 休息模式
+      source:
+        page: 其他设置
+        ui_line: 1393
+    休息模式开始H:
+      name: 休息模式开始H
+      type: select
+      value: 0
+      storage: legacy
+      key: 休息模式开始H
+      source:
+        page: 其他设置
+        ui_line: 1395
+      option:
+      - value: 0
+        label: '0'
+      - value: 1
+        label: '1'
+      - value: 2
+        label: '2'
+      - value: 3
+        label: '3'
+      - value: 4
+        label: '4'
+      - value: 5
+        label: '5'
+      - value: 6
+        label: '6'
+      - value: 7
+        label: '7'
+      - value: 8
+        label: '8'
+      - value: 9
+        label: '9'
+      - value: 10
+        label: '10'
+      - value: 11
+        label: '11'
+      - value: 12
+        label: '12'
+      - value: 13
+        label: '13'
+      - value: 14
+        label: '14'
+      - value: 15
+        label: '15'
+      - value: 16
+        label: '16'
+      - value: 17
+        label: '17'
+      - value: 18
+        label: '18'
+      - value: 19
+        label: '19'
+      - value: 20
+        label: '20'
+      - value: 21
+        label: '21'
+      - value: 22
+        label: '22'
+      - value: 23
+        label: '23'
+    休息模式开始M:
+      name: 休息模式开始M
+      type: select
+      value: 0
+      storage: legacy
+      key: 休息模式开始M
+      source:
+        page: 其他设置
+        ui_line: 1397
+      option:
+      - value: 0
+        label: '0'
+      - value: 1
+        label: '1'
+      - value: 2
+        label: '2'
+      - value: 3
+        label: '3'
+      - value: 4
+        label: '4'
+      - value: 5
+        label: '5'
+      - value: 6
+        label: '6'
+      - value: 7
+        label: '7'
+      - value: 8
+        label: '8'
+      - value: 9
+        label: '9'
+      - value: 10
+        label: '10'
+      - value: 11
+        label: '11'
+      - value: 12
+        label: '12'
+      - value: 13
+        label: '13'
+      - value: 14
+        label: '14'
+      - value: 15
+        label: '15'
+      - value: 16
+        label: '16'
+      - value: 17
+        label: '17'
+      - value: 18
+        label: '18'
+      - value: 19
+        label: '19'
+      - value: 20
+        label: '20'
+      - value: 21
+        label: '21'
+      - value: 22
+        label: '22'
+      - value: 23
+        label: '23'
+      - value: 24
+        label: '24'
+      - value: 25
+        label: '25'
+      - value: 26
+        label: '26'
+      - value: 27
+        label: '27'
+      - value: 28
+        label: '28'
+      - value: 29
+        label: '29'
+      - value: 30
+        label: '30'
+      - value: 31
+        label: '31'
+      - value: 32
+        label: '32'
+      - value: 33
+        label: '33'
+      - value: 34
+        label: '34'
+      - value: 35
+        label: '35'
+      - value: 36
+        label: '36'
+      - value: 37
+        label: '37'
+      - value: 38
+        label: '38'
+      - value: 39
+        label: '39'
+      - value: 40
+        label: '40'
+      - value: 41
+        label: '41'
+      - value: 42
+        label: '42'
+      - value: 43
+        label: '43'
+      - value: 44
+        label: '44'
+      - value: 45
+        label: '45'
+      - value: 46
+        label: '46'
+      - value: 47
+        label: '47'
+      - value: 48
+        label: '48'
+      - value: 49
+        label: '49'
+      - value: 50
+        label: '50'
+      - value: 51
+        label: '51'
+      - value: 52
+        label: '52'
+      - value: 53
+        label: '53'
+      - value: 54
+        label: '54'
+      - value: 55
+        label: '55'
+      - value: 56
+        label: '56'
+      - value: 57
+        label: '57'
+      - value: 58
+        label: '58'
+      - value: 59
+        label: '59'
+    休息模式结束H:
+      name: 休息模式结束H
+      type: select
+      value: 0
+      storage: legacy
+      key: 休息模式结束H
+      source:
+        page: 其他设置
+        ui_line: 1399
+      option:
+      - value: 0
+        label: '0'
+      - value: 1
+        label: '1'
+      - value: 2
+        label: '2'
+      - value: 3
+        label: '3'
+      - value: 4
+        label: '4'
+      - value: 5
+        label: '5'
+      - value: 6
+        label: '6'
+      - value: 7
+        label: '7'
+      - value: 8
+        label: '8'
+      - value: 9
+        label: '9'
+      - value: 10
+        label: '10'
+      - value: 11
+        label: '11'
+      - value: 12
+        label: '12'
+      - value: 13
+        label: '13'
+      - value: 14
+        label: '14'
+      - value: 15
+        label: '15'
+      - value: 16
+        label: '16'
+      - value: 17
+        label: '17'
+      - value: 18
+        label: '18'
+      - value: 19
+        label: '19'
+      - value: 20
+        label: '20'
+      - value: 21
+        label: '21'
+      - value: 22
+        label: '22'
+      - value: 23
+        label: '23'
+    休息模式结束M:
+      name: 休息模式结束M
+      type: select
+      value: 0
+      storage: legacy
+      key: 休息模式结束M
+      source:
+        page: 其他设置
+        ui_line: 1401
+      option:
+      - value: 0
+        label: '0'
+      - value: 1
+        label: '1'
+      - value: 2
+        label: '2'
+      - value: 3
+        label: '3'
+      - value: 4
+        label: '4'
+      - value: 5
+        label: '5'
+      - value: 6
+        label: '6'
+      - value: 7
+        label: '7'
+      - value: 8
+        label: '8'
+      - value: 9
+        label: '9'
+      - value: 10
+        label: '10'
+      - value: 11
+        label: '11'
+      - value: 12
+        label: '12'
+      - value: 13
+        label: '13'
+      - value: 14
+        label: '14'
+      - value: 15
+        label: '15'
+      - value: 16
+        label: '16'
+      - value: 17
+        label: '17'
+      - value: 18
+        label: '18'
+      - value: 19
+        label: '19'
+      - value: 20
+        label: '20'
+      - value: 21
+        label: '21'
+      - value: 22
+        label: '22'
+      - value: 23
+        label: '23'
+      - value: 24
+        label: '24'
+      - value: 25
+        label: '25'
+      - value: 26
+        label: '26'
+      - value: 27
+        label: '27'
+      - value: 28
+        label: '28'
+      - value: 29
+        label: '29'
+      - value: 30
+        label: '30'
+      - value: 31
+        label: '31'
+      - value: 32
+        label: '32'
+      - value: 33
+        label: '33'
+      - value: 34
+        label: '34'
+      - value: 35
+        label: '35'
+      - value: 36
+        label: '36'
+      - value: 37
+        label: '37'
+      - value: 38
+        label: '38'
+      - value: 39
+        label: '39'
+      - value: 40
+        label: '40'
+      - value: 41
+        label: '41'
+      - value: 42
+        label: '42'
+      - value: 43
+        label: '43'
+      - value: 44
+        label: '44'
+      - value: 45
+        label: '45'
+      - value: 46
+        label: '46'
+      - value: 47
+        label: '47'
+      - value: 48
+        label: '48'
+      - value: 49
+        label: '49'
+      - value: 50
+        label: '50'
+      - value: 51
+        label: '51'
+      - value: 52
+        label: '52'
+      - value: 53
+        label: '53'
+      - value: 54
+        label: '54'
+      - value: 55
+        label: '55'
+      - value: 56
+        label: '56'
+      - value: 57
+        label: '57'
+      - value: 58
+        label: '58'
+      - value: 59
+        label: '59'
+    允许日志:
+      name: 允许日志
+      type: checkbox
+      value: true
+      storage: legacy
+      key: 允许日志
+      source:
+        page: 其他设置
+        ui_line: 1418
+    允许网络日志:
+      name: 允许网络日志
+      type: checkbox
+      value: true
+      storage: legacy
+      key: 允许网络日志
+      source:
+        page: 其他设置
+        ui_line: 1420
+    网络日志不推送战斗:
+      name: 网络日志不推送战斗
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 网络日志不推送战斗
+      source:
+        page: 其他设置
+        ui_line: 1425
+control:
+  Control:
+    自动做菜:
+      name: 自动做菜
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 自动做菜
+      source:
+        page: 功能控制台
+        ui_line: 124
+    挂远征泡澡:
+      name: 挂远征泡澡
+      type: checkbox
+      value: true
+      storage: legacy
+      key: 挂远征泡澡
+      source:
+        page: 功能控制台
+        ui_line: 131
+    胖次方案A:
+      name: 胖次方案A
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 胖次方案A
+      source:
+        page: 功能控制台
+        ui_line: 136
+    胖次方案B:
+      name: 胖次方案B
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 胖次方案B
+      source:
+        page: 功能控制台
+        ui_line: 137
+    胖次方案C:
+      name: 胖次方案C
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 胖次方案C
+      source:
+        page: 功能控制台
+        ui_line: 138
+    前方案A:
+      name: 前方案A
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 前方案A
+      source:
+        page: 功能控制台
+        ui_line: 143
+    前方案B:
+      name: 前方案B
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 前方案B
+      source:
+        page: 功能控制台
+        ui_line: 144
+    前方案C:
+      name: 前方案C
+      type: checkbox
+      value: true
+      storage: legacy
+      key: 前方案C
+      source:
+        page: 功能控制台
+        ui_line: 145
+    前远征:
+      name: 前远征
+      type: checkbox
+      value: true
+      storage: legacy
+      key: 前远征
+      source:
+        page: 功能控制台
+        ui_line: 146
+    后方案A:
+      name: 后方案A
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 后方案A
+      source:
+        page: 功能控制台
+        ui_line: 151
+    后方案B:
+      name: 后方案B
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 后方案B
+      source:
+        page: 功能控制台
+        ui_line: 152
+    后方案C:
+      name: 后方案C
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 后方案C
+      source:
+        page: 功能控制台
+        ui_line: 153
+    后远征:
+      name: 后远征
+      type: checkbox
+      value: true
+      storage: legacy
+      key: 后远征
+      source:
+        page: 功能控制台
+        ui_line: 154
+    换票资源:
+      name: 换票资源
+      type: select
+      value: 0
+      storage: legacy
+      key: 换票资源
+      source:
+        page: 功能控制台
+        ui_line: 169
+      option:
+      - value: 0
+        label: 钢
+      - value: 1
+        label: 弹
+      - value: 2
+        label: 铝
+      - value: 3
+        label: 油
+    '351':
+      name: '351'
+      type: checkbox
+      value: false
+      storage: legacy
+      key: '351'
+      source:
+        page: 功能控制台
+        ui_line: 221
+    U96:
+      name: U96
+      type: checkbox
+      value: false
+      storage: legacy
+      key: U96
+      source:
+        page: 功能控制台
+        ui_line: 225
+    U1206:
+      name: U1206
+      type: checkbox
+      value: false
+      storage: legacy
+      key: U1206
+      source:
+        page: 功能控制台
+        ui_line: 226
+    鹦鹉螺:
+      name: 鹦鹉螺
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 鹦鹉螺
+      source:
+        page: 功能控制台
+        ui_line: 227
+    U1405:
+      name: U1405
+      type: checkbox
+      value: false
+      storage: legacy
+      key: U1405
+      source:
+        page: 功能控制台
+        ui_line: 231
+    鲃鱼:
+      name: 鲃鱼
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 鲃鱼
+      source:
+        page: 功能控制台
+        ui_line: 232
+    开局SL潜艇:
+      name: 开局SL潜艇
+      type: checkbox
+      value: true
+      storage: legacy
+      key: 开局SL潜艇
+      source:
+        page: 功能控制台
+        ui_line: 233
+expedition:
+  Scheduler:
+    Enable:
+      name: 启用任务
+      type: checkbox
+      value: false
+      storage: task
+      key: enabled
+    Priority:
+      name: 优先级
+      help: 数字越小，优先级越高。
+      type: number
+      value: 5
+      min: 1
+      max: 10
+      storage: task
+      key: priority
+    StartTime:
+      name: 计划时间
+      type: time
+      value: 00:00
+      storage: task
+      key: start_time
+    IntervalMinutes:
+      name: 执行间隔（分钟）
+      type: number
+      value: 60
+      min: 1
+      max: 10080
+      storage: task
+      key: interval_minutes
+    NextRun:
+      name: 下次运行
+      type: datetime-local
+      value: ''
+      storage: scheduler
+      key: NextRun
+    Runs:
+      name: 执行次数
+      type: number
+      value: 1
+      min: 1
+      max: 9999
+      storage: task
+      key: runs
+    SaveScreenshots:
+      name: 保留任务截图
+      type: checkbox
+      value: true
+      storage: task
+      key: save_screenshots
+  Expedition:
+    Dispatch:
+      name: 派遣方式
+      type: input
+      value: 继续原舰队远征
+      display: readonly
+      storage: constant
+campaign:
+  Scheduler:
+    Enable:
+      name: 启用任务
+      type: checkbox
+      value: false
+      storage: task
+      key: enabled
+      display: readonly
+    Priority:
+      name: 优先级
+      help: 数字越小，优先级越高。
+      type: number
+      value: 5
+      min: 1
+      max: 10
+      storage: task
+      key: priority
+      display: readonly
+    StartTime:
+      name: 计划时间
+      type: time
+      value: 00:00
+      storage: task
+      key: start_time
+      display: readonly
+    IntervalMinutes:
+      name: 执行间隔（分钟）
+      type: number
+      value: 60
+      min: 1
+      max: 10080
+      storage: task
+      key: interval_minutes
+      display: readonly
+    NextRun:
+      name: 下次运行
+      type: datetime-local
+      value: ''
+      storage: scheduler
+      key: NextRun
+      display: readonly
+    Runs:
+      name: 执行次数
+      type: number
+      value: 1
+      min: 1
+      max: 9999
+      storage: task
+      key: runs
+      display: readonly
+    SaveScreenshots:
+      name: 保留任务截图
+      type: checkbox
+      value: true
+      storage: task
+      key: save_screenshots
+      display: readonly
+  Campaign:
+    战役开关:
+      name: 战役开关
+      type: checkbox
+      value: true
+      storage: legacy
+      key: 战役开关
+      source:
+        page: 功能控制台
+        ui_line: 89
+    战役SL:
+      name: 战役SL
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 战役SL
+      source:
+        page: 功能控制台
+        ui_line: 90
+    战役章节:
+      name: 战役章节
+      type: select
+      value: 2
+      storage: legacy
+      key: 战役章节
+      source:
+        page: 功能控制台
+        ui_line: 94
+      option:
+      - value: 0
+        label: 驱逐
+      - value: 1
+        label: 巡洋
+      - value: 2
+        label: 战列
+      - value: 3
+        label: 航母
+      - value: 4
+        label: 潜艇
+    战役难度:
+      name: 战役难度
+      type: select
+      value: 1
+      storage: legacy
+      key: 战役难度
+      source:
+        page: 功能控制台
+        ui_line: 95
+      option:
+      - value: 0
+        label: 简单
+      - value: 1
+        label: 困难
+    战役阵型:
+      name: 战役阵型
+      type: select
+      value: 1
+      storage: legacy
+      key: 战役阵型
+      source:
+        page: 功能控制台
+        ui_line: 96
+      option:
+      - value: 0
+        label: 单纵
+      - value: 1
+        label: 复纵
+      - value: 2
+        label: 轮型
+      - value: 3
+        label: 梯形
+      - value: 4
+        label: 单横
+    战役修理:
+      name: 战役修理
+      type: select
+      value: 1
+      storage: legacy
+      key: 战役修理
+      source:
+        page: 功能控制台
+        ui_line: 97
+      option:
+      - value: 0
+        label: 中破快修
+      - value: 1
+        label: 大破快修
+      - value: 2
+        label: 中破泡澡
+      - value: 3
+        label: 大破泡澡
+exercise:
+  Scheduler:
+    Enable:
+      name: 启用任务
+      type: checkbox
+      value: false
+      storage: task
+      key: enabled
+      display: readonly
+    Priority:
+      name: 优先级
+      help: 数字越小，优先级越高。
+      type: number
+      value: 5
+      min: 1
+      max: 10
+      storage: task
+      key: priority
+      display: readonly
+    StartTime:
+      name: 计划时间
+      type: time
+      value: 00:00
+      storage: task
+      key: start_time
+      display: readonly
+    IntervalMinutes:
+      name: 执行间隔（分钟）
+      type: number
+      value: 60
+      min: 1
+      max: 10080
+      storage: task
+      key: interval_minutes
+      display: readonly
+    NextRun:
+      name: 下次运行
+      type: datetime-local
+      value: ''
+      storage: scheduler
+      key: NextRun
+      display: readonly
+    Runs:
+      name: 执行次数
+      type: number
+      value: 1
+      min: 1
+      max: 9999
+      storage: task
+      key: runs
+      display: readonly
+    SaveScreenshots:
+      name: 保留任务截图
+      type: checkbox
+      value: true
+      storage: task
+      key: save_screenshots
+      display: readonly
+  Exercise:
+    演习开关:
+      name: 演习开关
+      type: checkbox
+      value: true
+      storage: legacy
+      key: 演习开关
+      source:
+        page: 功能控制台
+        ui_line: 106
+    演习舰队:
+      name: 演习舰队
+      type: select
+      value: 1
+      storage: legacy
+      key: 演习舰队
+      source:
+        page: 功能控制台
+        ui_line: 107
+      option:
+      - value: 0
+        label: 第一舰队
+      - value: 1
+        label: 第二舰队
+      - value: 2
+        label: 第三舰队
+      - value: 3
+        label: 第四舰队
+    演习阵型:
+      name: 演习阵型
+      type: select
+      value: 1
+      storage: legacy
+      key: 演习阵型
+      source:
+        page: 功能控制台
+        ui_line: 108
+      option:
+      - value: 0
+        label: 单纵
+      - value: 1
+        label: 复纵
+      - value: 2
+        label: 轮型
+      - value: 3
+        label: 梯形
+      - value: 4
+        label: 单横
+    演习避潜艇:
+      name: 演习避潜艇
+      type: checkbox
+      value: true
+      storage: legacy
+      key: 演习避潜艇
+      source:
+        page: 功能控制台
+        ui_line: 112
+    演习夜战:
+      name: 演习夜战
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 演习夜战
+      source:
+        page: 功能控制台
+        ui_line: 117
+sortie_a:
+  Scheduler:
+    Enable:
+      name: 启用任务
+      type: checkbox
+      value: false
+      storage: task
+      key: enabled
+      display: readonly
+    Priority:
+      name: 优先级
+      help: 数字越小，优先级越高。
+      type: number
+      value: 5
+      min: 1
+      max: 10
+      storage: task
+      key: priority
+      display: readonly
+    StartTime:
+      name: 计划时间
+      type: time
+      value: 00:00
+      storage: task
+      key: start_time
+      display: readonly
+    IntervalMinutes:
+      name: 执行间隔（分钟）
+      type: number
+      value: 60
+      min: 1
+      max: 10080
+      storage: task
+      key: interval_minutes
+      display: readonly
+    NextRun:
+      name: 下次运行
+      type: datetime-local
+      value: ''
+      storage: scheduler
+      key: NextRun
+      display: readonly
+    Runs:
+      name: 执行次数
+      type: number
+      value: 1
+      min: 1
+      max: 9999
+      storage: task
+      key: runs
+      display: readonly
+    SaveScreenshots:
+      name: 保留任务截图
+      type: checkbox
+      value: true
+      storage: task
+      key: save_screenshots
+      display: readonly
+  Map:
+    自定义:
+      name: 自定义
+      type: checkbox
+      value: true
+      storage: legacy
+      key: 自定义
+      source:
+        page: 方案A
+        ui_line: 253
+    2-1胖次:
+      name: 2-1胖次
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 2-1胖次
+      source:
+        page: 方案A
+        ui_line: 254
+    2-2偷油:
+      name: 2-2偷油
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 2-2偷油
+      source:
+        page: 方案A
+        ui_line: 255
+    2-3偷油:
+      name: 2-3偷油
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 2-3偷油
+      source:
+        page: 方案A
+        ui_line: 256
+    3-1偷弹:
+      name: 3-1偷弹
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 3-1偷弹
+      source:
+        page: 方案A
+        ui_line: 257
+    3-1偷弹避战巡:
+      name: 3-1偷弹避战巡
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 3-1偷弹避战巡
+      source:
+        page: 方案A
+        ui_line: 258
+    4-3偷铝:
+      name: 4-3偷铝
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 4-3偷铝
+      source:
+        page: 方案A
+        ui_line: 259
+    4-3偷铝避轻母:
+      name: 4-3偷铝避轻母
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 4-3偷铝避轻母
+      source:
+        page: 方案A
+        ui_line: 260
+    4-3偷铝避战巡:
+      name: 4-3偷铝避战巡
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 4-3偷铝避战巡
+      source:
+        page: 方案A
+        ui_line: 261
+    5-2炸鱼:
+      name: 5-2炸鱼
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 5-2炸鱼
+      source:
+        page: 方案A
+        ui_line: 262
+    5-3偷钢:
+      name: 5-3偷钢
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 5-3偷钢
+      source:
+        page: 方案A
+        ui_line: 263
+    6-1炸鱼:
+      name: 6-1炸鱼
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 6-1炸鱼
+      source:
+        page: 方案A
+        ui_line: 264
+    6-1避轻母:
+      name: 6-1避轻母
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 6-1避轻母
+      source:
+        page: 方案A
+        ui_line: 265
+    7-1炸鱼:
+      name: 7-1炸鱼
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 7-1炸鱼
+      source:
+        page: 方案A
+        ui_line: 266
+    7-2练鱼:
+      name: 7-2练鱼
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 7-2练鱼
+      source:
+        page: 方案A
+        ui_line: 267
+    8-1炸鱼:
+      name: 8-1炸鱼
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 8-1炸鱼
+      source:
+        page: 方案A
+        ui_line: 268
+    8-1只打轻巡:
+      name: 8-1只打轻巡
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 8-1只打轻巡
+      source:
+        page: 方案A
+        ui_line: 269
+    8-1不打重巡:
+      name: 8-1不打重巡
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 8-1不打重巡
+      source:
+        page: 方案A
+        ui_line: 270
+    8-2炸鱼:
+      name: 8-2炸鱼
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 8-2炸鱼
+      source:
+        page: 方案A
+        ui_line: 271
+    8-2不打重巡:
+      name: 8-2不打重巡
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 8-2不打重巡
+      source:
+        page: 方案A
+        ui_line: 272
+    8-5不打轻巡:
+      name: 8-5不打轻巡
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 8-5不打轻巡
+      source:
+        page: 方案A
+        ui_line: 273
+    9-1炸鱼:
+      name: 9-1炸鱼
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 9-1炸鱼
+      source:
+        page: 方案A
+        ui_line: 274
+    9-2炸鱼:
+      name: 9-2炸鱼
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 9-2炸鱼
+      source:
+        page: 方案A
+        ui_line: 275
+    章:
+      name: 章
+      type: select
+      value: 10
+      storage: legacy
+      key: 章
+      source:
+        page: 方案A
+        ui_line: 283
+      option:
+      - value: 0
+        label: 一
+      - value: 1
+        label: 二
+      - value: 2
+        label: 三
+      - value: 3
+        label: 四
+      - value: 4
+        label: 五
+      - value: 5
+        label: 六
+      - value: 6
+        label: 七
+      - value: 7
+        label: 八
+      - value: 8
+        label: 九
+      - value: 9
+        label: 十
+      - value: 10
+        label: 最强之舟
+    图:
+      name: 图
+      type: select
+      value: 10
+      storage: legacy
+      key: 图
+      source:
+        page: 方案A
+        ui_line: 285
+      option:
+      - value: 0
+        label: 一
+      - value: 1
+        label: 二
+      - value: 2
+        label: 三
+      - value: 3
+        label: 四
+      - value: 4
+        label: 五
+      - value: 5
+        label: 六
+      - value: 6
+        label: 七
+      - value: 7
+        label: 八
+      - value: 8
+        label: 九
+      - value: 9
+        label: 十
+      - value: 10
+        label: 十一
+      - value: 11
+        label: 十二
+      - value: 12
+        label: 十三
+      - value: 13
+        label: 十四
+    终点位置:
+      name: 终点位置
+      type: select
+      value: 0
+      storage: legacy
+      key: 终点位置
+      source:
+        page: 方案A
+        ui_line: 291
+      option:
+      - value: 0
+        label: '1'
+      - value: 1
+        label: '2'
+      - value: 2
+        label: '3'
+      - value: 3
+        label: '4'
+      - value: 4
+        label: '5'
+      - value: 5
+        label: '6'
+      - value: 6
+        label: '7'
+    入口:
+      name: 入口
+      type: select
+      value: 0
+      storage: legacy
+      key: 入口
+      source:
+        page: 方案A
+        ui_line: 293
+      option:
+      - value: 0
+        label: α
+      - value: 1
+        label: β
+      - value: 2
+        label: γ
+      - value: 3
+        label: δ
+    两战捞胖次:
+      name: 两战捞胖次
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 两战捞胖次
+      source:
+        page: 方案A
+        ui_line: 456
+  Fleet:
+    出征舰队:
+      name: 出征舰队
+      type: select
+      value: 1
+      storage: legacy
+      key: 出征舰队
+      source:
+        page: 方案A
+        ui_line: 281
+      option:
+      - value: 0
+        label: 一
+      - value: 1
+        label: 二
+      - value: 2
+        label: 三
+      - value: 3
+        label: 四
+    满级换船开关:
+      name: 满级换船开关
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 满级换船开关
+      source:
+        page: 方案A
+        ui_line: 297
+    满级换船输入框:
+      name: 满级换船输入框
+      type: input
+      value: '123456'
+      storage: legacy
+      key: 满级换船输入框
+      source:
+        page: 方案A
+        ui_line: 298
+    满级换船条件:
+      name: 满级换船条件
+      type: select
+      value: 0
+      storage: legacy
+      key: 满级换船条件
+      source:
+        page: 方案A
+        ui_line: 300
+      option:
+      - value: 0
+        label: 满级
+      - value: 1
+        label: 泡澡
+      - value: 2
+        label: 养成
+    满级换船执行:
+      name: 满级换船执行
+      type: select
+      value: 0
+      storage: legacy
+      key: 满级换船执行
+      source:
+        page: 方案A
+        ui_line: 301
+      option:
+      - value: 0
+        label: 换船
+      - value: 1
+        label: 远征
+    满级换船目标:
+      name: 满级换船目标
+      type: select
+      value: 7
+      storage: legacy
+      key: 满级换船目标
+      source:
+        page: 方案A
+        ui_line: 303
+      option:
+      - value: 0
+        label: 航母
+      - value: 1
+        label: 轻母
+      - value: 2
+        label: 装母
+      - value: 3
+        label: 战列
+      - value: 4
+        label: 战巡
+      - value: 5
+        label: 重巡
+      - value: 6
+        label: 轻巡
+      - value: 7
+        label: 驱逐
+      - value: 8
+        label: 潜艇
+      - value: 9
+        label: 导驱
+      - value: 10
+        label: 补给
+      - value: 11
+        label: 全部
+      - value: 12
+        label: 防驱
+      - value: 13
+        label: 重炮
+      - value: 14
+        label: 炮潜
+    满级换船排序:
+      name: 满级换船排序
+      type: select
+      value: 0
+      storage: legacy
+      key: 满级换船排序
+      source:
+        page: 方案A
+        ui_line: 305
+      option:
+      - value: 0
+        label: 降序
+      - value: 1
+        label: 升序
+    满级换船国籍:
+      name: 满级换船国籍
+      type: select
+      value: 0
+      storage: legacy
+      key: 满级换船国籍
+      source:
+        page: 方案A
+        ui_line: 307
+      option:
+      - value: 0
+        label: 所有
+      - value: 1
+        label: C国
+      - value: 2
+        label: E国
+      - value: 3
+        label: F国
+      - value: 4
+        label: G国
+      - value: 5
+        label: I国
+      - value: 6
+        label: J国
+      - value: 7
+        label: S国
+      - value: 8
+        label: U国
+      - value: 9
+        label: 其他
+    满级换船开关2:
+      name: 满级换船开关2
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 满级换船开关2
+      source:
+        page: 方案A
+        ui_line: 311
+    满级换船输入框2:
+      name: 满级换船输入框2
+      type: input
+      value: '123456'
+      storage: legacy
+      key: 满级换船输入框2
+      source:
+        page: 方案A
+        ui_line: 312
+    满级换船条件2:
+      name: 满级换船条件2
+      type: select
+      value: 0
+      storage: legacy
+      key: 满级换船条件2
+      source:
+        page: 方案A
+        ui_line: 314
+      option:
+      - value: 0
+        label: 满级
+      - value: 1
+        label: 泡澡
+      - value: 2
+        label: 养成
+    满级换船执行2:
+      name: 满级换船执行2
+      type: select
+      value: 0
+      storage: legacy
+      key: 满级换船执行2
+      source:
+        page: 方案A
+        ui_line: 315
+      option:
+      - value: 0
+        label: 换船
+      - value: 1
+        label: 远征
+    满级换船目标2:
+      name: 满级换船目标2
+      type: select
+      value: 7
+      storage: legacy
+      key: 满级换船目标2
+      source:
+        page: 方案A
+        ui_line: 317
+      option:
+      - value: 0
+        label: 航母
+      - value: 1
+        label: 轻母
+      - value: 2
+        label: 装母
+      - value: 3
+        label: 战列
+      - value: 4
+        label: 战巡
+      - value: 5
+        label: 重巡
+      - value: 6
+        label: 轻巡
+      - value: 7
+        label: 驱逐
+      - value: 8
+        label: 潜艇
+      - value: 9
+        label: 导驱
+      - value: 10
+        label: 补给
+      - value: 11
+        label: 全部
+      - value: 12
+        label: 防驱
+      - value: 13
+        label: 重炮
+      - value: 14
+        label: 炮潜
+    满级换船排序2:
+      name: 满级换船排序2
+      type: select
+      value: 0
+      storage: legacy
+      key: 满级换船排序2
+      source:
+        page: 方案A
+        ui_line: 319
+      option:
+      - value: 0
+        label: 降序
+      - value: 1
+        label: 升序
+    满级换船国籍2:
+      name: 满级换船国籍2
+      type: select
+      value: 0
+      storage: legacy
+      key: 满级换船国籍2
+      source:
+        page: 方案A
+        ui_line: 321
+      option:
+      - value: 0
+        label: 所有
+      - value: 1
+        label: C国
+      - value: 2
+        label: E国
+      - value: 3
+        label: F国
+      - value: 4
+        label: G国
+      - value: 5
+        label: I国
+      - value: 6
+        label: J国
+      - value: 7
+        label: S国
+      - value: 8
+        label: U国
+      - value: 9
+        label: 其他
+    满级换船开关3:
+      name: 满级换船开关3
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 满级换船开关3
+      source:
+        page: 方案A
+        ui_line: 325
+    满级换船输入框3:
+      name: 满级换船输入框3
+      type: input
+      value: '123456'
+      storage: legacy
+      key: 满级换船输入框3
+      source:
+        page: 方案A
+        ui_line: 326
+    满级换船条件3:
+      name: 满级换船条件3
+      type: select
+      value: 0
+      storage: legacy
+      key: 满级换船条件3
+      source:
+        page: 方案A
+        ui_line: 328
+      option:
+      - value: 0
+        label: 满级
+      - value: 1
+        label: 泡澡
+      - value: 2
+        label: 养成
+    满级换船执行3:
+      name: 满级换船执行3
+      type: select
+      value: 0
+      storage: legacy
+      key: 满级换船执行3
+      source:
+        page: 方案A
+        ui_line: 329
+      option:
+      - value: 0
+        label: 换船
+      - value: 1
+        label: 远征
+    满级换船目标3:
+      name: 满级换船目标3
+      type: select
+      value: 7
+      storage: legacy
+      key: 满级换船目标3
+      source:
+        page: 方案A
+        ui_line: 331
+      option:
+      - value: 0
+        label: 航母
+      - value: 1
+        label: 轻母
+      - value: 2
+        label: 装母
+      - value: 3
+        label: 战列
+      - value: 4
+        label: 战巡
+      - value: 5
+        label: 重巡
+      - value: 6
+        label: 轻巡
+      - value: 7
+        label: 驱逐
+      - value: 8
+        label: 潜艇
+      - value: 9
+        label: 导驱
+      - value: 10
+        label: 补给
+      - value: 11
+        label: 全部
+      - value: 12
+        label: 防驱
+      - value: 13
+        label: 重炮
+      - value: 14
+        label: 炮潜
+    满级换船排序3:
+      name: 满级换船排序3
+      type: select
+      value: 0
+      storage: legacy
+      key: 满级换船排序3
+      source:
+        page: 方案A
+        ui_line: 333
+      option:
+      - value: 0
+        label: 降序
+      - value: 1
+        label: 升序
+    满级换船国籍3:
+      name: 满级换船国籍3
+      type: select
+      value: 0
+      storage: legacy
+      key: 满级换船国籍3
+      source:
+        page: 方案A
+        ui_line: 335
+      option:
+      - value: 0
+        label: 所有
+      - value: 1
+        label: C国
+      - value: 2
+        label: E国
+      - value: 3
+        label: F国
+      - value: 4
+        label: G国
+      - value: 5
+        label: I国
+      - value: 6
+        label: J国
+      - value: 7
+        label: S国
+      - value: 8
+        label: U国
+      - value: 9
+        label: 其他
+    满级换船开关4:
+      name: 满级换船开关4
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 满级换船开关4
+      source:
+        page: 方案A
+        ui_line: 339
+    满级换船输入框4:
+      name: 满级换船输入框4
+      type: input
+      value: '123456'
+      storage: legacy
+      key: 满级换船输入框4
+      source:
+        page: 方案A
+        ui_line: 340
+    满级换船条件4:
+      name: 满级换船条件4
+      type: select
+      value: 0
+      storage: legacy
+      key: 满级换船条件4
+      source:
+        page: 方案A
+        ui_line: 342
+      option:
+      - value: 0
+        label: 满级
+      - value: 1
+        label: 泡澡
+      - value: 2
+        label: 养成
+    满级换船执行4:
+      name: 满级换船执行4
+      type: select
+      value: 0
+      storage: legacy
+      key: 满级换船执行4
+      source:
+        page: 方案A
+        ui_line: 343
+      option:
+      - value: 0
+        label: 换船
+      - value: 1
+        label: 远征
+    满级换船目标4:
+      name: 满级换船目标4
+      type: select
+      value: 7
+      storage: legacy
+      key: 满级换船目标4
+      source:
+        page: 方案A
+        ui_line: 345
+      option:
+      - value: 0
+        label: 航母
+      - value: 1
+        label: 轻母
+      - value: 2
+        label: 装母
+      - value: 3
+        label: 战列
+      - value: 4
+        label: 战巡
+      - value: 5
+        label: 重巡
+      - value: 6
+        label: 轻巡
+      - value: 7
+        label: 驱逐
+      - value: 8
+        label: 潜艇
+      - value: 9
+        label: 导驱
+      - value: 10
+        label: 补给
+      - value: 11
+        label: 全部
+      - value: 12
+        label: 防驱
+      - value: 13
+        label: 重炮
+      - value: 14
+        label: 炮潜
+    满级换船排序4:
+      name: 满级换船排序4
+      type: select
+      value: 0
+      storage: legacy
+      key: 满级换船排序4
+      source:
+        page: 方案A
+        ui_line: 347
+      option:
+      - value: 0
+        label: 降序
+      - value: 1
+        label: 升序
+    满级换船国籍4:
+      name: 满级换船国籍4
+      type: select
+      value: 0
+      storage: legacy
+      key: 满级换船国籍4
+      source:
+        page: 方案A
+        ui_line: 349
+      option:
+      - value: 0
+        label: 所有
+      - value: 1
+        label: C国
+      - value: 2
+        label: E国
+      - value: 3
+        label: F国
+      - value: 4
+        label: G国
+      - value: 5
+        label: I国
+      - value: 6
+        label: J国
+      - value: 7
+        label: S国
+      - value: 8
+        label: U国
+      - value: 9
+        label: 其他
+    满级换船开关5:
+      name: 满级换船开关5
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 满级换船开关5
+      source:
+        page: 方案A
+        ui_line: 353
+    满级换船输入框5:
+      name: 满级换船输入框5
+      type: input
+      value: '123456'
+      storage: legacy
+      key: 满级换船输入框5
+      source:
+        page: 方案A
+        ui_line: 354
+    满级换船条件5:
+      name: 满级换船条件5
+      type: select
+      value: 0
+      storage: legacy
+      key: 满级换船条件5
+      source:
+        page: 方案A
+        ui_line: 356
+      option:
+      - value: 0
+        label: 满级
+      - value: 1
+        label: 泡澡
+      - value: 2
+        label: 养成
+    满级换船执行5:
+      name: 满级换船执行5
+      type: select
+      value: 0
+      storage: legacy
+      key: 满级换船执行5
+      source:
+        page: 方案A
+        ui_line: 357
+      option:
+      - value: 0
+        label: 换船
+      - value: 1
+        label: 远征
+    满级换船目标5:
+      name: 满级换船目标5
+      type: select
+      value: 7
+      storage: legacy
+      key: 满级换船目标5
+      source:
+        page: 方案A
+        ui_line: 359
+      option:
+      - value: 0
+        label: 航母
+      - value: 1
+        label: 轻母
+      - value: 2
+        label: 装母
+      - value: 3
+        label: 战列
+      - value: 4
+        label: 战巡
+      - value: 5
+        label: 重巡
+      - value: 6
+        label: 轻巡
+      - value: 7
+        label: 驱逐
+      - value: 8
+        label: 潜艇
+      - value: 9
+        label: 导驱
+      - value: 10
+        label: 补给
+      - value: 11
+        label: 全部
+      - value: 12
+        label: 防驱
+      - value: 13
+        label: 重炮
+      - value: 14
+        label: 炮潜
+    满级换船排序5:
+      name: 满级换船排序5
+      type: select
+      value: 0
+      storage: legacy
+      key: 满级换船排序5
+      source:
+        page: 方案A
+        ui_line: 361
+      option:
+      - value: 0
+        label: 降序
+      - value: 1
+        label: 升序
+    满级换船国籍5:
+      name: 满级换船国籍5
+      type: select
+      value: 0
+      storage: legacy
+      key: 满级换船国籍5
+      source:
+        page: 方案A
+        ui_line: 363
+      option:
+      - value: 0
+        label: 所有
+      - value: 1
+        label: C国
+      - value: 2
+        label: E国
+      - value: 3
+        label: F国
+      - value: 4
+        label: G国
+      - value: 5
+        label: I国
+      - value: 6
+        label: J国
+      - value: 7
+        label: S国
+      - value: 8
+        label: U国
+      - value: 9
+        label: 其他
+    满级换船开关6:
+      name: 满级换船开关6
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 满级换船开关6
+      source:
+        page: 方案A
+        ui_line: 367
+    满级换船输入框6:
+      name: 满级换船输入框6
+      type: input
+      value: '123456'
+      storage: legacy
+      key: 满级换船输入框6
+      source:
+        page: 方案A
+        ui_line: 368
+    满级换船条件6:
+      name: 满级换船条件6
+      type: select
+      value: 0
+      storage: legacy
+      key: 满级换船条件6
+      source:
+        page: 方案A
+        ui_line: 370
+      option:
+      - value: 0
+        label: 满级
+      - value: 1
+        label: 泡澡
+      - value: 2
+        label: 养成
+    满级换船执行6:
+      name: 满级换船执行6
+      type: select
+      value: 0
+      storage: legacy
+      key: 满级换船执行6
+      source:
+        page: 方案A
+        ui_line: 371
+      option:
+      - value: 0
+        label: 换船
+      - value: 1
+        label: 远征
+    满级换船目标6:
+      name: 满级换船目标6
+      type: select
+      value: 7
+      storage: legacy
+      key: 满级换船目标6
+      source:
+        page: 方案A
+        ui_line: 373
+      option:
+      - value: 0
+        label: 航母
+      - value: 1
+        label: 轻母
+      - value: 2
+        label: 装母
+      - value: 3
+        label: 战列
+      - value: 4
+        label: 战巡
+      - value: 5
+        label: 重巡
+      - value: 6
+        label: 轻巡
+      - value: 7
+        label: 驱逐
+      - value: 8
+        label: 潜艇
+      - value: 9
+        label: 导驱
+      - value: 10
+        label: 补给
+      - value: 11
+        label: 全部
+      - value: 12
+        label: 防驱
+      - value: 13
+        label: 重炮
+      - value: 14
+        label: 炮潜
+    满级换船排序6:
+      name: 满级换船排序6
+      type: select
+      value: 0
+      storage: legacy
+      key: 满级换船排序6
+      source:
+        page: 方案A
+        ui_line: 375
+      option:
+      - value: 0
+        label: 降序
+      - value: 1
+        label: 升序
+    满级换船国籍6:
+      name: 满级换船国籍6
+      type: select
+      value: 0
+      storage: legacy
+      key: 满级换船国籍6
+      source:
+        page: 方案A
+        ui_line: 377
+      option:
+      - value: 0
+        label: 所有
+      - value: 1
+        label: C国
+      - value: 2
+        label: E国
+      - value: 3
+        label: F国
+      - value: 4
+        label: G国
+      - value: 5
+        label: I国
+      - value: 6
+        label: J国
+      - value: 7
+        label: S国
+      - value: 8
+        label: U国
+      - value: 9
+        label: 其他
+    换预设编队开关:
+      name: 换预设编队开关
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 换预设编队开关
+      source:
+        page: 方案A
+        ui_line: 556
+    换预设编队频率:
+      name: 换预设编队频率
+      type: select
+      value: 0
+      storage: legacy
+      key: 换预设编队频率
+      source:
+        page: 方案A
+        ui_line: 558
+      option:
+      - value: 0
+        label: '50'
+      - value: 1
+        label: '100'
+      - value: 2
+        label: '150'
+    套用预设编队:
+      name: 套用预设编队
+      type: select
+      value: 0
+      storage: legacy
+      key: 套用预设编队
+      source:
+        page: 方案A
+        ui_line: 560
+      option:
+      - value: 0
+        label: '1'
+      - value: 1
+        label: '4'
+      - value: 2
+        label: '5'
+      - value: 3
+        label: '6'
+      - value: 4
+        label: '9'
+      - value: 5
+        label: '10'
+      - value: 6
+        label: '11'
+      - value: 7
+        label: '14'
+      - value: 8
+        label: '15'
+    套用预设编队一:
+      name: 套用预设编队一
+      type: select
+      value: 1
+      storage: legacy
+      key: 套用预设编队一
+      source:
+        page: 方案A
+        ui_line: 561
+      option:
+      - value: 0
+        label: '1'
+      - value: 1
+        label: '4'
+      - value: 2
+        label: '5'
+      - value: 3
+        label: '6'
+      - value: 4
+        label: '9'
+      - value: 5
+        label: '10'
+      - value: 6
+        label: '11'
+      - value: 7
+        label: '14'
+      - value: 8
+        label: '15'
+    套用预设编队二:
+      name: 套用预设编队二
+      type: select
+      value: 2
+      storage: legacy
+      key: 套用预设编队二
+      source:
+        page: 方案A
+        ui_line: 562
+      option:
+      - value: 0
+        label: '1'
+      - value: 1
+        label: '4'
+      - value: 2
+        label: '5'
+      - value: 3
+        label: '6'
+      - value: 4
+        label: '9'
+      - value: 5
+        label: '10'
+      - value: 6
+        label: '11'
+      - value: 7
+        label: '14'
+      - value: 8
+        label: '15'
+  Repair:
+    快修开关:
+      name: 快修开关
+      type: checkbox
+      value: true
+      storage: legacy
+      key: 快修开关
+      source:
+        page: 方案A
+        ui_line: 381
+    快修输入框:
+      name: 快修输入框
+      type: input
+      value: '0'
+      storage: legacy
+      key: 快修输入框
+      source:
+        page: 方案A
+        ui_line: 382
+    泡澡开关:
+      name: 泡澡开关
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 泡澡开关
+      source:
+        page: 方案A
+        ui_line: 387
+    泡澡选择:
+      name: 泡澡选择
+      type: select
+      value: 1
+      storage: legacy
+      key: 泡澡选择
+      source:
+        page: 方案A
+        ui_line: 388
+      option:
+      - value: 0
+        label: 中破
+      - value: 1
+        label: 大破
+    泡澡例外船输入框:
+      name: 泡澡例外船输入框
+      type: input
+      value: '0'
+      storage: legacy
+      key: 泡澡例外船输入框
+      source:
+        page: 方案A
+        ui_line: 394
+  Battle:
+    一战罗盘:
+      name: 一战罗盘
+      type: select
+      value: 0
+      storage: legacy
+      key: 一战罗盘
+      source:
+        page: 方案A
+        ui_line: 401
+      option:
+      - value: 0
+        label: 不选
+      - value: 1
+        label: √×
+      - value: 2
+        label: ×√
+      - value: 3
+        label: √××
+      - value: 4
+        label: ×√×
+      - value: 5
+        label: ××√
+      - value: 6
+        label: ×√√
+      - value: 7
+        label: √×√
+      - value: 8
+        label: √√×
+    第一点阵型:
+      name: 第一点阵型
+      type: select
+      value: 1
+      storage: legacy
+      key: 第一点阵型
+      source:
+        page: 方案A
+        ui_line: 403
+      option:
+      - value: 0
+        label: 单纵
+      - value: 1
+        label: 复纵
+      - value: 2
+        label: 轮型
+      - value: 3
+        label: 梯形
+      - value: 4
+        label: 单横
+    一战夜战:
+      name: 一战夜战
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 一战夜战
+      source:
+        page: 方案A
+        ui_line: 404
+    二战罗盘:
+      name: 二战罗盘
+      type: select
+      value: 0
+      storage: legacy
+      key: 二战罗盘
+      source:
+        page: 方案A
+        ui_line: 409
+      option:
+      - value: 0
+        label: 不选
+      - value: 1
+        label: √×
+      - value: 2
+        label: ×√
+      - value: 3
+        label: √××
+      - value: 4
+        label: ×√×
+      - value: 5
+        label: ××√
+      - value: 6
+        label: ×√√
+      - value: 7
+        label: √×√
+      - value: 8
+        label: √√×
+    第二点阵型:
+      name: 第二点阵型
+      type: select
+      value: 1
+      storage: legacy
+      key: 第二点阵型
+      source:
+        page: 方案A
+        ui_line: 411
+      option:
+      - value: 0
+        label: 单纵
+      - value: 1
+        label: 复纵
+      - value: 2
+        label: 轮型
+      - value: 3
+        label: 梯形
+      - value: 4
+        label: 单横
+    二战夜战:
+      name: 二战夜战
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 二战夜战
+      source:
+        page: 方案A
+        ui_line: 412
+    三战罗盘:
+      name: 三战罗盘
+      type: select
+      value: 0
+      storage: legacy
+      key: 三战罗盘
+      source:
+        page: 方案A
+        ui_line: 417
+      option:
+      - value: 0
+        label: 不选
+      - value: 1
+        label: √×
+      - value: 2
+        label: ×√
+      - value: 3
+        label: √××
+      - value: 4
+        label: ×√×
+      - value: 5
+        label: ××√
+      - value: 6
+        label: ×√√
+      - value: 7
+        label: √×√
+      - value: 8
+        label: √√×
+    第三点阵型:
+      name: 第三点阵型
+      type: select
+      value: 1
+      storage: legacy
+      key: 第三点阵型
+      source:
+        page: 方案A
+        ui_line: 419
+      option:
+      - value: 0
+        label: 单纵
+      - value: 1
+        label: 复纵
+      - value: 2
+        label: 轮型
+      - value: 3
+        label: 梯形
+      - value: 4
+        label: 单横
+    三战夜战:
+      name: 三战夜战
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 三战夜战
+      source:
+        page: 方案A
+        ui_line: 420
+    四战罗盘:
+      name: 四战罗盘
+      type: select
+      value: 0
+      storage: legacy
+      key: 四战罗盘
+      source:
+        page: 方案A
+        ui_line: 425
+      option:
+      - value: 0
+        label: 不选
+      - value: 1
+        label: √×
+      - value: 2
+        label: ×√
+      - value: 3
+        label: √××
+      - value: 4
+        label: ×√×
+      - value: 5
+        label: ××√
+      - value: 6
+        label: ×√√
+      - value: 7
+        label: √×√
+      - value: 8
+        label: √√×
+    第四点阵型:
+      name: 第四点阵型
+      type: select
+      value: 1
+      storage: legacy
+      key: 第四点阵型
+      source:
+        page: 方案A
+        ui_line: 427
+      option:
+      - value: 0
+        label: 单纵
+      - value: 1
+        label: 复纵
+      - value: 2
+        label: 轮型
+      - value: 3
+        label: 梯形
+      - value: 4
+        label: 单横
+    四战夜战:
+      name: 四战夜战
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 四战夜战
+      source:
+        page: 方案A
+        ui_line: 428
+    五战罗盘:
+      name: 五战罗盘
+      type: select
+      value: 0
+      storage: legacy
+      key: 五战罗盘
+      source:
+        page: 方案A
+        ui_line: 433
+      option:
+      - value: 0
+        label: 不选
+      - value: 1
+        label: √×
+      - value: 2
+        label: ×√
+      - value: 3
+        label: √××
+      - value: 4
+        label: ×√×
+      - value: 5
+        label: ××√
+      - value: 6
+        label: ×√√
+      - value: 7
+        label: √×√
+      - value: 8
+        label: √√×
+    第五点阵型:
+      name: 第五点阵型
+      type: select
+      value: 1
+      storage: legacy
+      key: 第五点阵型
+      source:
+        page: 方案A
+        ui_line: 435
+      option:
+      - value: 0
+        label: 单纵
+      - value: 1
+        label: 复纵
+      - value: 2
+        label: 轮型
+      - value: 3
+        label: 梯形
+      - value: 4
+        label: 单横
+    五战夜战:
+      name: 五战夜战
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 五战夜战
+      source:
+        page: 方案A
+        ui_line: 436
+    六战罗盘:
+      name: 六战罗盘
+      type: select
+      value: 0
+      storage: legacy
+      key: 六战罗盘
+      source:
+        page: 方案A
+        ui_line: 441
+      option:
+      - value: 0
+        label: 不选
+      - value: 1
+        label: √×
+      - value: 2
+        label: ×√
+      - value: 3
+        label: √××
+      - value: 4
+        label: ×√×
+      - value: 5
+        label: ××√
+      - value: 6
+        label: ×√√
+      - value: 7
+        label: √×√
+      - value: 8
+        label: √√×
+    第六点阵型:
+      name: 第六点阵型
+      type: select
+      value: 1
+      storage: legacy
+      key: 第六点阵型
+      source:
+        page: 方案A
+        ui_line: 443
+      option:
+      - value: 0
+        label: 单纵
+      - value: 1
+        label: 复纵
+      - value: 2
+        label: 轮型
+      - value: 3
+        label: 梯形
+      - value: 4
+        label: 单横
+    六战夜战:
+      name: 六战夜战
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 六战夜战
+      source:
+        page: 方案A
+        ui_line: 444
+    七战罗盘:
+      name: 七战罗盘
+      type: select
+      value: 0
+      storage: legacy
+      key: 七战罗盘
+      source:
+        page: 方案A
+        ui_line: 449
+      option:
+      - value: 0
+        label: 不选
+      - value: 1
+        label: √×
+      - value: 2
+        label: ×√
+      - value: 3
+        label: √××
+      - value: 4
+        label: ×√×
+      - value: 5
+        label: ××√
+      - value: 6
+        label: ×√√
+      - value: 7
+        label: √×√
+      - value: 8
+        label: √√×
+    第七点阵型:
+      name: 第七点阵型
+      type: select
+      value: 1
+      storage: legacy
+      key: 第七点阵型
+      source:
+        page: 方案A
+        ui_line: 451
+      option:
+      - value: 0
+        label: 单纵
+      - value: 1
+        label: 复纵
+      - value: 2
+        label: 轮型
+      - value: 3
+        label: 梯形
+      - value: 4
+        label: 单横
+    七战夜战:
+      name: 七战夜战
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 七战夜战
+      source:
+        page: 方案A
+        ui_line: 452
+  Sortie:
+    迂回点:
+      name: 迂回点
+      type: input
+      value: '123456'
+      storage: legacy
+      key: 迂回点
+      source:
+        page: 方案A
+        ui_line: 463
+    是否迂回:
+      name: 是否迂回
+      type: select
+      value: 0
+      storage: legacy
+      key: 是否迂回
+      source:
+        page: 方案A
+        ui_line: 464
+      option:
+      - value: 0
+        label: 不迂回
+      - value: 1
+        label: 回港
+      - value: 2
+        label: 迂回,若失败重启
+      - value: 3
+        label: 迂回,不管是否成功
+      - value: 4
+        label: 迂回,成功则撤退失败则重启
+    资源点SL:
+      name: 资源点SL
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 资源点SL
+      source:
+        page: 方案A
+        ui_line: 465
+    撤退方式:
+      name: 撤退方式
+      type: select
+      value: 0
+      storage: legacy
+      key: 撤退方式
+      source:
+        page: 方案A
+        ui_line: 475
+      option:
+      - value: 0
+        label: 索敌成功后回港
+      - value: 1
+        label: 重启
+    大破出征:
+      name: 大破出征
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 大破出征
+      source:
+        page: 方案A
+        ui_line: 533
+    大破进击:
+      name: 大破进击
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 大破进击
+      source:
+        page: 方案A
+        ui_line: 535
+    出征SL:
+      name: 出征SL
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 出征SL
+      source:
+        page: 方案A
+        ui_line: 541
+    出征BUFF:
+      name: 出征BUFF
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 出征BUFF
+      source:
+        page: 方案A
+        ui_line: 546
+    弹药空了才补给:
+      name: 弹药空了才补给
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 弹药空了才补给
+      source:
+        page: 方案A
+        ui_line: 551
+  Enemy:
+    索敌失败处理:
+      name: 索敌失败处理
+      type: select
+      value: 1
+      storage: legacy
+      key: 索敌失败处理
+      source:
+        page: 方案A
+        ui_line: 470
+      option:
+      - value: 0
+        label: 无视
+      - value: 1
+        label: 战斗中提醒
+      - value: 2
+        label: 选阵型时重启
+      - value: 3
+        label: 停止等人工干预
+    转单横:
+      name: 转单横
+      type: input
+      value: '12345'
+      storage: legacy
+      key: 转单横
+      source:
+        page: 方案A
+        ui_line: 480
+    转轮型:
+      name: 转轮型
+      type: input
+      value: '0'
+      storage: legacy
+      key: 转轮型
+      source:
+        page: 方案A
+        ui_line: 486
+    远程打击:
+      name: 远程打击
+      type: input
+      value: '0'
+      storage: legacy
+      key: 远程打击
+      source:
+        page: 方案A
+        ui_line: 492
+    判断位置1:
+      name: 判断位置1
+      type: input
+      value: '0'
+      storage: legacy
+      key: 判断位置1
+      source:
+        page: 方案A
+        ui_line: 498
+    判断是否1:
+      name: 判断是否1
+      type: select
+      value: 0
+      storage: legacy
+      key: 判断是否1
+      source:
+        page: 方案A
+        ui_line: 500
+      option:
+      - value: 0
+        label: 是
+      - value: 1
+        label: 不是
+    判断阵型1:
+      name: 判断阵型1
+      type: select
+      value: 0
+      storage: legacy
+      key: 判断阵型1
+      source:
+        page: 方案A
+        ui_line: 501
+      option:
+      - value: 0
+        label: 单纵
+      - value: 1
+        label: 复纵
+      - value: 2
+        label: 轮型
+      - value: 3
+        label: 梯形
+      - value: 4
+        label: 单横
+    判断位置EX1:
+      name: 判断位置EX1
+      type: input
+      value: '0'
+      storage: legacy
+      key: 判断位置EX1
+      source:
+        page: 方案A
+        ui_line: 507
+    判断空位EX1:
+      name: 判断空位EX1
+      type: select
+      value: 0
+      storage: legacy
+      key: 判断空位EX1
+      source:
+        page: 方案A
+        ui_line: 509
+      option:
+      - value: 0
+        label: '1'
+      - value: 1
+        label: '2'
+      - value: 2
+        label: '3'
+      - value: 3
+        label: '4'
+      - value: 4
+        label: '5'
+      - value: 5
+        label: '6'
+    判断有无EX1:
+      name: 判断有无EX1
+      type: select
+      value: 1
+      storage: legacy
+      key: 判断有无EX1
+      source:
+        page: 方案A
+        ui_line: 511
+      option:
+      - value: 0
+        label: 不是
+      - value: 1
+        label: 是
+    判断配置EX1:
+      name: 判断配置EX1
+      type: select
+      value: 0
+      storage: legacy
+      key: 判断配置EX1
+      source:
+        page: 方案A
+        ui_line: 512
+      option:
+      - value: 0
+        label: 驱逐
+      - value: 1
+        label: 轻巡
+      - value: 2
+        label: 重巡
+      - value: 3
+        label: 雷巡
+      - value: 4
+        label: 战巡
+      - value: 5
+        label: 战列
+      - value: 6
+        label: 轻母
+      - value: 7
+        label: 航母
+      - value: 8
+        label: 补给
+      - value: 9
+        label: 旗舰
+      - value: 10
+        label: 潜艇
+      - value: 11
+        label: 防驱
+      - value: 12
+        label: 导驱
+      - value: 13
+        label: 大巡
+    判断位置EX2:
+      name: 判断位置EX2
+      type: input
+      value: '0'
+      storage: legacy
+      key: 判断位置EX2
+      source:
+        page: 方案A
+        ui_line: 518
+    判断空位EX2:
+      name: 判断空位EX2
+      type: select
+      value: 0
+      storage: legacy
+      key: 判断空位EX2
+      source:
+        page: 方案A
+        ui_line: 520
+      option:
+      - value: 0
+        label: '1'
+      - value: 1
+        label: '2'
+      - value: 2
+        label: '3'
+      - value: 3
+        label: '4'
+      - value: 4
+        label: '5'
+      - value: 5
+        label: '6'
+    判断有无EX2:
+      name: 判断有无EX2
+      type: select
+      value: 1
+      storage: legacy
+      key: 判断有无EX2
+      source:
+        page: 方案A
+        ui_line: 522
+      option:
+      - value: 0
+        label: 不是
+      - value: 1
+        label: 是
+    判断配置EX2:
+      name: 判断配置EX2
+      type: select
+      value: 0
+      storage: legacy
+      key: 判断配置EX2
+      source:
+        page: 方案A
+        ui_line: 523
+      option:
+      - value: 0
+        label: 驱逐
+      - value: 1
+        label: 轻巡
+      - value: 2
+        label: 重巡
+      - value: 3
+        label: 雷巡
+      - value: 4
+        label: 战巡
+      - value: 5
+        label: 战列
+      - value: 6
+        label: 轻母
+      - value: 7
+        label: 航母
+      - value: 8
+        label: 补给
+      - value: 9
+        label: 旗舰
+      - value: 10
+        label: 潜艇
+      - value: 11
+        label: 防驱
+      - value: 12
+        label: 导驱
+      - value: 13
+        label: 大巡
+sortie_b:
+  Scheduler:
+    Enable:
+      name: 启用任务
+      type: checkbox
+      value: false
+      storage: task
+      key: enabled
+      display: readonly
+    Priority:
+      name: 优先级
+      help: 数字越小，优先级越高。
+      type: number
+      value: 5
+      min: 1
+      max: 10
+      storage: task
+      key: priority
+      display: readonly
+    StartTime:
+      name: 计划时间
+      type: time
+      value: 00:00
+      storage: task
+      key: start_time
+      display: readonly
+    IntervalMinutes:
+      name: 执行间隔（分钟）
+      type: number
+      value: 60
+      min: 1
+      max: 10080
+      storage: task
+      key: interval_minutes
+      display: readonly
+    NextRun:
+      name: 下次运行
+      type: datetime-local
+      value: ''
+      storage: scheduler
+      key: NextRun
+      display: readonly
+    Runs:
+      name: 执行次数
+      type: number
+      value: 1
+      min: 1
+      max: 9999
+      storage: task
+      key: runs
+      display: readonly
+    SaveScreenshots:
+      name: 保留任务截图
+      type: checkbox
+      value: true
+      storage: task
+      key: save_screenshots
+      display: readonly
+  Map:
+    自定义B:
+      name: 自定义
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 自定义B
+      source:
+        page: 方案B
+        ui_line: 579
+    2-1胖次B:
+      name: 2-1胖次
+      type: checkbox
+      value: true
+      storage: legacy
+      key: 2-1胖次B
+      source:
+        page: 方案B
+        ui_line: 580
+    2-2偷油B:
+      name: 2-2偷油
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 2-2偷油B
+      source:
+        page: 方案B
+        ui_line: 581
+    2-3偷油B:
+      name: 2-3偷油
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 2-3偷油B
+      source:
+        page: 方案B
+        ui_line: 582
+    3-1偷弹B:
+      name: 3-1偷弹
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 3-1偷弹B
+      source:
+        page: 方案B
+        ui_line: 583
+    3-1偷弹避战巡B:
+      name: 3-1偷弹避战巡
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 3-1偷弹避战巡B
+      source:
+        page: 方案B
+        ui_line: 584
+    4-3偷铝B:
+      name: 4-3偷铝
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 4-3偷铝B
+      source:
+        page: 方案B
+        ui_line: 585
+    4-3偷铝避轻母B:
+      name: 4-3偷铝避轻母
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 4-3偷铝避轻母B
+      source:
+        page: 方案B
+        ui_line: 586
+    4-3偷铝避战巡B:
+      name: 4-3偷铝避战巡
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 4-3偷铝避战巡B
+      source:
+        page: 方案B
+        ui_line: 587
+    5-2炸鱼B:
+      name: 5-2炸鱼
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 5-2炸鱼B
+      source:
+        page: 方案B
+        ui_line: 588
+    5-3偷钢B:
+      name: 5-3偷钢
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 5-3偷钢B
+      source:
+        page: 方案B
+        ui_line: 589
+    6-1炸鱼B:
+      name: 6-1炸鱼
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 6-1炸鱼B
+      source:
+        page: 方案B
+        ui_line: 590
+    6-1避轻母B:
+      name: 6-1避轻母
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 6-1避轻母B
+      source:
+        page: 方案B
+        ui_line: 591
+    7-1炸鱼B:
+      name: 7-1炸鱼
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 7-1炸鱼B
+      source:
+        page: 方案B
+        ui_line: 592
+    7-2练鱼B:
+      name: 7-2练鱼
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 7-2练鱼B
+      source:
+        page: 方案B
+        ui_line: 593
+    8-1炸鱼B:
+      name: 8-1炸鱼
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 8-1炸鱼B
+      source:
+        page: 方案B
+        ui_line: 594
+    8-1只打轻巡B:
+      name: 8-1只打轻巡
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 8-1只打轻巡B
+      source:
+        page: 方案B
+        ui_line: 595
+    8-1不打重巡B:
+      name: 8-1不打重巡
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 8-1不打重巡B
+      source:
+        page: 方案B
+        ui_line: 596
+    8-2炸鱼B:
+      name: 8-2炸鱼
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 8-2炸鱼B
+      source:
+        page: 方案B
+        ui_line: 597
+    8-2不打重巡B:
+      name: 8-2不打重巡
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 8-2不打重巡B
+      source:
+        page: 方案B
+        ui_line: 598
+    8-5不打轻巡B:
+      name: 8-5不打轻巡
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 8-5不打轻巡B
+      source:
+        page: 方案B
+        ui_line: 599
+    9-1炸鱼B:
+      name: 9-1炸鱼
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 9-1炸鱼B
+      source:
+        page: 方案B
+        ui_line: 600
+    9-2炸鱼B:
+      name: 9-2炸鱼
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 9-2炸鱼B
+      source:
+        page: 方案B
+        ui_line: 601
+    章B:
+      name: 章
+      type: select
+      value: 1
+      storage: legacy
+      key: 章B
+      source:
+        page: 方案B
+        ui_line: 609
+      option:
+      - value: 0
+        label: 一
+      - value: 1
+        label: 二
+      - value: 2
+        label: 三
+      - value: 3
+        label: 四
+      - value: 4
+        label: 五
+      - value: 5
+        label: 六
+      - value: 6
+        label: 七
+      - value: 7
+        label: 八
+      - value: 8
+        label: 九
+      - value: 9
+        label: 十
+      - value: 10
+        label: 最强之舟
+    图B:
+      name: 图
+      type: select
+      value: 0
+      storage: legacy
+      key: 图B
+      source:
+        page: 方案B
+        ui_line: 611
+      option:
+      - value: 0
+        label: 一
+      - value: 1
+        label: 二
+      - value: 2
+        label: 三
+      - value: 3
+        label: 四
+      - value: 4
+        label: 五
+      - value: 5
+        label: 六
+      - value: 6
+        label: 七
+      - value: 7
+        label: 八
+      - value: 8
+        label: 九
+      - value: 9
+        label: 十
+      - value: 10
+        label: 十一
+      - value: 11
+        label: 十二
+      - value: 12
+        label: 十三
+      - value: 13
+        label: 十四
+    终点位置B:
+      name: 终点位置
+      type: select
+      value: 0
+      storage: legacy
+      key: 终点位置B
+      source:
+        page: 方案B
+        ui_line: 617
+      option:
+      - value: 0
+        label: '1'
+      - value: 1
+        label: '2'
+      - value: 2
+        label: '3'
+      - value: 3
+        label: '4'
+      - value: 4
+        label: '5'
+      - value: 5
+        label: '6'
+      - value: 6
+        label: '7'
+    入口B:
+      name: 入口
+      type: select
+      value: 0
+      storage: legacy
+      key: 入口B
+      source:
+        page: 方案B
+        ui_line: 619
+      option:
+      - value: 0
+        label: α
+      - value: 1
+        label: β
+      - value: 2
+        label: γ
+      - value: 3
+        label: δ
+    两战捞胖次B:
+      name: 两战捞胖次
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 两战捞胖次B
+      source:
+        page: 方案B
+        ui_line: 782
+  Fleet:
+    出征舰队B:
+      name: 出征舰队
+      type: select
+      value: 0
+      storage: legacy
+      key: 出征舰队B
+      source:
+        page: 方案B
+        ui_line: 607
+      option:
+      - value: 0
+        label: 一
+      - value: 1
+        label: 二
+      - value: 2
+        label: 三
+      - value: 3
+        label: 四
+    满级换船开关B:
+      name: 满级换船开关
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 满级换船开关B
+      source:
+        page: 方案B
+        ui_line: 623
+    满级换船输入框B:
+      name: 满级换船输入框
+      type: input
+      value: '123456'
+      storage: legacy
+      key: 满级换船输入框B
+      source:
+        page: 方案B
+        ui_line: 624
+    满级换船条件B:
+      name: 满级换船条件
+      type: select
+      value: 0
+      storage: legacy
+      key: 满级换船条件B
+      source:
+        page: 方案B
+        ui_line: 626
+      option:
+      - value: 0
+        label: 满级
+      - value: 1
+        label: 泡澡
+      - value: 2
+        label: 养成
+    满级换船执行B:
+      name: 满级换船执行
+      type: select
+      value: 0
+      storage: legacy
+      key: 满级换船执行B
+      source:
+        page: 方案B
+        ui_line: 627
+      option:
+      - value: 0
+        label: 换船
+      - value: 1
+        label: 远征
+    满级换船目标B:
+      name: 满级换船目标
+      type: select
+      value: 3
+      storage: legacy
+      key: 满级换船目标B
+      source:
+        page: 方案B
+        ui_line: 629
+      option:
+      - value: 0
+        label: 航母
+      - value: 1
+        label: 轻母
+      - value: 2
+        label: 装母
+      - value: 3
+        label: 战列
+      - value: 4
+        label: 战巡
+      - value: 5
+        label: 重巡
+      - value: 6
+        label: 轻巡
+      - value: 7
+        label: 驱逐
+      - value: 8
+        label: 潜艇
+      - value: 9
+        label: 导驱
+      - value: 10
+        label: 补给
+      - value: 11
+        label: 全部
+      - value: 12
+        label: 防驱
+      - value: 13
+        label: 重炮
+      - value: 14
+        label: 炮潜
+    满级换船排序B:
+      name: 满级换船排序
+      type: select
+      value: 0
+      storage: legacy
+      key: 满级换船排序B
+      source:
+        page: 方案B
+        ui_line: 631
+      option:
+      - value: 0
+        label: 降序
+      - value: 1
+        label: 升序
+    满级换船国籍B:
+      name: 满级换船国籍
+      type: select
+      value: 0
+      storage: legacy
+      key: 满级换船国籍B
+      source:
+        page: 方案B
+        ui_line: 633
+      option:
+      - value: 0
+        label: 所有
+      - value: 1
+        label: C国
+      - value: 2
+        label: E国
+      - value: 3
+        label: F国
+      - value: 4
+        label: G国
+      - value: 5
+        label: I国
+      - value: 6
+        label: J国
+      - value: 7
+        label: S国
+      - value: 8
+        label: U国
+      - value: 9
+        label: 其他
+    满级换船开关2B:
+      name: 满级换船开关2
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 满级换船开关2B
+      source:
+        page: 方案B
+        ui_line: 637
+    满级换船输入框2B:
+      name: 满级换船输入框2
+      type: input
+      value: '123456'
+      storage: legacy
+      key: 满级换船输入框2B
+      source:
+        page: 方案B
+        ui_line: 638
+    满级换船条件2B:
+      name: 满级换船条件2
+      type: select
+      value: 0
+      storage: legacy
+      key: 满级换船条件2B
+      source:
+        page: 方案B
+        ui_line: 640
+      option:
+      - value: 0
+        label: 满级
+      - value: 1
+        label: 泡澡
+      - value: 2
+        label: 养成
+    满级换船执行2B:
+      name: 满级换船执行2
+      type: select
+      value: 0
+      storage: legacy
+      key: 满级换船执行2B
+      source:
+        page: 方案B
+        ui_line: 641
+      option:
+      - value: 0
+        label: 换船
+      - value: 1
+        label: 远征
+    满级换船目标2B:
+      name: 满级换船目标2
+      type: select
+      value: 3
+      storage: legacy
+      key: 满级换船目标2B
+      source:
+        page: 方案B
+        ui_line: 643
+      option:
+      - value: 0
+        label: 航母
+      - value: 1
+        label: 轻母
+      - value: 2
+        label: 装母
+      - value: 3
+        label: 战列
+      - value: 4
+        label: 战巡
+      - value: 5
+        label: 重巡
+      - value: 6
+        label: 轻巡
+      - value: 7
+        label: 驱逐
+      - value: 8
+        label: 潜艇
+      - value: 9
+        label: 导驱
+      - value: 10
+        label: 补给
+      - value: 11
+        label: 全部
+      - value: 12
+        label: 防驱
+      - value: 13
+        label: 重炮
+      - value: 14
+        label: 炮潜
+    满级换船排序2B:
+      name: 满级换船排序2
+      type: select
+      value: 0
+      storage: legacy
+      key: 满级换船排序2B
+      source:
+        page: 方案B
+        ui_line: 645
+      option:
+      - value: 0
+        label: 降序
+      - value: 1
+        label: 升序
+    满级换船国籍2B:
+      name: 满级换船国籍2
+      type: select
+      value: 0
+      storage: legacy
+      key: 满级换船国籍2B
+      source:
+        page: 方案B
+        ui_line: 647
+      option:
+      - value: 0
+        label: 所有
+      - value: 1
+        label: C国
+      - value: 2
+        label: E国
+      - value: 3
+        label: F国
+      - value: 4
+        label: G国
+      - value: 5
+        label: I国
+      - value: 6
+        label: J国
+      - value: 7
+        label: S国
+      - value: 8
+        label: U国
+      - value: 9
+        label: 其他
+    满级换船开关3B:
+      name: 满级换船开关3
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 满级换船开关3B
+      source:
+        page: 方案B
+        ui_line: 651
+    满级换船输入框3B:
+      name: 满级换船输入框3
+      type: input
+      value: '123456'
+      storage: legacy
+      key: 满级换船输入框3B
+      source:
+        page: 方案B
+        ui_line: 652
+    满级换船条件3B:
+      name: 满级换船条件3
+      type: select
+      value: 0
+      storage: legacy
+      key: 满级换船条件3B
+      source:
+        page: 方案B
+        ui_line: 654
+      option:
+      - value: 0
+        label: 满级
+      - value: 1
+        label: 泡澡
+      - value: 2
+        label: 养成
+    满级换船执行3B:
+      name: 满级换船执行3
+      type: select
+      value: 0
+      storage: legacy
+      key: 满级换船执行3B
+      source:
+        page: 方案B
+        ui_line: 655
+      option:
+      - value: 0
+        label: 换船
+      - value: 1
+        label: 远征
+    满级换船目标3B:
+      name: 满级换船目标3
+      type: select
+      value: 3
+      storage: legacy
+      key: 满级换船目标3B
+      source:
+        page: 方案B
+        ui_line: 657
+      option:
+      - value: 0
+        label: 航母
+      - value: 1
+        label: 轻母
+      - value: 2
+        label: 装母
+      - value: 3
+        label: 战列
+      - value: 4
+        label: 战巡
+      - value: 5
+        label: 重巡
+      - value: 6
+        label: 轻巡
+      - value: 7
+        label: 驱逐
+      - value: 8
+        label: 潜艇
+      - value: 9
+        label: 导驱
+      - value: 10
+        label: 补给
+      - value: 11
+        label: 全部
+      - value: 12
+        label: 防驱
+      - value: 13
+        label: 重炮
+      - value: 14
+        label: 炮潜
+    满级换船排序3B:
+      name: 满级换船排序3
+      type: select
+      value: 0
+      storage: legacy
+      key: 满级换船排序3B
+      source:
+        page: 方案B
+        ui_line: 659
+      option:
+      - value: 0
+        label: 降序
+      - value: 1
+        label: 升序
+    满级换船国籍3B:
+      name: 满级换船国籍3
+      type: select
+      value: 0
+      storage: legacy
+      key: 满级换船国籍3B
+      source:
+        page: 方案B
+        ui_line: 661
+      option:
+      - value: 0
+        label: 所有
+      - value: 1
+        label: C国
+      - value: 2
+        label: E国
+      - value: 3
+        label: F国
+      - value: 4
+        label: G国
+      - value: 5
+        label: I国
+      - value: 6
+        label: J国
+      - value: 7
+        label: S国
+      - value: 8
+        label: U国
+      - value: 9
+        label: 其他
+    满级换船开关4B:
+      name: 满级换船开关4
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 满级换船开关4B
+      source:
+        page: 方案B
+        ui_line: 665
+    满级换船输入框4B:
+      name: 满级换船输入框4
+      type: input
+      value: '123456'
+      storage: legacy
+      key: 满级换船输入框4B
+      source:
+        page: 方案B
+        ui_line: 666
+    满级换船条件4B:
+      name: 满级换船条件4
+      type: select
+      value: 0
+      storage: legacy
+      key: 满级换船条件4B
+      source:
+        page: 方案B
+        ui_line: 668
+      option:
+      - value: 0
+        label: 满级
+      - value: 1
+        label: 泡澡
+      - value: 2
+        label: 养成
+    满级换船执行4B:
+      name: 满级换船执行4
+      type: select
+      value: 0
+      storage: legacy
+      key: 满级换船执行4B
+      source:
+        page: 方案B
+        ui_line: 669
+      option:
+      - value: 0
+        label: 换船
+      - value: 1
+        label: 远征
+    满级换船目标4B:
+      name: 满级换船目标4
+      type: select
+      value: 3
+      storage: legacy
+      key: 满级换船目标4B
+      source:
+        page: 方案B
+        ui_line: 671
+      option:
+      - value: 0
+        label: 航母
+      - value: 1
+        label: 轻母
+      - value: 2
+        label: 装母
+      - value: 3
+        label: 战列
+      - value: 4
+        label: 战巡
+      - value: 5
+        label: 重巡
+      - value: 6
+        label: 轻巡
+      - value: 7
+        label: 驱逐
+      - value: 8
+        label: 潜艇
+      - value: 9
+        label: 导驱
+      - value: 10
+        label: 补给
+      - value: 11
+        label: 全部
+      - value: 12
+        label: 防驱
+      - value: 13
+        label: 重炮
+      - value: 14
+        label: 炮潜
+    满级换船排序4B:
+      name: 满级换船排序4
+      type: select
+      value: 0
+      storage: legacy
+      key: 满级换船排序4B
+      source:
+        page: 方案B
+        ui_line: 673
+      option:
+      - value: 0
+        label: 降序
+      - value: 1
+        label: 升序
+    满级换船国籍4B:
+      name: 满级换船国籍4
+      type: select
+      value: 0
+      storage: legacy
+      key: 满级换船国籍4B
+      source:
+        page: 方案B
+        ui_line: 675
+      option:
+      - value: 0
+        label: 所有
+      - value: 1
+        label: C国
+      - value: 2
+        label: E国
+      - value: 3
+        label: F国
+      - value: 4
+        label: G国
+      - value: 5
+        label: I国
+      - value: 6
+        label: J国
+      - value: 7
+        label: S国
+      - value: 8
+        label: U国
+      - value: 9
+        label: 其他
+    满级换船开关5B:
+      name: 满级换船开关5
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 满级换船开关5B
+      source:
+        page: 方案B
+        ui_line: 679
+    满级换船输入框5B:
+      name: 满级换船输入框5
+      type: input
+      value: '123456'
+      storage: legacy
+      key: 满级换船输入框5B
+      source:
+        page: 方案B
+        ui_line: 680
+    满级换船条件5B:
+      name: 满级换船条件5
+      type: select
+      value: 0
+      storage: legacy
+      key: 满级换船条件5B
+      source:
+        page: 方案B
+        ui_line: 682
+      option:
+      - value: 0
+        label: 满级
+      - value: 1
+        label: 泡澡
+      - value: 2
+        label: 养成
+    满级换船执行5B:
+      name: 满级换船执行5
+      type: select
+      value: 0
+      storage: legacy
+      key: 满级换船执行5B
+      source:
+        page: 方案B
+        ui_line: 683
+      option:
+      - value: 0
+        label: 换船
+      - value: 1
+        label: 远征
+    满级换船目标5B:
+      name: 满级换船目标5
+      type: select
+      value: 7
+      storage: legacy
+      key: 满级换船目标5B
+      source:
+        page: 方案B
+        ui_line: 685
+      option:
+      - value: 0
+        label: 航母
+      - value: 1
+        label: 轻母
+      - value: 2
+        label: 装母
+      - value: 3
+        label: 战列
+      - value: 4
+        label: 战巡
+      - value: 5
+        label: 重巡
+      - value: 6
+        label: 轻巡
+      - value: 7
+        label: 驱逐
+      - value: 8
+        label: 潜艇
+      - value: 9
+        label: 导驱
+      - value: 10
+        label: 补给
+      - value: 11
+        label: 全部
+      - value: 12
+        label: 防驱
+      - value: 13
+        label: 重炮
+      - value: 14
+        label: 炮潜
+    满级换船排序5B:
+      name: 满级换船排序5
+      type: select
+      value: 0
+      storage: legacy
+      key: 满级换船排序5B
+      source:
+        page: 方案B
+        ui_line: 687
+      option:
+      - value: 0
+        label: 降序
+      - value: 1
+        label: 升序
+    满级换船国籍5B:
+      name: 满级换船国籍5
+      type: select
+      value: 0
+      storage: legacy
+      key: 满级换船国籍5B
+      source:
+        page: 方案B
+        ui_line: 689
+      option:
+      - value: 0
+        label: 所有
+      - value: 1
+        label: C国
+      - value: 2
+        label: E国
+      - value: 3
+        label: F国
+      - value: 4
+        label: G国
+      - value: 5
+        label: I国
+      - value: 6
+        label: J国
+      - value: 7
+        label: S国
+      - value: 8
+        label: U国
+      - value: 9
+        label: 其他
+    满级换船开关6B:
+      name: 满级换船开关6
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 满级换船开关6B
+      source:
+        page: 方案B
+        ui_line: 693
+    满级换船输入框6B:
+      name: 满级换船输入框6
+      type: input
+      value: '123456'
+      storage: legacy
+      key: 满级换船输入框6B
+      source:
+        page: 方案B
+        ui_line: 694
+    满级换船条件6B:
+      name: 满级换船条件6
+      type: select
+      value: 0
+      storage: legacy
+      key: 满级换船条件6B
+      source:
+        page: 方案B
+        ui_line: 696
+      option:
+      - value: 0
+        label: 满级
+      - value: 1
+        label: 泡澡
+      - value: 2
+        label: 养成
+    满级换船执行6B:
+      name: 满级换船执行6
+      type: select
+      value: 0
+      storage: legacy
+      key: 满级换船执行6B
+      source:
+        page: 方案B
+        ui_line: 697
+      option:
+      - value: 0
+        label: 换船
+      - value: 1
+        label: 远征
+    满级换船目标6B:
+      name: 满级换船目标6
+      type: select
+      value: 7
+      storage: legacy
+      key: 满级换船目标6B
+      source:
+        page: 方案B
+        ui_line: 699
+      option:
+      - value: 0
+        label: 航母
+      - value: 1
+        label: 轻母
+      - value: 2
+        label: 装母
+      - value: 3
+        label: 战列
+      - value: 4
+        label: 战巡
+      - value: 5
+        label: 重巡
+      - value: 6
+        label: 轻巡
+      - value: 7
+        label: 驱逐
+      - value: 8
+        label: 潜艇
+      - value: 9
+        label: 导驱
+      - value: 10
+        label: 补给
+      - value: 11
+        label: 全部
+      - value: 12
+        label: 防驱
+      - value: 13
+        label: 重炮
+      - value: 14
+        label: 炮潜
+    满级换船排序6B:
+      name: 满级换船排序6
+      type: select
+      value: 0
+      storage: legacy
+      key: 满级换船排序6B
+      source:
+        page: 方案B
+        ui_line: 701
+      option:
+      - value: 0
+        label: 降序
+      - value: 1
+        label: 升序
+    满级换船国籍6B:
+      name: 满级换船国籍6
+      type: select
+      value: 0
+      storage: legacy
+      key: 满级换船国籍6B
+      source:
+        page: 方案B
+        ui_line: 703
+      option:
+      - value: 0
+        label: 所有
+      - value: 1
+        label: C国
+      - value: 2
+        label: E国
+      - value: 3
+        label: F国
+      - value: 4
+        label: G国
+      - value: 5
+        label: I国
+      - value: 6
+        label: J国
+      - value: 7
+        label: S国
+      - value: 8
+        label: U国
+      - value: 9
+        label: 其他
+    换预设编队开关B:
+      name: 换预设编队开关
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 换预设编队开关B
+      source:
+        page: 方案B
+        ui_line: 882
+    换预设编队频率B:
+      name: 换预设编队频率
+      type: select
+      value: 0
+      storage: legacy
+      key: 换预设编队频率B
+      source:
+        page: 方案B
+        ui_line: 884
+      option:
+      - value: 0
+        label: '50'
+      - value: 1
+        label: '100'
+      - value: 2
+        label: '150'
+    套用预设编队B:
+      name: 套用预设编队
+      type: select
+      value: 0
+      storage: legacy
+      key: 套用预设编队B
+      source:
+        page: 方案B
+        ui_line: 886
+      option:
+      - value: 0
+        label: '1'
+      - value: 1
+        label: '4'
+      - value: 2
+        label: '5'
+      - value: 3
+        label: '6'
+      - value: 4
+        label: '9'
+      - value: 5
+        label: '10'
+      - value: 6
+        label: '11'
+      - value: 7
+        label: '14'
+      - value: 8
+        label: '15'
+    套用预设编队一B:
+      name: 套用预设编队一
+      type: select
+      value: 1
+      storage: legacy
+      key: 套用预设编队一B
+      source:
+        page: 方案B
+        ui_line: 887
+      option:
+      - value: 0
+        label: '1'
+      - value: 1
+        label: '4'
+      - value: 2
+        label: '5'
+      - value: 3
+        label: '6'
+      - value: 4
+        label: '9'
+      - value: 5
+        label: '10'
+      - value: 6
+        label: '11'
+      - value: 7
+        label: '14'
+      - value: 8
+        label: '15'
+    套用预设编队二B:
+      name: 套用预设编队二
+      type: select
+      value: 1
+      storage: legacy
+      key: 套用预设编队二B
+      source:
+        page: 方案B
+        ui_line: 890
+      option:
+      - value: 0
+        label: '1'
+      - value: 1
+        label: '4'
+      - value: 2
+        label: '5'
+      - value: 3
+        label: '6'
+      - value: 4
+        label: '9'
+      - value: 5
+        label: '10'
+      - value: 6
+        label: '11'
+      - value: 7
+        label: '14'
+      - value: 8
+        label: '15'
+  Repair:
+    快修开关B:
+      name: 快修开关
+      type: checkbox
+      value: true
+      storage: legacy
+      key: 快修开关B
+      source:
+        page: 方案B
+        ui_line: 707
+    快修输入框B:
+      name: 快修输入框
+      type: input
+      value: '0'
+      storage: legacy
+      key: 快修输入框B
+      source:
+        page: 方案B
+        ui_line: 708
+    泡澡开关B:
+      name: 泡澡开关
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 泡澡开关B
+      source:
+        page: 方案B
+        ui_line: 713
+    泡澡选择B:
+      name: 泡澡选择
+      type: select
+      value: 1
+      storage: legacy
+      key: 泡澡选择B
+      source:
+        page: 方案B
+        ui_line: 714
+      option:
+      - value: 0
+        label: 中破
+      - value: 1
+        label: 大破
+    泡澡例外船输入框B:
+      name: 泡澡例外船输入框
+      type: input
+      value: '0'
+      storage: legacy
+      key: 泡澡例外船输入框B
+      source:
+        page: 方案B
+        ui_line: 720
+  Battle:
+    一战罗盘B:
+      name: 一战罗盘
+      type: select
+      value: 2
+      storage: legacy
+      key: 一战罗盘B
+      source:
+        page: 方案B
+        ui_line: 727
+      option:
+      - value: 0
+        label: 不选
+      - value: 1
+        label: √×
+      - value: 2
+        label: ×√
+      - value: 3
+        label: √××
+      - value: 4
+        label: ×√×
+      - value: 5
+        label: ××√
+      - value: 6
+        label: ×√√
+      - value: 7
+        label: √×√
+      - value: 8
+        label: √√×
+    第一点阵型B:
+      name: 第一点阵型
+      type: select
+      value: 1
+      storage: legacy
+      key: 第一点阵型B
+      source:
+        page: 方案B
+        ui_line: 729
+      option:
+      - value: 0
+        label: 单纵
+      - value: 1
+        label: 复纵
+      - value: 2
+        label: 轮型
+      - value: 3
+        label: 梯形
+      - value: 4
+        label: 单横
+    一战夜战B:
+      name: 一战夜战
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 一战夜战B
+      source:
+        page: 方案B
+        ui_line: 730
+    二战罗盘B:
+      name: 二战罗盘
+      type: select
+      value: 0
+      storage: legacy
+      key: 二战罗盘B
+      source:
+        page: 方案B
+        ui_line: 735
+      option:
+      - value: 0
+        label: 不选
+      - value: 1
+        label: √×
+      - value: 2
+        label: ×√
+      - value: 3
+        label: √××
+      - value: 4
+        label: ×√×
+      - value: 5
+        label: ××√
+      - value: 6
+        label: ×√√
+      - value: 7
+        label: √×√
+      - value: 8
+        label: √√×
+    第二点阵型B:
+      name: 第二点阵型
+      type: select
+      value: 1
+      storage: legacy
+      key: 第二点阵型B
+      source:
+        page: 方案B
+        ui_line: 737
+      option:
+      - value: 0
+        label: 单纵
+      - value: 1
+        label: 复纵
+      - value: 2
+        label: 轮型
+      - value: 3
+        label: 梯形
+      - value: 4
+        label: 单横
+    二战夜战B:
+      name: 二战夜战
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 二战夜战B
+      source:
+        page: 方案B
+        ui_line: 738
+    三战罗盘B:
+      name: 三战罗盘
+      type: select
+      value: 0
+      storage: legacy
+      key: 三战罗盘B
+      source:
+        page: 方案B
+        ui_line: 743
+      option:
+      - value: 0
+        label: 不选
+      - value: 1
+        label: √×
+      - value: 2
+        label: ×√
+      - value: 3
+        label: √××
+      - value: 4
+        label: ×√×
+      - value: 5
+        label: ××√
+      - value: 6
+        label: ×√√
+      - value: 7
+        label: √×√
+      - value: 8
+        label: √√×
+    第三点阵型B:
+      name: 第三点阵型
+      type: select
+      value: 1
+      storage: legacy
+      key: 第三点阵型B
+      source:
+        page: 方案B
+        ui_line: 745
+      option:
+      - value: 0
+        label: 单纵
+      - value: 1
+        label: 复纵
+      - value: 2
+        label: 轮型
+      - value: 3
+        label: 梯形
+      - value: 4
+        label: 单横
+    三战夜战B:
+      name: 三战夜战
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 三战夜战B
+      source:
+        page: 方案B
+        ui_line: 746
+    四战罗盘B:
+      name: 四战罗盘
+      type: select
+      value: 0
+      storage: legacy
+      key: 四战罗盘B
+      source:
+        page: 方案B
+        ui_line: 751
+      option:
+      - value: 0
+        label: 不选
+      - value: 1
+        label: √×
+      - value: 2
+        label: ×√
+      - value: 3
+        label: √××
+      - value: 4
+        label: ×√×
+      - value: 5
+        label: ××√
+      - value: 6
+        label: ×√√
+      - value: 7
+        label: √×√
+      - value: 8
+        label: √√×
+    第四点阵型B:
+      name: 第四点阵型
+      type: select
+      value: 1
+      storage: legacy
+      key: 第四点阵型B
+      source:
+        page: 方案B
+        ui_line: 753
+      option:
+      - value: 0
+        label: 单纵
+      - value: 1
+        label: 复纵
+      - value: 2
+        label: 轮型
+      - value: 3
+        label: 梯形
+      - value: 4
+        label: 单横
+    四战夜战B:
+      name: 四战夜战
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 四战夜战B
+      source:
+        page: 方案B
+        ui_line: 754
+    五战罗盘B:
+      name: 五战罗盘
+      type: select
+      value: 0
+      storage: legacy
+      key: 五战罗盘B
+      source:
+        page: 方案B
+        ui_line: 759
+      option:
+      - value: 0
+        label: 不选
+      - value: 1
+        label: √×
+      - value: 2
+        label: ×√
+      - value: 3
+        label: √××
+      - value: 4
+        label: ×√×
+      - value: 5
+        label: ××√
+      - value: 6
+        label: ×√√
+      - value: 7
+        label: √×√
+      - value: 8
+        label: √√×
+    第五点阵型B:
+      name: 第五点阵型
+      type: select
+      value: 1
+      storage: legacy
+      key: 第五点阵型B
+      source:
+        page: 方案B
+        ui_line: 761
+      option:
+      - value: 0
+        label: 单纵
+      - value: 1
+        label: 复纵
+      - value: 2
+        label: 轮型
+      - value: 3
+        label: 梯形
+      - value: 4
+        label: 单横
+    五战夜战B:
+      name: 五战夜战
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 五战夜战B
+      source:
+        page: 方案B
+        ui_line: 762
+    六战罗盘B:
+      name: 六战罗盘
+      type: select
+      value: 0
+      storage: legacy
+      key: 六战罗盘B
+      source:
+        page: 方案B
+        ui_line: 767
+      option:
+      - value: 0
+        label: 不选
+      - value: 1
+        label: √×
+      - value: 2
+        label: ×√
+      - value: 3
+        label: √××
+      - value: 4
+        label: ×√×
+      - value: 5
+        label: ××√
+      - value: 6
+        label: ×√√
+      - value: 7
+        label: √×√
+      - value: 8
+        label: √√×
+    第六点阵型B:
+      name: 第六点阵型
+      type: select
+      value: 1
+      storage: legacy
+      key: 第六点阵型B
+      source:
+        page: 方案B
+        ui_line: 769
+      option:
+      - value: 0
+        label: 单纵
+      - value: 1
+        label: 复纵
+      - value: 2
+        label: 轮型
+      - value: 3
+        label: 梯形
+      - value: 4
+        label: 单横
+    六战夜战B:
+      name: 六战夜战
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 六战夜战B
+      source:
+        page: 方案B
+        ui_line: 770
+    七战罗盘B:
+      name: 七战罗盘
+      type: select
+      value: 0
+      storage: legacy
+      key: 七战罗盘B
+      source:
+        page: 方案B
+        ui_line: 775
+      option:
+      - value: 0
+        label: 不选
+      - value: 1
+        label: √×
+      - value: 2
+        label: ×√
+      - value: 3
+        label: √××
+      - value: 4
+        label: ×√×
+      - value: 5
+        label: ××√
+      - value: 6
+        label: ×√√
+      - value: 7
+        label: √×√
+      - value: 8
+        label: √√×
+    第七点阵型B:
+      name: 第七点阵型
+      type: select
+      value: 1
+      storage: legacy
+      key: 第七点阵型B
+      source:
+        page: 方案B
+        ui_line: 777
+      option:
+      - value: 0
+        label: 单纵
+      - value: 1
+        label: 复纵
+      - value: 2
+        label: 轮型
+      - value: 3
+        label: 梯形
+      - value: 4
+        label: 单横
+    七战夜战B:
+      name: 七战夜战
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 七战夜战B
+      source:
+        page: 方案B
+        ui_line: 778
+  Sortie:
+    迂回点B:
+      name: 迂回点
+      type: input
+      value: '123456'
+      storage: legacy
+      key: 迂回点B
+      source:
+        page: 方案B
+        ui_line: 789
+    是否迂回B:
+      name: 是否迂回
+      type: select
+      value: 0
+      storage: legacy
+      key: 是否迂回B
+      source:
+        page: 方案B
+        ui_line: 790
+      option:
+      - value: 0
+        label: 不迂回
+      - value: 1
+        label: 回港
+      - value: 2
+        label: 迂回,若失败重启
+      - value: 3
+        label: 迂回,不管是否成功
+      - value: 4
+        label: 迂回,成功则撤退失败则重启
+    资源点SLB:
+      name: 资源点SL
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 资源点SLB
+      source:
+        page: 方案B
+        ui_line: 791
+    撤退方式B:
+      name: 撤退方式
+      type: select
+      value: 0
+      storage: legacy
+      key: 撤退方式B
+      source:
+        page: 方案B
+        ui_line: 801
+      option:
+      - value: 0
+        label: 索敌成功后回港
+      - value: 1
+        label: 重启
+    大破出征B:
+      name: 大破出征
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 大破出征B
+      source:
+        page: 方案B
+        ui_line: 859
+    大破进击B:
+      name: 大破进击
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 大破进击B
+      source:
+        page: 方案B
+        ui_line: 861
+    出征SLB:
+      name: 出征SL
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 出征SLB
+      source:
+        page: 方案B
+        ui_line: 867
+    出征BUFFB:
+      name: 出征BUFF
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 出征BUFFB
+      source:
+        page: 方案B
+        ui_line: 872
+    弹药空了才补给B:
+      name: 弹药空了才补给
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 弹药空了才补给B
+      source:
+        page: 方案B
+        ui_line: 877
+  Enemy:
+    索敌失败处理B:
+      name: 索敌失败处理
+      type: select
+      value: 1
+      storage: legacy
+      key: 索敌失败处理B
+      source:
+        page: 方案B
+        ui_line: 796
+      option:
+      - value: 0
+        label: 无视
+      - value: 1
+        label: 战斗中提醒
+      - value: 2
+        label: 选阵型时重启
+      - value: 3
+        label: 停止等人工干预
+    转单横B:
+      name: 转单横
+      type: input
+      value: '12345'
+      storage: legacy
+      key: 转单横B
+      source:
+        page: 方案B
+        ui_line: 806
+    转轮型B:
+      name: 转轮型
+      type: input
+      value: '0'
+      storage: legacy
+      key: 转轮型B
+      source:
+        page: 方案B
+        ui_line: 812
+    远程打击B:
+      name: 远程打击
+      type: input
+      value: '0'
+      storage: legacy
+      key: 远程打击B
+      source:
+        page: 方案B
+        ui_line: 818
+    判断位置1B:
+      name: 判断位置1
+      type: input
+      value: '0'
+      storage: legacy
+      key: 判断位置1B
+      source:
+        page: 方案B
+        ui_line: 824
+    判断是否1B:
+      name: 判断是否1
+      type: select
+      value: 0
+      storage: legacy
+      key: 判断是否1B
+      source:
+        page: 方案B
+        ui_line: 826
+      option:
+      - value: 0
+        label: 是
+      - value: 1
+        label: 不是
+    判断阵型1B:
+      name: 判断阵型1
+      type: select
+      value: 0
+      storage: legacy
+      key: 判断阵型1B
+      source:
+        page: 方案B
+        ui_line: 827
+      option:
+      - value: 0
+        label: 单纵
+      - value: 1
+        label: 复纵
+      - value: 2
+        label: 轮型
+      - value: 3
+        label: 梯形
+      - value: 4
+        label: 单横
+    判断位置EX1B:
+      name: 判断位置EX1
+      type: input
+      value: '0'
+      storage: legacy
+      key: 判断位置EX1B
+      source:
+        page: 方案B
+        ui_line: 833
+    判断空位EX1B:
+      name: 判断空位EX1
+      type: select
+      value: 0
+      storage: legacy
+      key: 判断空位EX1B
+      source:
+        page: 方案B
+        ui_line: 835
+      option:
+      - value: 0
+        label: '1'
+      - value: 1
+        label: '2'
+      - value: 2
+        label: '3'
+      - value: 3
+        label: '4'
+      - value: 4
+        label: '5'
+      - value: 5
+        label: '6'
+    判断有无EX1B:
+      name: 判断有无EX1
+      type: select
+      value: 1
+      storage: legacy
+      key: 判断有无EX1B
+      source:
+        page: 方案B
+        ui_line: 837
+      option:
+      - value: 0
+        label: 不是
+      - value: 1
+        label: 是
+    判断配置EX1B:
+      name: 判断配置EX1
+      type: select
+      value: 0
+      storage: legacy
+      key: 判断配置EX1B
+      source:
+        page: 方案B
+        ui_line: 838
+      option:
+      - value: 0
+        label: 驱逐
+      - value: 1
+        label: 轻巡
+      - value: 2
+        label: 重巡
+      - value: 3
+        label: 雷巡
+      - value: 4
+        label: 战巡
+      - value: 5
+        label: 战列
+      - value: 6
+        label: 轻母
+      - value: 7
+        label: 航母
+      - value: 8
+        label: 补给
+      - value: 9
+        label: 旗舰
+      - value: 10
+        label: 潜艇
+      - value: 11
+        label: 防驱
+      - value: 12
+        label: 导驱
+      - value: 13
+        label: 大巡
+    判断位置EX2B:
+      name: 判断位置EX2
+      type: input
+      value: '0'
+      storage: legacy
+      key: 判断位置EX2B
+      source:
+        page: 方案B
+        ui_line: 844
+    判断空位EX2B:
+      name: 判断空位EX2
+      type: select
+      value: 0
+      storage: legacy
+      key: 判断空位EX2B
+      source:
+        page: 方案B
+        ui_line: 846
+      option:
+      - value: 0
+        label: '1'
+      - value: 1
+        label: '2'
+      - value: 2
+        label: '3'
+      - value: 3
+        label: '4'
+      - value: 4
+        label: '5'
+      - value: 5
+        label: '6'
+    判断有无EX2B:
+      name: 判断有无EX2
+      type: select
+      value: 1
+      storage: legacy
+      key: 判断有无EX2B
+      source:
+        page: 方案B
+        ui_line: 848
+      option:
+      - value: 0
+        label: 不是
+      - value: 1
+        label: 是
+    判断配置EX2B:
+      name: 判断配置EX2
+      type: select
+      value: 0
+      storage: legacy
+      key: 判断配置EX2B
+      source:
+        page: 方案B
+        ui_line: 849
+      option:
+      - value: 0
+        label: 驱逐
+      - value: 1
+        label: 轻巡
+      - value: 2
+        label: 重巡
+      - value: 3
+        label: 雷巡
+      - value: 4
+        label: 战巡
+      - value: 5
+        label: 战列
+      - value: 6
+        label: 轻母
+      - value: 7
+        label: 航母
+      - value: 8
+        label: 补给
+      - value: 9
+        label: 旗舰
+      - value: 10
+        label: 潜艇
+      - value: 11
+        label: 防驱
+      - value: 12
+        label: 导驱
+      - value: 13
+        label: 大巡
+sortie:
+  Scheduler:
+    Enable:
+      name: 启用任务
+      type: checkbox
+      value: false
+      storage: task
+      key: enabled
+    Priority:
+      name: 优先级
+      help: 数字越小，优先级越高。
+      type: number
+      value: 5
+      min: 1
+      max: 10
+      storage: task
+      key: priority
+    StartTime:
+      name: 计划时间
+      type: time
+      value: 00:00
+      storage: task
+      key: start_time
+    IntervalMinutes:
+      name: 执行间隔（分钟）
+      type: number
+      value: 60
+      min: 1
+      max: 10080
+      storage: task
+      key: interval_minutes
+    NextRun:
+      name: 下次运行
+      type: datetime-local
+      value: ''
+      storage: scheduler
+      key: NextRun
+    Runs:
+      name: 执行次数
+      type: number
+      value: 1
+      min: 1
+      max: 9999
+      storage: task
+      key: runs
+    SaveScreenshots:
+      name: 保留任务截图
+      type: checkbox
+      value: true
+      storage: task
+      key: save_screenshots
+  Map:
+    自定义C:
+      name: 自定义
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 自定义C
+      source:
+        page: 方案C
+        ui_line: 907
+    2-1胖次C:
+      name: 2-1胖次
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 2-1胖次C
+      source:
+        page: 方案C
+        ui_line: 908
+    2-2偷油C:
+      name: 2-2偷油
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 2-2偷油C
+      source:
+        page: 方案C
+        ui_line: 909
+    2-3偷油C:
+      name: 2-3偷油
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 2-3偷油C
+      source:
+        page: 方案C
+        ui_line: 910
+    3-1偷弹C:
+      name: 3-1偷弹
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 3-1偷弹C
+      source:
+        page: 方案C
+        ui_line: 911
+    3-1偷弹避战巡C:
+      name: 3-1偷弹避战巡
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 3-1偷弹避战巡C
+      source:
+        page: 方案C
+        ui_line: 912
+    4-3偷铝C:
+      name: 4-3偷铝
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 4-3偷铝C
+      source:
+        page: 方案C
+        ui_line: 913
+    4-3偷铝避轻母C:
+      name: 4-3偷铝避轻母
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 4-3偷铝避轻母C
+      source:
+        page: 方案C
+        ui_line: 914
+    4-3偷铝避战巡C:
+      name: 4-3偷铝避战巡
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 4-3偷铝避战巡C
+      source:
+        page: 方案C
+        ui_line: 915
+    5-2炸鱼C:
+      name: 5-2炸鱼
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 5-2炸鱼C
+      source:
+        page: 方案C
+        ui_line: 916
+    5-3偷钢C:
+      name: 5-3偷钢
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 5-3偷钢C
+      source:
+        page: 方案C
+        ui_line: 917
+    6-1炸鱼C:
+      name: 6-1炸鱼
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 6-1炸鱼C
+      source:
+        page: 方案C
+        ui_line: 918
+    6-1避轻母C:
+      name: 6-1避轻母
+      type: checkbox
+      value: true
+      storage: legacy
+      key: 6-1避轻母C
+      source:
+        page: 方案C
+        ui_line: 919
+    7-1炸鱼C:
+      name: 7-1炸鱼
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 7-1炸鱼C
+      source:
+        page: 方案C
+        ui_line: 920
+    7-2练鱼C:
+      name: 7-2练鱼
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 7-2练鱼C
+      source:
+        page: 方案C
+        ui_line: 921
+    8-1炸鱼C:
+      name: 8-1炸鱼
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 8-1炸鱼C
+      source:
+        page: 方案C
+        ui_line: 922
+    8-1只打轻巡C:
+      name: 8-1只打轻巡
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 8-1只打轻巡C
+      source:
+        page: 方案C
+        ui_line: 923
+    8-1不打重巡C:
+      name: 8-1不打重巡
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 8-1不打重巡C
+      source:
+        page: 方案C
+        ui_line: 924
+    8-2炸鱼C:
+      name: 8-2炸鱼
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 8-2炸鱼C
+      source:
+        page: 方案C
+        ui_line: 925
+    8-2不打重巡C:
+      name: 8-2不打重巡
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 8-2不打重巡C
+      source:
+        page: 方案C
+        ui_line: 926
+    8-5不打轻巡C:
+      name: 8-5不打轻巡
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 8-5不打轻巡C
+      source:
+        page: 方案C
+        ui_line: 927
+    9-1炸鱼C:
+      name: 9-1炸鱼
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 9-1炸鱼C
+      source:
+        page: 方案C
+        ui_line: 928
+    9-2炸鱼C:
+      name: 9-2炸鱼
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 9-2炸鱼C
+      source:
+        page: 方案C
+        ui_line: 929
+    章C:
+      name: 章
+      type: select
+      value: 5
+      storage: legacy
+      key: 章C
+      source:
+        page: 方案C
+        ui_line: 937
+      option:
+      - value: 0
+        label: 一
+      - value: 1
+        label: 二
+      - value: 2
+        label: 三
+      - value: 3
+        label: 四
+      - value: 4
+        label: 五
+      - value: 5
+        label: 六
+      - value: 6
+        label: 七
+      - value: 7
+        label: 八
+      - value: 8
+        label: 九
+      - value: 9
+        label: 十
+      - value: 10
+        label: 最强之舟
+    图C:
+      name: 图
+      type: select
+      value: 0
+      storage: legacy
+      key: 图C
+      source:
+        page: 方案C
+        ui_line: 939
+      option:
+      - value: 0
+        label: 一
+      - value: 1
+        label: 二
+      - value: 2
+        label: 三
+      - value: 3
+        label: 四
+      - value: 4
+        label: 五
+      - value: 5
+        label: 六
+      - value: 6
+        label: 七
+      - value: 7
+        label: 八
+      - value: 8
+        label: 九
+      - value: 9
+        label: 十
+      - value: 10
+        label: 十一
+      - value: 11
+        label: 十二
+      - value: 12
+        label: 十三
+      - value: 13
+        label: 十四
+    终点位置C:
+      name: 终点位置
+      type: select
+      value: 0
+      storage: legacy
+      key: 终点位置C
+      source:
+        page: 方案C
+        ui_line: 945
+      option:
+      - value: 0
+        label: '1'
+      - value: 1
+        label: '2'
+      - value: 2
+        label: '3'
+      - value: 3
+        label: '4'
+      - value: 4
+        label: '5'
+      - value: 5
+        label: '6'
+      - value: 6
+        label: '7'
+    入口C:
+      name: 入口
+      type: select
+      value: 0
+      storage: legacy
+      key: 入口C
+      source:
+        page: 方案C
+        ui_line: 947
+      option:
+      - value: 0
+        label: α
+      - value: 1
+        label: β
+      - value: 2
+        label: γ
+      - value: 3
+        label: δ
+    两战捞胖次C:
+      name: 两战捞胖次
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 两战捞胖次C
+      source:
+        page: 方案C
+        ui_line: 1110
+  Fleet:
+    出征舰队C:
+      name: 出征舰队
+      type: select
+      value: 1
+      storage: legacy
+      key: 出征舰队C
+      source:
+        page: 方案C
+        ui_line: 935
+      option:
+      - value: 0
+        label: 一
+      - value: 1
+        label: 二
+      - value: 2
+        label: 三
+      - value: 3
+        label: 四
+    满级换船开关C:
+      name: 满级换船开关
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 满级换船开关C
+      source:
+        page: 方案C
+        ui_line: 951
+    满级换船输入框C:
+      name: 满级换船输入框
+      type: input
+      value: '123456'
+      storage: legacy
+      key: 满级换船输入框C
+      source:
+        page: 方案C
+        ui_line: 952
+    满级换船条件C:
+      name: 满级换船条件
+      type: select
+      value: 0
+      storage: legacy
+      key: 满级换船条件C
+      source:
+        page: 方案C
+        ui_line: 954
+      option:
+      - value: 0
+        label: 满级
+      - value: 1
+        label: 泡澡
+      - value: 2
+        label: 养成
+    满级换船执行C:
+      name: 满级换船执行
+      type: select
+      value: 0
+      storage: legacy
+      key: 满级换船执行C
+      source:
+        page: 方案C
+        ui_line: 955
+      option:
+      - value: 0
+        label: 换船
+      - value: 1
+        label: 远征
+    满级换船目标C:
+      name: 满级换船目标
+      type: select
+      value: 3
+      storage: legacy
+      key: 满级换船目标C
+      source:
+        page: 方案C
+        ui_line: 957
+      option:
+      - value: 0
+        label: 航母
+      - value: 1
+        label: 轻母
+      - value: 2
+        label: 装母
+      - value: 3
+        label: 战列
+      - value: 4
+        label: 战巡
+      - value: 5
+        label: 重巡
+      - value: 6
+        label: 轻巡
+      - value: 7
+        label: 驱逐
+      - value: 8
+        label: 潜艇
+      - value: 9
+        label: 导驱
+      - value: 10
+        label: 补给
+      - value: 11
+        label: 全部
+      - value: 12
+        label: 防驱
+      - value: 13
+        label: 重炮
+      - value: 14
+        label: 炮潜
+    满级换船排序C:
+      name: 满级换船排序
+      type: select
+      value: 0
+      storage: legacy
+      key: 满级换船排序C
+      source:
+        page: 方案C
+        ui_line: 959
+      option:
+      - value: 0
+        label: 降序
+      - value: 1
+        label: 升序
+    满级换船国籍C:
+      name: 满级换船国籍
+      type: select
+      value: 0
+      storage: legacy
+      key: 满级换船国籍C
+      source:
+        page: 方案C
+        ui_line: 961
+      option:
+      - value: 0
+        label: 所有
+      - value: 1
+        label: C国
+      - value: 2
+        label: E国
+      - value: 3
+        label: F国
+      - value: 4
+        label: G国
+      - value: 5
+        label: I国
+      - value: 6
+        label: J国
+      - value: 7
+        label: S国
+      - value: 8
+        label: U国
+      - value: 9
+        label: 其他
+    满级换船开关2C:
+      name: 满级换船开关2
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 满级换船开关2C
+      source:
+        page: 方案C
+        ui_line: 965
+    满级换船输入框2C:
+      name: 满级换船输入框2
+      type: input
+      value: '123456'
+      storage: legacy
+      key: 满级换船输入框2C
+      source:
+        page: 方案C
+        ui_line: 966
+    满级换船条件2C:
+      name: 满级换船条件2
+      type: select
+      value: 0
+      storage: legacy
+      key: 满级换船条件2C
+      source:
+        page: 方案C
+        ui_line: 968
+      option:
+      - value: 0
+        label: 满级
+      - value: 1
+        label: 泡澡
+      - value: 2
+        label: 养成
+    满级换船执行2C:
+      name: 满级换船执行2
+      type: select
+      value: 0
+      storage: legacy
+      key: 满级换船执行2C
+      source:
+        page: 方案C
+        ui_line: 969
+      option:
+      - value: 0
+        label: 换船
+      - value: 1
+        label: 远征
+    满级换船目标2C:
+      name: 满级换船目标2
+      type: select
+      value: 3
+      storage: legacy
+      key: 满级换船目标2C
+      source:
+        page: 方案C
+        ui_line: 971
+      option:
+      - value: 0
+        label: 航母
+      - value: 1
+        label: 轻母
+      - value: 2
+        label: 装母
+      - value: 3
+        label: 战列
+      - value: 4
+        label: 战巡
+      - value: 5
+        label: 重巡
+      - value: 6
+        label: 轻巡
+      - value: 7
+        label: 驱逐
+      - value: 8
+        label: 潜艇
+      - value: 9
+        label: 导驱
+      - value: 10
+        label: 补给
+      - value: 11
+        label: 全部
+      - value: 12
+        label: 防驱
+      - value: 13
+        label: 重炮
+      - value: 14
+        label: 炮潜
+    满级换船排序2C:
+      name: 满级换船排序2
+      type: select
+      value: 0
+      storage: legacy
+      key: 满级换船排序2C
+      source:
+        page: 方案C
+        ui_line: 973
+      option:
+      - value: 0
+        label: 降序
+      - value: 1
+        label: 升序
+    满级换船国籍2C:
+      name: 满级换船国籍2
+      type: select
+      value: 0
+      storage: legacy
+      key: 满级换船国籍2C
+      source:
+        page: 方案C
+        ui_line: 975
+      option:
+      - value: 0
+        label: 所有
+      - value: 1
+        label: C国
+      - value: 2
+        label: E国
+      - value: 3
+        label: F国
+      - value: 4
+        label: G国
+      - value: 5
+        label: I国
+      - value: 6
+        label: J国
+      - value: 7
+        label: S国
+      - value: 8
+        label: U国
+      - value: 9
+        label: 其他
+    满级换船开关3C:
+      name: 满级换船开关3
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 满级换船开关3C
+      source:
+        page: 方案C
+        ui_line: 979
+    满级换船输入框3C:
+      name: 满级换船输入框3
+      type: input
+      value: '123456'
+      storage: legacy
+      key: 满级换船输入框3C
+      source:
+        page: 方案C
+        ui_line: 980
+    满级换船条件3C:
+      name: 满级换船条件3
+      type: select
+      value: 0
+      storage: legacy
+      key: 满级换船条件3C
+      source:
+        page: 方案C
+        ui_line: 982
+      option:
+      - value: 0
+        label: 满级
+      - value: 1
+        label: 泡澡
+      - value: 2
+        label: 养成
+    满级换船执行3C:
+      name: 满级换船执行3
+      type: select
+      value: 0
+      storage: legacy
+      key: 满级换船执行3C
+      source:
+        page: 方案C
+        ui_line: 983
+      option:
+      - value: 0
+        label: 换船
+      - value: 1
+        label: 远征
+    满级换船目标3C:
+      name: 满级换船目标3
+      type: select
+      value: 3
+      storage: legacy
+      key: 满级换船目标3C
+      source:
+        page: 方案C
+        ui_line: 985
+      option:
+      - value: 0
+        label: 航母
+      - value: 1
+        label: 轻母
+      - value: 2
+        label: 装母
+      - value: 3
+        label: 战列
+      - value: 4
+        label: 战巡
+      - value: 5
+        label: 重巡
+      - value: 6
+        label: 轻巡
+      - value: 7
+        label: 驱逐
+      - value: 8
+        label: 潜艇
+      - value: 9
+        label: 导驱
+      - value: 10
+        label: 补给
+      - value: 11
+        label: 全部
+      - value: 12
+        label: 防驱
+      - value: 13
+        label: 重炮
+      - value: 14
+        label: 炮潜
+    满级换船排序3C:
+      name: 满级换船排序3
+      type: select
+      value: 0
+      storage: legacy
+      key: 满级换船排序3C
+      source:
+        page: 方案C
+        ui_line: 987
+      option:
+      - value: 0
+        label: 降序
+      - value: 1
+        label: 升序
+    满级换船国籍3C:
+      name: 满级换船国籍3
+      type: select
+      value: 0
+      storage: legacy
+      key: 满级换船国籍3C
+      source:
+        page: 方案C
+        ui_line: 989
+      option:
+      - value: 0
+        label: 所有
+      - value: 1
+        label: C国
+      - value: 2
+        label: E国
+      - value: 3
+        label: F国
+      - value: 4
+        label: G国
+      - value: 5
+        label: I国
+      - value: 6
+        label: J国
+      - value: 7
+        label: S国
+      - value: 8
+        label: U国
+      - value: 9
+        label: 其他
+    满级换船开关4C:
+      name: 满级换船开关4
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 满级换船开关4C
+      source:
+        page: 方案C
+        ui_line: 993
+    满级换船输入框4C:
+      name: 满级换船输入框4
+      type: input
+      value: '123456'
+      storage: legacy
+      key: 满级换船输入框4C
+      source:
+        page: 方案C
+        ui_line: 994
+    满级换船条件4C:
+      name: 满级换船条件4
+      type: select
+      value: 0
+      storage: legacy
+      key: 满级换船条件4C
+      source:
+        page: 方案C
+        ui_line: 996
+      option:
+      - value: 0
+        label: 满级
+      - value: 1
+        label: 泡澡
+      - value: 2
+        label: 养成
+    满级换船执行4C:
+      name: 满级换船执行4
+      type: select
+      value: 0
+      storage: legacy
+      key: 满级换船执行4C
+      source:
+        page: 方案C
+        ui_line: 997
+      option:
+      - value: 0
+        label: 换船
+      - value: 1
+        label: 远征
+    满级换船目标4C:
+      name: 满级换船目标4
+      type: select
+      value: 3
+      storage: legacy
+      key: 满级换船目标4C
+      source:
+        page: 方案C
+        ui_line: 999
+      option:
+      - value: 0
+        label: 航母
+      - value: 1
+        label: 轻母
+      - value: 2
+        label: 装母
+      - value: 3
+        label: 战列
+      - value: 4
+        label: 战巡
+      - value: 5
+        label: 重巡
+      - value: 6
+        label: 轻巡
+      - value: 7
+        label: 驱逐
+      - value: 8
+        label: 潜艇
+      - value: 9
+        label: 导驱
+      - value: 10
+        label: 补给
+      - value: 11
+        label: 全部
+      - value: 12
+        label: 防驱
+      - value: 13
+        label: 重炮
+      - value: 14
+        label: 炮潜
+    满级换船排序4C:
+      name: 满级换船排序4
+      type: select
+      value: 0
+      storage: legacy
+      key: 满级换船排序4C
+      source:
+        page: 方案C
+        ui_line: 1001
+      option:
+      - value: 0
+        label: 降序
+      - value: 1
+        label: 升序
+    满级换船国籍4C:
+      name: 满级换船国籍4
+      type: select
+      value: 0
+      storage: legacy
+      key: 满级换船国籍4C
+      source:
+        page: 方案C
+        ui_line: 1003
+      option:
+      - value: 0
+        label: 所有
+      - value: 1
+        label: C国
+      - value: 2
+        label: E国
+      - value: 3
+        label: F国
+      - value: 4
+        label: G国
+      - value: 5
+        label: I国
+      - value: 6
+        label: J国
+      - value: 7
+        label: S国
+      - value: 8
+        label: U国
+      - value: 9
+        label: 其他
+    满级换船开关5C:
+      name: 满级换船开关5
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 满级换船开关5C
+      source:
+        page: 方案C
+        ui_line: 1007
+    满级换船输入框5C:
+      name: 满级换船输入框5
+      type: input
+      value: '123456'
+      storage: legacy
+      key: 满级换船输入框5C
+      source:
+        page: 方案C
+        ui_line: 1008
+    满级换船条件5C:
+      name: 满级换船条件5
+      type: select
+      value: 0
+      storage: legacy
+      key: 满级换船条件5C
+      source:
+        page: 方案C
+        ui_line: 1010
+      option:
+      - value: 0
+        label: 满级
+      - value: 1
+        label: 泡澡
+      - value: 2
+        label: 养成
+    满级换船执行5C:
+      name: 满级换船执行5
+      type: select
+      value: 0
+      storage: legacy
+      key: 满级换船执行5C
+      source:
+        page: 方案C
+        ui_line: 1011
+      option:
+      - value: 0
+        label: 换船
+      - value: 1
+        label: 远征
+    满级换船目标5C:
+      name: 满级换船目标5
+      type: select
+      value: 7
+      storage: legacy
+      key: 满级换船目标5C
+      source:
+        page: 方案C
+        ui_line: 1013
+      option:
+      - value: 0
+        label: 航母
+      - value: 1
+        label: 轻母
+      - value: 2
+        label: 装母
+      - value: 3
+        label: 战列
+      - value: 4
+        label: 战巡
+      - value: 5
+        label: 重巡
+      - value: 6
+        label: 轻巡
+      - value: 7
+        label: 驱逐
+      - value: 8
+        label: 潜艇
+      - value: 9
+        label: 导驱
+      - value: 10
+        label: 补给
+      - value: 11
+        label: 全部
+      - value: 12
+        label: 防驱
+      - value: 13
+        label: 重炮
+      - value: 14
+        label: 炮潜
+    满级换船排序5C:
+      name: 满级换船排序5
+      type: select
+      value: 0
+      storage: legacy
+      key: 满级换船排序5C
+      source:
+        page: 方案C
+        ui_line: 1015
+      option:
+      - value: 0
+        label: 降序
+      - value: 1
+        label: 升序
+    满级换船国籍5C:
+      name: 满级换船国籍5
+      type: select
+      value: 0
+      storage: legacy
+      key: 满级换船国籍5C
+      source:
+        page: 方案C
+        ui_line: 1017
+      option:
+      - value: 0
+        label: 所有
+      - value: 1
+        label: C国
+      - value: 2
+        label: E国
+      - value: 3
+        label: F国
+      - value: 4
+        label: G国
+      - value: 5
+        label: I国
+      - value: 6
+        label: J国
+      - value: 7
+        label: S国
+      - value: 8
+        label: U国
+      - value: 9
+        label: 其他
+    满级换船开关6C:
+      name: 满级换船开关6
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 满级换船开关6C
+      source:
+        page: 方案C
+        ui_line: 1021
+    满级换船输入框6C:
+      name: 满级换船输入框6
+      type: input
+      value: '123456'
+      storage: legacy
+      key: 满级换船输入框6C
+      source:
+        page: 方案C
+        ui_line: 1022
+    满级换船条件6C:
+      name: 满级换船条件6
+      type: select
+      value: 0
+      storage: legacy
+      key: 满级换船条件6C
+      source:
+        page: 方案C
+        ui_line: 1024
+      option:
+      - value: 0
+        label: 满级
+      - value: 1
+        label: 泡澡
+      - value: 2
+        label: 养成
+    满级换船执行6C:
+      name: 满级换船执行6
+      type: select
+      value: 0
+      storage: legacy
+      key: 满级换船执行6C
+      source:
+        page: 方案C
+        ui_line: 1025
+      option:
+      - value: 0
+        label: 换船
+      - value: 1
+        label: 远征
+    满级换船目标6C:
+      name: 满级换船目标6
+      type: select
+      value: 7
+      storage: legacy
+      key: 满级换船目标6C
+      source:
+        page: 方案C
+        ui_line: 1027
+      option:
+      - value: 0
+        label: 航母
+      - value: 1
+        label: 轻母
+      - value: 2
+        label: 装母
+      - value: 3
+        label: 战列
+      - value: 4
+        label: 战巡
+      - value: 5
+        label: 重巡
+      - value: 6
+        label: 轻巡
+      - value: 7
+        label: 驱逐
+      - value: 8
+        label: 潜艇
+      - value: 9
+        label: 导驱
+      - value: 10
+        label: 补给
+      - value: 11
+        label: 全部
+      - value: 12
+        label: 防驱
+      - value: 13
+        label: 重炮
+      - value: 14
+        label: 炮潜
+    满级换船排序6C:
+      name: 满级换船排序6
+      type: select
+      value: 0
+      storage: legacy
+      key: 满级换船排序6C
+      source:
+        page: 方案C
+        ui_line: 1029
+      option:
+      - value: 0
+        label: 降序
+      - value: 1
+        label: 升序
+    满级换船国籍6C:
+      name: 满级换船国籍6
+      type: select
+      value: 0
+      storage: legacy
+      key: 满级换船国籍6C
+      source:
+        page: 方案C
+        ui_line: 1031
+      option:
+      - value: 0
+        label: 所有
+      - value: 1
+        label: C国
+      - value: 2
+        label: E国
+      - value: 3
+        label: F国
+      - value: 4
+        label: G国
+      - value: 5
+        label: I国
+      - value: 6
+        label: J国
+      - value: 7
+        label: S国
+      - value: 8
+        label: U国
+      - value: 9
+        label: 其他
+    换预设编队开关C:
+      name: 换预设编队开关
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 换预设编队开关C
+      source:
+        page: 方案C
+        ui_line: 1210
+    换预设编队频率C:
+      name: 换预设编队频率
+      type: select
+      value: 0
+      storage: legacy
+      key: 换预设编队频率C
+      source:
+        page: 方案C
+        ui_line: 1212
+      option:
+      - value: 0
+        label: '50'
+      - value: 1
+        label: '100'
+      - value: 2
+        label: '150'
+    套用预设编队C:
+      name: 套用预设编队
+      type: select
+      value: 0
+      storage: legacy
+      key: 套用预设编队C
+      source:
+        page: 方案C
+        ui_line: 1214
+      option:
+      - value: 0
+        label: '1'
+      - value: 1
+        label: '4'
+      - value: 2
+        label: '5'
+      - value: 3
+        label: '6'
+      - value: 4
+        label: '9'
+      - value: 5
+        label: '10'
+      - value: 6
+        label: '11'
+      - value: 7
+        label: '14'
+      - value: 8
+        label: '15'
+    套用预设编队一C:
+      name: 套用预设编队一
+      type: select
+      value: 1
+      storage: legacy
+      key: 套用预设编队一C
+      source:
+        page: 方案C
+        ui_line: 1215
+      option:
+      - value: 0
+        label: '1'
+      - value: 1
+        label: '4'
+      - value: 2
+        label: '5'
+      - value: 3
+        label: '6'
+      - value: 4
+        label: '9'
+      - value: 5
+        label: '10'
+      - value: 6
+        label: '11'
+      - value: 7
+        label: '14'
+      - value: 8
+        label: '15'
+    套用预设编队二C:
+      name: 套用预设编队二
+      type: select
+      value: 1
+      storage: legacy
+      key: 套用预设编队二C
+      source:
+        page: 方案C
+        ui_line: 1217
+      option:
+      - value: 0
+        label: '1'
+      - value: 1
+        label: '4'
+      - value: 2
+        label: '5'
+      - value: 3
+        label: '6'
+      - value: 4
+        label: '9'
+      - value: 5
+        label: '10'
+      - value: 6
+        label: '11'
+      - value: 7
+        label: '14'
+      - value: 8
+        label: '15'
+  Repair:
+    快修开关C:
+      name: 快修开关
+      type: checkbox
+      value: true
+      storage: legacy
+      key: 快修开关C
+      source:
+        page: 方案C
+        ui_line: 1035
+    快修输入框C:
+      name: 快修输入框
+      type: input
+      value: '0'
+      storage: legacy
+      key: 快修输入框C
+      source:
+        page: 方案C
+        ui_line: 1036
+    泡澡开关C:
+      name: 泡澡开关
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 泡澡开关C
+      source:
+        page: 方案C
+        ui_line: 1041
+    泡澡选择C:
+      name: 泡澡选择
+      type: select
+      value: 1
+      storage: legacy
+      key: 泡澡选择C
+      source:
+        page: 方案C
+        ui_line: 1042
+      option:
+      - value: 0
+        label: 中破
+      - value: 1
+        label: 大破
+    泡澡例外船输入框C:
+      name: 泡澡例外船输入框
+      type: input
+      value: '0'
+      storage: legacy
+      key: 泡澡例外船输入框C
+      source:
+        page: 方案C
+        ui_line: 1048
+  Battle:
+    一战罗盘C:
+      name: 一战罗盘
+      type: select
+      value: 3
+      storage: legacy
+      key: 一战罗盘C
+      source:
+        page: 方案C
+        ui_line: 1055
+      option:
+      - value: 0
+        label: 不选
+      - value: 1
+        label: √×
+      - value: 2
+        label: ×√
+      - value: 3
+        label: √××
+      - value: 4
+        label: ×√×
+      - value: 5
+        label: ××√
+      - value: 6
+        label: ×√√
+      - value: 7
+        label: √×√
+      - value: 8
+        label: √√×
+    第一点阵型C:
+      name: 第一点阵型
+      type: select
+      value: 4
+      storage: legacy
+      key: 第一点阵型C
+      source:
+        page: 方案C
+        ui_line: 1057
+      option:
+      - value: 0
+        label: 单纵
+      - value: 1
+        label: 复纵
+      - value: 2
+        label: 轮型
+      - value: 3
+        label: 梯形
+      - value: 4
+        label: 单横
+    一战夜战C:
+      name: 一战夜战
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 一战夜战C
+      source:
+        page: 方案C
+        ui_line: 1058
+    二战罗盘C:
+      name: 二战罗盘
+      type: select
+      value: 0
+      storage: legacy
+      key: 二战罗盘C
+      source:
+        page: 方案C
+        ui_line: 1063
+      option:
+      - value: 0
+        label: 不选
+      - value: 1
+        label: √×
+      - value: 2
+        label: ×√
+      - value: 3
+        label: √××
+      - value: 4
+        label: ×√×
+      - value: 5
+        label: ××√
+      - value: 6
+        label: ×√√
+      - value: 7
+        label: √×√
+      - value: 8
+        label: √√×
+    第二点阵型C:
+      name: 第二点阵型
+      type: select
+      value: 1
+      storage: legacy
+      key: 第二点阵型C
+      source:
+        page: 方案C
+        ui_line: 1065
+      option:
+      - value: 0
+        label: 单纵
+      - value: 1
+        label: 复纵
+      - value: 2
+        label: 轮型
+      - value: 3
+        label: 梯形
+      - value: 4
+        label: 单横
+    二战夜战C:
+      name: 二战夜战
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 二战夜战C
+      source:
+        page: 方案C
+        ui_line: 1066
+    三战罗盘C:
+      name: 三战罗盘
+      type: select
+      value: 0
+      storage: legacy
+      key: 三战罗盘C
+      source:
+        page: 方案C
+        ui_line: 1071
+      option:
+      - value: 0
+        label: 不选
+      - value: 1
+        label: √×
+      - value: 2
+        label: ×√
+      - value: 3
+        label: √××
+      - value: 4
+        label: ×√×
+      - value: 5
+        label: ××√
+      - value: 6
+        label: ×√√
+      - value: 7
+        label: √×√
+      - value: 8
+        label: √√×
+    第三点阵型C:
+      name: 第三点阵型
+      type: select
+      value: 1
+      storage: legacy
+      key: 第三点阵型C
+      source:
+        page: 方案C
+        ui_line: 1073
+      option:
+      - value: 0
+        label: 单纵
+      - value: 1
+        label: 复纵
+      - value: 2
+        label: 轮型
+      - value: 3
+        label: 梯形
+      - value: 4
+        label: 单横
+    三战夜战C:
+      name: 三战夜战
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 三战夜战C
+      source:
+        page: 方案C
+        ui_line: 1074
+    四战罗盘C:
+      name: 四战罗盘
+      type: select
+      value: 0
+      storage: legacy
+      key: 四战罗盘C
+      source:
+        page: 方案C
+        ui_line: 1079
+      option:
+      - value: 0
+        label: 不选
+      - value: 1
+        label: √×
+      - value: 2
+        label: ×√
+      - value: 3
+        label: √××
+      - value: 4
+        label: ×√×
+      - value: 5
+        label: ××√
+      - value: 6
+        label: ×√√
+      - value: 7
+        label: √×√
+      - value: 8
+        label: √√×
+    第四点阵型C:
+      name: 第四点阵型
+      type: select
+      value: 1
+      storage: legacy
+      key: 第四点阵型C
+      source:
+        page: 方案C
+        ui_line: 1081
+      option:
+      - value: 0
+        label: 单纵
+      - value: 1
+        label: 复纵
+      - value: 2
+        label: 轮型
+      - value: 3
+        label: 梯形
+      - value: 4
+        label: 单横
+    四战夜战C:
+      name: 四战夜战
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 四战夜战C
+      source:
+        page: 方案C
+        ui_line: 1082
+    五战罗盘C:
+      name: 五战罗盘
+      type: select
+      value: 0
+      storage: legacy
+      key: 五战罗盘C
+      source:
+        page: 方案C
+        ui_line: 1087
+      option:
+      - value: 0
+        label: 不选
+      - value: 1
+        label: √×
+      - value: 2
+        label: ×√
+      - value: 3
+        label: √××
+      - value: 4
+        label: ×√×
+      - value: 5
+        label: ××√
+      - value: 6
+        label: ×√√
+      - value: 7
+        label: √×√
+      - value: 8
+        label: √√×
+    第五点阵型C:
+      name: 第五点阵型
+      type: select
+      value: 1
+      storage: legacy
+      key: 第五点阵型C
+      source:
+        page: 方案C
+        ui_line: 1089
+      option:
+      - value: 0
+        label: 单纵
+      - value: 1
+        label: 复纵
+      - value: 2
+        label: 轮型
+      - value: 3
+        label: 梯形
+      - value: 4
+        label: 单横
+    五战夜战C:
+      name: 五战夜战
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 五战夜战C
+      source:
+        page: 方案C
+        ui_line: 1090
+    六战罗盘C:
+      name: 六战罗盘
+      type: select
+      value: 0
+      storage: legacy
+      key: 六战罗盘C
+      source:
+        page: 方案C
+        ui_line: 1095
+      option:
+      - value: 0
+        label: 不选
+      - value: 1
+        label: √×
+      - value: 2
+        label: ×√
+      - value: 3
+        label: √××
+      - value: 4
+        label: ×√×
+      - value: 5
+        label: ××√
+      - value: 6
+        label: ×√√
+      - value: 7
+        label: √×√
+      - value: 8
+        label: √√×
+    第六点阵型C:
+      name: 第六点阵型
+      type: select
+      value: 1
+      storage: legacy
+      key: 第六点阵型C
+      source:
+        page: 方案C
+        ui_line: 1097
+      option:
+      - value: 0
+        label: 单纵
+      - value: 1
+        label: 复纵
+      - value: 2
+        label: 轮型
+      - value: 3
+        label: 梯形
+      - value: 4
+        label: 单横
+    六战夜战C:
+      name: 六战夜战
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 六战夜战C
+      source:
+        page: 方案C
+        ui_line: 1098
+    七战罗盘C:
+      name: 七战罗盘
+      type: select
+      value: 0
+      storage: legacy
+      key: 七战罗盘C
+      source:
+        page: 方案C
+        ui_line: 1103
+      option:
+      - value: 0
+        label: 不选
+      - value: 1
+        label: √×
+      - value: 2
+        label: ×√
+      - value: 3
+        label: √××
+      - value: 4
+        label: ×√×
+      - value: 5
+        label: ××√
+      - value: 6
+        label: ×√√
+      - value: 7
+        label: √×√
+      - value: 8
+        label: √√×
+    第七点阵型C:
+      name: 第七点阵型
+      type: select
+      value: 1
+      storage: legacy
+      key: 第七点阵型C
+      source:
+        page: 方案C
+        ui_line: 1105
+      option:
+      - value: 0
+        label: 单纵
+      - value: 1
+        label: 复纵
+      - value: 2
+        label: 轮型
+      - value: 3
+        label: 梯形
+      - value: 4
+        label: 单横
+    七战夜战C:
+      name: 七战夜战
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 七战夜战C
+      source:
+        page: 方案C
+        ui_line: 1106
+  Sortie:
+    迂回点C:
+      name: 迂回点
+      type: input
+      value: '123456'
+      storage: legacy
+      key: 迂回点C
+      source:
+        page: 方案C
+        ui_line: 1117
+    是否迂回C:
+      name: 是否迂回
+      type: select
+      value: 0
+      storage: legacy
+      key: 是否迂回C
+      source:
+        page: 方案C
+        ui_line: 1118
+      option:
+      - value: 0
+        label: 不迂回
+      - value: 1
+        label: 回港
+      - value: 2
+        label: 迂回,若失败重启
+      - value: 3
+        label: 迂回,不管是否成功
+      - value: 4
+        label: 迂回,成功则撤退失败则重启
+    资源点SLC:
+      name: 资源点SL
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 资源点SLC
+      source:
+        page: 方案C
+        ui_line: 1119
+    撤退方式C:
+      name: 撤退方式
+      type: select
+      value: 0
+      storage: legacy
+      key: 撤退方式C
+      source:
+        page: 方案C
+        ui_line: 1129
+      option:
+      - value: 0
+        label: 索敌成功后回港
+      - value: 1
+        label: 重启
+    大破出征C:
+      name: 大破出征
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 大破出征C
+      source:
+        page: 方案C
+        ui_line: 1187
+      display: readonly
+      help: 本版固定关闭。
+    大破进击C:
+      name: 大破进击
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 大破进击C
+      source:
+        page: 方案C
+        ui_line: 1189
+      display: readonly
+      help: 本版固定关闭。
+    出征SLC:
+      name: 出征SL
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 出征SLC
+      source:
+        page: 方案C
+        ui_line: 1195
+    出征BUFFC:
+      name: 出征BUFF
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 出征BUFFC
+      source:
+        page: 方案C
+        ui_line: 1200
+    弹药空了才补给C:
+      name: 弹药空了才补给
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 弹药空了才补给C
+      source:
+        page: 方案C
+        ui_line: 1205
+  Enemy:
+    索敌失败处理C:
+      name: 索敌失败处理
+      type: select
+      value: 1
+      storage: legacy
+      key: 索敌失败处理C
+      source:
+        page: 方案C
+        ui_line: 1124
+      option:
+      - value: 0
+        label: 无视
+      - value: 1
+        label: 战斗中提醒
+      - value: 2
+        label: 选阵型时重启
+      - value: 3
+        label: 停止等人工干预
+    转单横C:
+      name: 转单横
+      type: input
+      value: '12345'
+      storage: legacy
+      key: 转单横C
+      source:
+        page: 方案C
+        ui_line: 1134
+    转轮型C:
+      name: 转轮型
+      type: input
+      value: '0'
+      storage: legacy
+      key: 转轮型C
+      source:
+        page: 方案C
+        ui_line: 1140
+    远程打击C:
+      name: 远程打击
+      type: input
+      value: '0'
+      storage: legacy
+      key: 远程打击C
+      source:
+        page: 方案C
+        ui_line: 1146
+    判断位置1C:
+      name: 判断位置1
+      type: input
+      value: '0'
+      storage: legacy
+      key: 判断位置1C
+      source:
+        page: 方案C
+        ui_line: 1152
+    判断是否1C:
+      name: 判断是否1
+      type: select
+      value: 0
+      storage: legacy
+      key: 判断是否1C
+      source:
+        page: 方案C
+        ui_line: 1154
+      option:
+      - value: 0
+        label: 是
+      - value: 1
+        label: 不是
+    判断阵型1C:
+      name: 判断阵型1
+      type: select
+      value: 0
+      storage: legacy
+      key: 判断阵型1C
+      source:
+        page: 方案C
+        ui_line: 1155
+      option:
+      - value: 0
+        label: 单纵
+      - value: 1
+        label: 复纵
+      - value: 2
+        label: 轮型
+      - value: 3
+        label: 梯形
+      - value: 4
+        label: 单横
+    判断位置EX1C:
+      name: 判断位置EX1
+      type: input
+      value: '0'
+      storage: legacy
+      key: 判断位置EX1C
+      source:
+        page: 方案C
+        ui_line: 1161
+    判断空位EX1C:
+      name: 判断空位EX1
+      type: select
+      value: 0
+      storage: legacy
+      key: 判断空位EX1C
+      source:
+        page: 方案C
+        ui_line: 1163
+      option:
+      - value: 0
+        label: '1'
+      - value: 1
+        label: '2'
+      - value: 2
+        label: '3'
+      - value: 3
+        label: '4'
+      - value: 4
+        label: '5'
+      - value: 5
+        label: '6'
+    判断有无EX1C:
+      name: 判断有无EX1
+      type: select
+      value: 1
+      storage: legacy
+      key: 判断有无EX1C
+      source:
+        page: 方案C
+        ui_line: 1165
+      option:
+      - value: 0
+        label: 不是
+      - value: 1
+        label: 是
+    判断配置EX1C:
+      name: 判断配置EX1
+      type: select
+      value: 0
+      storage: legacy
+      key: 判断配置EX1C
+      source:
+        page: 方案C
+        ui_line: 1166
+      option:
+      - value: 0
+        label: 驱逐
+      - value: 1
+        label: 轻巡
+      - value: 2
+        label: 重巡
+      - value: 3
+        label: 雷巡
+      - value: 4
+        label: 战巡
+      - value: 5
+        label: 战列
+      - value: 6
+        label: 轻母
+      - value: 7
+        label: 航母
+      - value: 8
+        label: 补给
+      - value: 9
+        label: 旗舰
+      - value: 10
+        label: 潜艇
+      - value: 11
+        label: 防驱
+      - value: 12
+        label: 导驱
+      - value: 13
+        label: 大巡
+    判断位置EX2C:
+      name: 判断位置EX2
+      type: input
+      value: '0'
+      storage: legacy
+      key: 判断位置EX2C
+      source:
+        page: 方案C
+        ui_line: 1172
+    判断空位EX2C:
+      name: 判断空位EX2
+      type: select
+      value: 0
+      storage: legacy
+      key: 判断空位EX2C
+      source:
+        page: 方案C
+        ui_line: 1174
+      option:
+      - value: 0
+        label: '1'
+      - value: 1
+        label: '2'
+      - value: 2
+        label: '3'
+      - value: 3
+        label: '4'
+      - value: 4
+        label: '5'
+      - value: 5
+        label: '6'
+    判断有无EX2C:
+      name: 判断有无EX2
+      type: select
+      value: 1
+      storage: legacy
+      key: 判断有无EX2C
+      source:
+        page: 方案C
+        ui_line: 1176
+      option:
+      - value: 0
+        label: 不是
+      - value: 1
+        label: 是
+    判断配置EX2C:
+      name: 判断配置EX2
+      type: select
+      value: 0
+      storage: legacy
+      key: 判断配置EX2C
+      source:
+        page: 方案C
+        ui_line: 1177
+      option:
+      - value: 0
+        label: 驱逐
+      - value: 1
+        label: 轻巡
+      - value: 2
+        label: 重巡
+      - value: 3
+        label: 雷巡
+      - value: 4
+        label: 战巡
+      - value: 5
+        label: 战列
+      - value: 6
+        label: 轻母
+      - value: 7
+        label: 航母
+      - value: 8
+        label: 补给
+      - value: 9
+        label: 旗舰
+      - value: 10
+        label: 潜艇
+      - value: 11
+        label: 防驱
+      - value: 12
+        label: 导驱
+      - value: 13
+        label: 大巡
+decisive:
+  Scheduler:
+    Enable:
+      name: 启用任务
+      type: checkbox
+      value: false
+      storage: task
+      key: enabled
+      display: readonly
+    Priority:
+      name: 优先级
+      help: 数字越小，优先级越高。
+      type: number
+      value: 5
+      min: 1
+      max: 10
+      storage: task
+      key: priority
+      display: readonly
+    StartTime:
+      name: 计划时间
+      type: time
+      value: 00:00
+      storage: task
+      key: start_time
+      display: readonly
+    IntervalMinutes:
+      name: 执行间隔（分钟）
+      type: number
+      value: 60
+      min: 1
+      max: 10080
+      storage: task
+      key: interval_minutes
+      display: readonly
+    NextRun:
+      name: 下次运行
+      type: datetime-local
+      value: ''
+      storage: scheduler
+      key: NextRun
+      display: readonly
+    Runs:
+      name: 执行次数
+      type: number
+      value: 1
+      min: 1
+      max: 9999
+      storage: task
+      key: runs
+      display: readonly
+    SaveScreenshots:
+      name: 保留任务截图
+      type: checkbox
+      value: true
+      storage: task
+      key: save_screenshots
+      display: readonly
+  Decisive:
+    决战换票开关:
+      name: 决战换票开关
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 决战换票开关
+      source:
+        page: 功能控制台
+        ui_line: 167
+    决战开关:
+      name: 决战开关
+      type: checkbox
+      value: true
+      storage: legacy
+      key: 决战开关
+      source:
+        page: 功能控制台
+        ui_line: 174
+    决战限制次数:
+      name: 决战限制次数
+      type: select
+      value: 11
+      storage: legacy
+      key: 决战限制次数
+      source:
+        page: 功能控制台
+        ui_line: 176
+      option:
+      - value: 0
+        label: '1'
+      - value: 1
+        label: '2'
+      - value: 2
+        label: '3'
+      - value: 3
+        label: '4'
+      - value: 4
+        label: '5'
+      - value: 5
+        label: '6'
+      - value: 6
+        label: '7'
+      - value: 7
+        label: '8'
+      - value: 8
+        label: '9'
+      - value: 9
+        label: '10'
+      - value: 10
+        label: '11'
+      - value: 11
+        label: '12'
+      - value: 12
+        label: '13'
+      - value: 13
+        label: '14'
+      - value: 14
+        label: '15'
+      - value: 15
+        label: '16'
+      - value: 16
+        label: '17'
+      - value: 17
+        label: '18'
+      - value: 18
+        label: '19'
+      - value: 19
+        label: '20'
+      - value: 20
+        label: '21'
+      - value: 21
+        label: '22'
+      - value: 22
+        label: '23'
+      - value: 23
+        label: '24'
+      - value: 24
+        label: '25'
+      - value: 25
+        label: '26'
+      - value: 26
+        label: '27'
+      - value: 27
+        label: '28'
+      - value: 28
+        label: '29'
+      - value: 29
+        label: '30'
+      - value: 30
+        label: '31'
+      - value: 31
+        label: '32'
+      - value: 32
+        label: '33'
+      - value: 33
+        label: '34'
+      - value: 34
+        label: '35'
+      - value: 35
+        label: '36'
+      - value: 36
+        label: '37'
+      - value: 37
+        label: '38'
+      - value: 38
+        label: '39'
+      - value: 39
+        label: '40'
+      - value: 40
+        label: '41'
+      - value: 41
+        label: '42'
+      - value: 42
+        label: '43'
+      - value: 43
+        label: '44'
+      - value: 44
+        label: '45'
+      - value: 45
+        label: '46'
+      - value: 46
+        label: '47'
+      - value: 47
+        label: '48'
+      - value: 48
+        label: '49'
+      - value: 49
+        label: '50'
+      - value: 50
+        label: '51'
+      - value: 51
+        label: '52'
+      - value: 52
+        label: '53'
+      - value: 53
+        label: '54'
+      - value: 54
+        label: '55'
+      - value: 55
+        label: '56'
+      - value: 56
+        label: '57'
+      - value: 57
+        label: '58'
+      - value: 58
+        label: '59'
+      - value: 59
+        label: '60'
+      - value: 60
+        label: '61'
+      - value: 61
+        label: '62'
+      - value: 62
+        label: '63'
+      - value: 63
+        label: '64'
+      - value: 64
+        label: '65'
+      - value: 65
+        label: '66'
+      - value: 66
+        label: '67'
+      - value: 67
+        label: '68'
+      - value: 68
+        label: '69'
+      - value: 69
+        label: '70'
+      - value: 70
+        label: '71'
+      - value: 71
+        label: '72'
+      - value: 72
+        label: '73'
+      - value: 73
+        label: '74'
+      - value: 74
+        label: '75'
+      - value: 75
+        label: '76'
+      - value: 76
+        label: '77'
+      - value: 77
+        label: '78'
+      - value: 78
+        label: '79'
+      - value: 79
+        label: '80'
+      - value: 80
+        label: '81'
+      - value: 81
+        label: '82'
+      - value: 82
+        label: '83'
+      - value: 83
+        label: '84'
+      - value: 84
+        label: '85'
+      - value: 85
+        label: '86'
+      - value: 86
+        label: '87'
+      - value: 87
+        label: '88'
+      - value: 88
+        label: '89'
+      - value: 89
+        label: '90'
+      - value: 90
+        label: '91'
+      - value: 91
+        label: '92'
+      - value: 92
+        label: '93'
+      - value: 93
+        label: '94'
+      - value: 94
+        label: '95'
+      - value: 95
+        label: '96'
+      - value: 96
+        label: '97'
+      - value: 97
+        label: '98'
+      - value: 98
+        label: '99'
+      - value: 99
+        label: '100'
+    决战方案:
+      name: 决战方案
+      type: select
+      value: 0
+      storage: legacy
+      key: 决战方案
+      source:
+        page: 功能控制台
+        ui_line: 182
+      option:
+      - value: 0
+        label: E6
+      - value: 1
+        label: E5
+      - value: 2
+        label: E4(6鱼BOSS无法S胜)
+      - value: 3
+        label: E3
+      - value: 4
+        label: E2(6鱼BOSS无法S胜)
+      - value: 5
+        label: E1
+    决战道中阵型:
+      name: 决战道中阵型
+      type: select
+      value: 3
+      storage: legacy
+      key: 决战道中阵型
+      source:
+        page: 功能控制台
+        ui_line: 187
+      option:
+      - value: 0
+        label: 单纵
+      - value: 1
+        label: 复纵
+      - value: 2
+        label: 轮型
+      - value: 3
+        label: 梯形
+      - value: 4
+        label: 单横
+    决战道中夜战:
+      name: 决战道中夜战
+      type: select
+      value: 0
+      storage: legacy
+      key: 决战道中夜战
+      source:
+        page: 功能控制台
+        ui_line: 188
+      option:
+      - value: 0
+        label: 夜战
+      - value: 1
+        label: 不夜战
+    决战道中快修:
+      name: 决战道中快修
+      type: select
+      value: 1
+      storage: legacy
+      key: 决战道中快修
+      source:
+        page: 功能控制台
+        ui_line: 189
+      option:
+      - value: 0
+        label: 中破快修
+      - value: 1
+        label: 大破快修
+      - value: 2
+        label: 擦伤快修
+      - value: 3
+        label: 中破泡澡
+      - value: 4
+        label: 大破泡澡
+    决战BOSS阵型:
+      name: 决战BOSS阵型
+      type: select
+      value: 3
+      storage: legacy
+      key: 决战BOSS阵型
+      source:
+        page: 功能控制台
+        ui_line: 194
+      option:
+      - value: 0
+        label: 单纵
+      - value: 1
+        label: 复纵
+      - value: 2
+        label: 轮型
+      - value: 3
+        label: 梯形
+      - value: 4
+        label: 单横
+    决战BOSS夜战:
+      name: 决战BOSS夜战
+      type: select
+      value: 0
+      storage: legacy
+      key: 决战BOSS夜战
+      source:
+        page: 功能控制台
+        ui_line: 195
+      option:
+      - value: 0
+        label: 夜战
+      - value: 1
+        label: 不夜战
+    决战BOSS快修:
+      name: 决战BOSS快修
+      type: select
+      value: 2
+      storage: legacy
+      key: 决战BOSS快修
+      source:
+        page: 功能控制台
+        ui_line: 196
+      option:
+      - value: 0
+        label: 中破快修
+      - value: 1
+        label: 中破快修
+      - value: 2
+        label: 擦伤快修
+      - value: 3
+        label: 中破泡澡
+      - value: 4
+        label: 大破泡澡
+    肌肉记忆:
+      name: 肌肉记忆
+      type: checkbox
+      value: true
+      storage: legacy
+      key: 肌肉记忆
+      source:
+        page: 功能控制台
+        ui_line: 201
+    关键一击:
+      name: 关键一击
+      type: checkbox
+      value: true
+      storage: legacy
+      key: 关键一击
+      source:
+        page: 功能控制台
+        ui_line: 202
+    黑科技:
+      name: 黑科技
+      type: checkbox
+      value: true
+      storage: legacy
+      key: 黑科技
+      source:
+        page: 功能控制台
+        ui_line: 203
+    长跑训练:
+      name: 长跑训练
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 长跑训练
+      source:
+        page: 功能控制台
+        ui_line: 207
+    抱头蹲防:
+      name: 抱头蹲防
+      type: checkbox
+      value: true
+      storage: legacy
+      key: 抱头蹲防
+      source:
+        page: 功能控制台
+        ui_line: 208
+    满编后买经验:
+      name: 满编后买经验
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 满编后买经验
+      source:
+        page: 功能控制台
+        ui_line: 213
+    教官用技能:
+      name: 教官用技能
+      type: checkbox
+      value: true
+      storage: legacy
+      key: 教官用技能
+      source:
+        page: 功能控制台
+        ui_line: 214
+    U47:
+      name: U47
+      type: checkbox
+      value: false
+      storage: legacy
+      key: U47
+      source:
+        page: 功能控制台
+        ui_line: 219
+    U81:
+      name: U81
+      type: checkbox
+      value: false
+      storage: legacy
+      key: U81
+      source:
+        page: 功能控制台
+        ui_line: 220

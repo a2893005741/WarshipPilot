@@ -113,6 +113,6 @@ class MigrationTest(unittest.TestCase):
         for t in threads:t.start()
         for t in threads:t.join()
         self.assertTrue(Config(self.root).section('Scheduler')['Enable'])
-        self.assertTrue(Config(self.root).section('Tasks')['expedition']['enabled'])
+        self.assertTrue(Config(self.root).section('Tasks')['expedition']['Scheduler']['Enable'])
 
 if __name__=='__main__':unittest.main()
