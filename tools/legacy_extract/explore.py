@@ -37,7 +37,7 @@ class PathLimit(Exception):
 
 
 class Explorer:
-    def __init__(self, max_decisions=400):
+    def __init__(self, max_decisions=400, useful=1):
         self.max_decisions = max_decisions
         self.config = json.loads((LEGACY / 'task-defaults.json').read_text(encoding='utf-8'))
         self.lua = LuaRuntime(encoding=None, unpack_returned_tuples=True, register_eval=False)
@@ -46,7 +46,7 @@ class Explorer:
         for key, value in json.loads((LEGACY / 'global-defaults.json').read_text()).items():
             g[key.encode()] = value.encode() if isinstance(value, str) else value
         for name, value in {'现在方案': 'C', '回港': 0, '试用': 1, '心跳时间戳': 0, '点击时间点': -10000,
-                            'X暂存': -1, 'Y暂存': -1, '有用': 1, '上次养成记录': 0,
+                            'X暂存': -1, 'Y暂存': -1, '有用': useful, '上次养成记录': 0,
                             '战斗次数C': 0, '快修次数C': 0}.items():
             g[identifier(name)] = value.encode() if isinstance(value, str) else value
         g[b'host_sdk'] = self.sdk
@@ -57,7 +57,7 @@ class Explorer:
         ''')
         for key, fmt in {b'Year': '%Y', b'Month': '%m', b'Day': '%d', b'Hour': '%H', b'Minute': '%M', b'Second': '%S'}.items():
             g[b'DateTime'][key] = lambda fmt=fmt: int(datetime(2026, 1, 1, 12).strftime(fmt))
-        g[b'ShanHai'][b'RndEx'] = lambda low, high: int(low)
+        g[b'ShanHai'][b'RndEx'] = lambda low, high: (int(low) + int(high)) // 2  # centre of random jitter
         g[b'File'][b'Read'] = lambda name: None
         g[b'File'][b'Write'] = lambda name, content: True
         # Snapshot globals so every path starts from identical state.
@@ -180,8 +180,11 @@ class Explorer:
             value = text(value)
         except PathLimit as exc:
             end, value = 'limit', str(exc)
-        if end == 'error' and 'PathLimit' in str(value):
-            end = 'limit'
+        if end == 'error':
+            # pcall hands back Python exceptions raised inside host callbacks.
+            if isinstance(value, PathLimit) or 'PATH_BUDGET' in str(value):
+                end = 'limit'
+            value = str(value)
         return {'end': end, 'value': value, 'decisions': self.decisions,
                 'trace': self.trace, 'config': sorted(self.config_reads)}
 
