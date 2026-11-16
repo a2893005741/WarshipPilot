@@ -39,6 +39,19 @@ class ColorCheckRequest(BaseModel):
     rule_id: str | None = Field(default=None, max_length=64)
 
 
+class ConsoleFiles(StaticFiles):
+    """The page itself is never cached (a new release must show at once);
+    hashed build assets are cached for good."""
+
+    async def get_response(self, path, scope):
+        response = await super().get_response(path, scope)
+        if path.startswith('assets/'):
+            response.headers['Cache-Control'] = 'public, max-age=31536000, immutable'
+        else:
+            response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+        return response
+
+
 def create_app(runtime: Runtime, key: str, shutdown):
     def authorized(request: Request):
         return secrets.compare_digest(request.headers.get("authorization", ""), "Bearer " + key)
@@ -211,7 +224,7 @@ def create_app(runtime: Runtime, key: str, shutdown):
         await asyncio.to_thread(runtime.close)
 
     return Starlette(routes=[Route("/health", health), Route("/api/{action}", api, methods=["GET", "POST"]),
-                              WebSocketRoute("/ws", websocket), Mount("/", StaticFiles(directory=runtime.resources / "frontend" / "dist", html=True))],
+                              WebSocketRoute("/ws", websocket), Mount("/", ConsoleFiles(directory=runtime.resources / "frontend" / "dist", html=True))],
                      exception_handlers={ValueError: error, RuntimeError: error, ValidationError: error, OSError: error}, lifespan=lifespan)
 
 

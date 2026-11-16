@@ -1,4 +1,4 @@
-# 舰R助手 WarshipPilot v0.4
+# 舰R助手 WarshipPilot
 
 Windows EXE + ALAS 式 WebUI。直接运行从舰娘肝帝 6.7.7 恢复的原 Lua 函数，接入远征收取与继续派遣、原方案 C 出征。当前目标：DESKTOP-3F63TNA 上的 MuMu 舰R实例 127.0.0.1:16416、1280×720。碧蓝实例 emulator-5554 不参与输入。
 
@@ -24,17 +24,28 @@ backend/legacy_vm.py 适配旧 SDK 的截图、查色、配置、字符串、日
 
 当前仅开放固定原方案 C；其它关卡和舰队尚未开放。assets/legacy 也保留 624 条颜色规则和出处。
 
-## 数据与局域网
+## 文件夹与局域网
 
-数据目录默认位于程序目录旁的 WarshipPilot-data，包含 access.json 访问码、task-drafts.json 任务配置、日志数据库、runs 任务截图和 faults 故障资料。关闭网页不停止后台；右上角电源按钮退出。重启后重新选择设备，不自动启动任务。MuMu IPC要求后台与MuMu位于同一桌面用户会话；远端已改为桌面用户登录启动，不能继续按SYSTEM服务方式运行。
+和 ALAS 一样，所有内容都在程序文件夹里：
 
-默认只监听本机 22680。局域网可运行：
-
-```powershell
-.\WarshipPilot.exe --host 0.0.0.0 --no-browser
+```
+WarshipPilot\
+  WarshipPilot.exe
+  _internal\    程序文件
+  data\         access.json 访问码、config.json（模拟器 Serial、截图/控制方式）、task-drafts.json 任务配置、
+                scheduler.json 调度状态、records.sqlite3 日志、runs 任务截图、faults 故障资料、updates 更新
 ```
 
-浏览器访问运行电脑的 22680 端口，输入其数据目录内的访问码。不要分享 access.json、console-url.txt 或私人游戏截图。
+0.5.1 及以前的数据在程序旁的 WarshipPilot-data；新版首次启动时复制进 data\（旧目录不改动）。
+启动后自动连接「设备设置」里填写的模拟器 Serial；调度器开关会保存，重启或更新后自动恢复。
+双击新版本时，旧版本若在运行会被通知退出并由新版接管。关闭网页不停止后台；右上角电源按钮退出。
+MuMu IPC 要求后台与 MuMu 位于同一桌面用户会话。
+
+默认监听 0.0.0.0:22680，局域网浏览器访问需要 data\access.json 里的访问码；只允许本机访问时在 data\config.json 写 `"host": "127.0.0.1"` 或用 `--host 127.0.0.1` 启动。不要分享 access.json、console-url.txt 或私人游戏截图。
+
+## 内置更新
+
+左侧「软件更新」：检查 GitHub Release，下载 `WarshipPilot-<版本>-win-x64.zip` 并按 SHA-256 校验后，后台退出并**原地更新**——robocopy 只覆盖有变化的文件，data\ 不动，旧程序文件备份在 data\updates\backup，新版本启动失败自动恢复。私有仓库需要只读访问令牌（fine-grained token，仅此仓库 Contents: Read）。发布：改 backend/version.py 后运行 scripts/release.ps1。
 
 ## 开发与构建
 

@@ -15,26 +15,64 @@ from backend.runtime import Runtime
 from backend.store import atomic_json
 
 
-def take_over_older(data_dir, port, auth_file):
-    """True if the running instance is older than this build and was told to exit."""
+APP_DIR = Path(sys.executable).resolve().parent if getattr(sys, "frozen", False) else Path(__file__).resolve().parent
+
+
+def migrate_legacy_data(data_dir):
+    """Up to 0.5.1 data lived next to the program (../WarshipPilot-data). Like
+    AzurPilot, everything now lives inside the program folder (./data). Copy
+    once; the old folder is left untouched."""
+    import shutil
+    legacy = APP_DIR.parent / "WarshipPilot-data"
+    if data_dir.exists() or not (legacy / "access.json").exists():
+        return False
+    shutil.copytree(legacy, data_dir, ignore=shutil.ignore_patterns("instance.lock"))
+    return True
+
+
+def take_over_older(port, keys):
+    """If an older WarshipPilot listens on `port`, ask it to exit and wait for the port.
+
+    Returns True when the port is (or became) free for this build."""
+    import socket
     import urllib.request
     from backend.updater import parse_version
     from backend.version import VERSION
     try:
         with urllib.request.urlopen(f"http://127.0.0.1:{port}/health", timeout=3) as response:
-            running = json.loads(response.read().decode("utf-8")).get("version", "")
+            running = json.loads(response.read().decode("utf-8"))
     except Exception:
+        return True  # nothing (or nothing of ours) answering
+    if running.get("product") != "WarshipPilot" or not parse_version(running.get("version", "")):
         return False
-    if not parse_version(running) or parse_version(running) >= parse_version(VERSION):
+    if parse_version(running["version"]) >= parse_version(VERSION):
         return False
-    try:
-        key = json.loads(auth_file.read_text(encoding="utf-8"))["key"]
-        request = urllib.request.Request(f"http://127.0.0.1:{port}/api/shutdown", data=b"{}", method="POST",
-                                         headers={"Authorization": f"Bearer {key}", "Content-Type": "application/json"})
-        urllib.request.urlopen(request, timeout=5).read()
-        return True
-    except Exception:
+    for key in keys:
+        try:
+            request = urllib.request.Request(f"http://127.0.0.1:{port}/api/shutdown", data=b"{}", method="POST",
+                                             headers={"Authorization": f"Bearer {key}", "Content-Type": "application/json"})
+            urllib.request.urlopen(request, timeout=5).read()
+            break
+        except Exception:
+            continue
+    else:
         return False
+    for _ in range(100):
+        with socket.socket() as probe:
+            if probe.connect_ex(("127.0.0.1", port)) != 0:
+                return True
+        threading.Event().wait(0.3)
+    return False
+
+
+def known_keys(*files):
+    keys = []
+    for file in files:
+        try:
+            keys.append(json.loads(Path(file).read_text(encoding="utf-8"))["key"])
+        except (OSError, ValueError, KeyError):
+            pass
+    return keys
 
 
 def main():
@@ -42,10 +80,11 @@ def main():
     # Default comes from data/config.json "host" (0.0.0.0: LAN console, access code required).
     parser.add_argument("--host", default=None)
     parser.add_argument("--port", type=int, default=22680)
-    default_data = (Path(sys.executable).resolve().parent.parent / "WarshipPilot-data") if getattr(sys, "frozen", False) else Path(os.getenv("LOCALAPPDATA", str(Path.home()))) / "WarshipPilot"
-    parser.add_argument("--data-dir", type=Path, default=default_data)
+    # Everything in one folder, like AzurPilot: <program>\data
+    parser.add_argument("--data-dir", type=Path, default=APP_DIR / "data")
     parser.add_argument("--no-browser", action="store_true")
     args = parser.parse_args()
+    migrated = migrate_legacy_data(args.data_dir)
     args.data_dir.mkdir(parents=True, exist_ok=True)
     auth_file = args.data_dir / "access.json"
     lock_file = (args.data_dir / "instance.lock").open("a+b")
@@ -61,7 +100,7 @@ def main():
         # Another instance owns this data folder. If it is an older version,
         # ask it to exit and take over (double-clicking a new release must
         # not silently open the old console).
-        if take_over_older(args.data_dir, args.port, auth_file):
+        if take_over_older(args.port, known_keys(auth_file)):
             for _ in range(100):
                 try:
                     msvcrt.locking(lock_file.fileno(), msvcrt.LK_NBLCK, 1)
@@ -82,6 +121,9 @@ def main():
             return
     if not auth_file.exists():
         atomic_json(auth_file, {"key": secrets.token_urlsafe(24)})
+    # An older build with a different data folder may still hold the port.
+    if not take_over_older(args.port, known_keys(auth_file, APP_DIR.parent / "WarshipPilot-data" / "access.json")):
+        raise RuntimeError(f"端口 {args.port} 已被占用，且无法让占用它的程序退出")
     key = json.loads(auth_file.read_text(encoding="utf-8"))["key"]
     url = f"http://127.0.0.1:{args.port}/#key={key}"
     if args.host is None:
@@ -91,6 +133,8 @@ def main():
             args.host = "0.0.0.0"
     resources = Path(getattr(sys, "_MEIPASS", Path(__file__).resolve().parent))
     runtime = Runtime(args.data_dir, resources)
+    if migrated:
+        runtime.store.event(f"已把旧数据目录 {APP_DIR.parent / 'WarshipPilot-data'} 复制到 {args.data_dir}（旧目录保留未改动）")
     server = None
 
     def shutdown():

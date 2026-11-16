@@ -39,35 +39,44 @@ def parse_version(text):
     return tuple(int(x) for x in match.groups()) if match else None
 
 
-APPLY_SCRIPT = r'''param([int]$OldPid, [string]$Live, [string]$Stage, [string]$Backup, [string]$Failed,
-      [string]$Exe, [string]$ArgsB64, [string]$Health, [string]$Expected, [string]$Log)
+APPLY_SCRIPT = r'''param([int]$OldPid, [string]$Live, [string]$Stage, [string]$Backup,
+      [string]$Exe, [string]$ArgsB64, [string]$Health, [string]$Expected, [string]$Log, [string]$Data)
+# In-place update, like AzurPilot's git pull: everything stays in one folder.
+# robocopy only rewrites files that changed (unchanged ones such as a running
+# adb.exe are skipped) and never touches the data folder.
 $ErrorActionPreference = 'Stop'
 function Note($text) { Add-Content -LiteralPath $Log -Value ("{0:s} {1}" -f (Get-Date), $text) -Encoding UTF8 }
 Note "updater started (target $Expected)"
-# Never sit inside the program folder: a process's current directory blocks renaming it.
 Set-Location -LiteralPath (Split-Path -Parent $Log)
-function Move-Retry($from, $to) {
-    for ($i = 0; $i -lt 30; $i++) {
-        try { Move-Item -LiteralPath $from -Destination $to; return } catch { Start-Sleep -Seconds 1 }
-    }
-    Move-Item -LiteralPath $from -Destination $to
-}
 $arguments = @()
 function Start-App {
     if ($arguments.Count) { Start-Process -FilePath $Exe -ArgumentList $arguments -WorkingDirectory $Live }
     else { Start-Process -FilePath $Exe -WorkingDirectory $Live }
 }
+function Mirror($from, $to) {
+    # /XD with full paths: the data folder is neither copied nor purged.
+    & robocopy $from $to /MIR /XD "$from\$Data" "$to\$Data" /R:3 /W:1 /NFL /NDL /NJH /NJS /NP | Out-Null
+    if ($LASTEXITCODE -ge 8) {
+        # A changed file is locked: stop leftovers started from the program
+        # folder (e.g. its adb server) and try once more.
+        Get-Process | Where-Object { $_.Path -and $_.Path.StartsWith($Live + '\', 'OrdinalIgnoreCase') } |
+            Stop-Process -Force -ErrorAction SilentlyContinue
+        Start-Sleep -Seconds 2
+        & robocopy $from $to /MIR /XD "$from\$Data" "$to\$Data" /R:5 /W:1 /NFL /NDL /NJH /NJS /NP | Out-Null
+        if ($LASTEXITCODE -ge 8) { throw "robocopy $from -> $to failed ($LASTEXITCODE)" }
+    }
+}
 try {
-    # Arguments travel as base64 JSON: no quoting through the Windows command line.
     $json = [Text.Encoding]::UTF8.GetString([Convert]::FromBase64String($ArgsB64))
     $arguments = @((ConvertFrom-Json $json) | ForEach-Object { [string]$_ })
     Note "waiting for pid $OldPid"
     $old = Get-Process -Id $OldPid -ErrorAction SilentlyContinue
     if ($old -and !$old.WaitForExit(60000)) { throw 'old process did not exit' }
     Start-Sleep -Milliseconds 500
-    Move-Retry $Live $Backup
-    Move-Retry $Stage $Live
-    Note "swapped; starting new version"
+    Mirror $Live $Backup
+    Note "backed up program files to $Backup"
+    Mirror $Stage $Live
+    Note "installed $Expected; starting"
     Start-App
     $ok = $false
     for ($i = 0; $i -lt 120; $i++) {
@@ -75,16 +84,14 @@ try {
         Start-Sleep -Milliseconds 500
     }
     if (!$ok) { throw "new version did not report $Expected" }
+    Remove-Item -LiteralPath $Stage -Recurse -Force -ErrorAction SilentlyContinue
     Note "update to $Expected healthy"
 } catch {
     Note "update failed: $_"
     try {
         Get-Process | Where-Object { $_.Path -eq $Exe } | Stop-Process -Force -ErrorAction SilentlyContinue
-        Start-Sleep -Milliseconds 500
-        if (Test-Path -LiteralPath $Backup) {
-            if (Test-Path -LiteralPath $Live) { Move-Retry $Live $Failed }
-            Move-Retry $Backup $Live
-        }
+        Start-Sleep -Milliseconds 800
+        if (Test-Path -LiteralPath "$Backup\WarshipPilot.exe") { Mirror $Backup $Live }
         Start-App
         Note "rolled back and restarted previous version"
     } catch { Note "rollback failed: $_" }
@@ -210,6 +217,7 @@ class Updater:
                     if not str(target).startswith(str(stage.resolve())):
                         raise ValueError('压缩包包含非法路径')
                 z.extractall(stage)
+            archive.unlink(missing_ok=True)  # keep the program folder small
             if not (stage / 'WarshipPilot.exe').is_file():
                 raise ValueError('压缩包里没有 WarshipPilot.exe')
             if self.busy():
@@ -222,45 +230,36 @@ class Updater:
 
     def _handover(self, stage, version):
         live = Path(sys.executable).resolve().parent
-        from datetime import datetime
-        stamp = datetime.now().strftime('%Y%m%d-%H%M%S')  # local time, readable in Explorer
-        backup = live.with_name(f'{live.name}-backup-{stamp}')
-        failed = live.with_name(f'{live.name}-failed-{stamp}')
-        # Stage must be on the same volume as the program folder for a rename.
-        if os.path.splitdrive(str(stage.resolve()))[0].lower() != os.path.splitdrive(str(live))[0].lower():
-            moved = live.with_name(f'{live.name}-stage-{stamp}')
-            shutil.move(str(stage), str(moved))
-            stage = moved
-        script = self.data / 'updates' / 'apply-update.ps1'
+        data = self.data.resolve()
+        if data.parent != live:
+            raise ValueError('内置更新要求数据目录位于程序目录下（默认 data 文件夹）')
+        backup = data / 'updates' / 'backup'
+        # Script and log must not sit in a folder robocopy rewrites.
+        work = data / 'updates'
+        script = work / 'apply-update.ps1'
         script.write_text(APPLY_SCRIPT, encoding='utf-8-sig')
-        log = self.data / 'updates' / 'update.log'
+        log = work / 'update.log'
         import base64
         args = base64.b64encode(json.dumps(self.launch.get('argv', [])).encode()).decode()
         health = f'http://127.0.0.1:{self.launch.get("port", 22680)}/health'
         command = ['powershell.exe', '-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', str(script),
-                          '-OldPid', str(os.getpid()), '-Live', str(live), '-Stage', str(stage),
-                          '-Backup', str(backup), '-Failed', str(failed), '-Exe', str(live / 'WarshipPilot.exe'),
-                          '-ArgsB64', args, '-Health', health, '-Expected', version, '-Log', str(log)]
+                   '-OldPid', str(os.getpid()), '-Live', str(live), '-Stage', str(stage.resolve()),
+                   '-Backup', str(backup), '-Exe', str(live / 'WarshipPilot.exe'),
+                   '-ArgsB64', args, '-Health', health, '-Expected', version, '-Log', str(log),
+                   '-Data', data.name]
         # CREATE_NO_WINDOW | NEW_PROCESS_GROUP. Not DETACHED_PROCESS: powershell.exe
         # silently does nothing without a console.
         flags = 0x08000000 | 0x00000200
         try:
             # Leave the parent's job object (scheduled task / console) so the
             # updater survives this process exiting.
-            subprocess.Popen(command, creationflags=flags | 0x01000000, close_fds=True, cwd=log.parent)
+            subprocess.Popen(command, creationflags=flags | 0x01000000, close_fds=True, cwd=work)
         except OSError:
-            subprocess.Popen(command, creationflags=flags, close_fds=True, cwd=log.parent)
-        self._prune_backups(live)
+            subprocess.Popen(command, creationflags=flags, close_fds=True, cwd=work)
         with self.lock:
             self.status.update(state='restarting', progress='')
-        self.event(f'更新 v{version} 已就绪，后台即将重启（旧版本备份为 {backup.name}）')
+        self.event(f'更新 v{version} 已下载，后台即将退出并原地更新（旧程序文件备份在 data\\updates\\backup）')
         self.shutdown()
-
-    @staticmethod
-    def _prune_backups(live, keep=2):
-        backups = sorted(live.parent.glob(f'{live.name}-backup-*'))
-        for old in backups[:-keep] if len(backups) > keep else []:
-            shutil.rmtree(old, ignore_errors=True)
 
     def start_auto_check(self, stop_event, interval=6 * 3600):
         def loop():
