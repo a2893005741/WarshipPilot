@@ -3,7 +3,7 @@
 Git:
   Executable: .venv/git/cmd/git.exe
   Repository: ''
-  Branch: native-rewrite
+  Branch: main
   Remote: origin
   AutoUpdate: true
 Python:

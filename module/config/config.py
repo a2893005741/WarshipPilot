@@ -21,7 +21,7 @@ def config_lock(root):
 def deploy_defaults():
     return {
         'Git': {'Executable': '.venv/git/cmd/git.exe', 'Repository': '',
-                'Branch': 'native-rewrite', 'Remote': 'origin', 'AutoUpdate': True},
+                'Branch': 'main', 'Remote': 'origin', 'AutoUpdate': True},
         'Python': {'Executable': '.venv/Scripts/python.exe', 'Uv': '.venv/uv.exe'},
         'Adb': {'Executable': '.venv/adb/adb.exe'},
         'WebUI': {'Host': '0.0.0.0', 'Port': 22680, 'AccessCode': ''},

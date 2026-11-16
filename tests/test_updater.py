@@ -26,11 +26,11 @@ class UpdateTest(unittest.TestCase):
         subprocess.run(['git','clone',str(self.remote),str(self.author)],check=True,capture_output=True)
         git(self.author,'config','user.email','test@example.invalid')
         git(self.author,'config','user.name','Test')
-        git(self.author,'switch','-c','native-rewrite')
+        git(self.author,'switch','-c','main')
         (self.author/'.gitignore').write_text('config/deploy.yaml\nconfig/warship.json\nlog/\n',encoding='utf-8')
         self.push('initial')
         self.live=self.base/'live'
-        subprocess.run(['git','clone','-b','native-rewrite',str(self.remote),str(self.live)],check=True,capture_output=True)
+        subprocess.run(['git','clone','-b','main',str(self.remote),str(self.live)],check=True,capture_output=True)
         Config(self.live).ensure()
         self.stop=threading.Event()
         self.addCleanup(self.stop.set)
@@ -43,7 +43,7 @@ class UpdateTest(unittest.TestCase):
         (self.author/'code.txt').write_text(message,encoding='utf-8')
         git(self.author,'add','.')
         git(self.author,'commit','-m',message)
-        git(self.author,'push','origin','native-rewrite')
+        git(self.author,'push','origin','main')
 
     def test_lists_and_applies_commit_without_touching_config(self):
         before=Config(self.live).deploy_file.read_bytes()
