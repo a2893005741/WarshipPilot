@@ -56,6 +56,8 @@ def main():
     output=(base/'gui.log').open('w',encoding='utf-8')
     process=subprocess.Popen([str(python),str(live/'gui.py'),'--no-browser'],cwd=live,stdout=output,stderr=output)
     try:
+        fingerprint=live/'.venv/.warship-lock'
+        fingerprint_time=fingerprint.stat().st_mtime_ns
         old=wait(lambda:call('health'))
         git(author,'config','user.email','smoke@example.invalid');git(author,'config','user.name','Source Update Smoke')
         (author/'docs/source-update-smoke.txt').write_text('Integration update marker\n',encoding='utf-8')
@@ -71,6 +73,7 @@ def main():
         assert state['automation']['scheduler'] is True
         assert state['automation']['due']['expedition']=='2030-01-01T00:00:00+00:00'
         assert Config(live).deploy()['WebUI']['AccessCode']==key
+        assert fingerprint.stat().st_mtime_ns==fingerprint_time, 'Unchanged dependencies were synchronized again'
         result={'before':old['commit'],'after':health['commit'],'pid_changed':True,'scheduler_restored':True,'due_restored':True,'access_code_preserved':True,'dependency_sync_skipped':True}
         (base/'result.json').write_text(json.dumps(result,indent=2),encoding='utf-8')
         print(json.dumps(result))

@@ -94,4 +94,3 @@ if __name__ == '__main__':
         folder.mkdir(exist_ok=True)
         (folder / 'startup-error.txt').write_text(traceback.format_exc(), encoding='utf-8')
         raise
-

@@ -124,6 +124,10 @@ c.save_deploy(d)
             Move-Item -LiteralPath $live -Destination $failed
             Move-Item -LiteralPath $backup -Destination $live
             if (Test-Path -LiteralPath "$failed\log\task-backup.xml") { Register-ScheduledTask -TaskName 'WarshipPilot-Preview' -Xml (Get-Content -LiteralPath "$failed\log\task-backup.xml" -Raw) -Force | Out-Null }
+            $restoreAction = New-ScheduledTaskAction -Execute $oldExecutable -Argument '--no-browser' -WorkingDirectory $activeFolder
+            Set-ScheduledTask -TaskName 'WarshipPilot-Preview' -Action $restoreAction | Out-Null
+            Get-NetFirewallRule -Name 'WarshipPilot-LAN' -ErrorAction SilentlyContinue | Remove-NetFirewallRule
+            New-NetFirewallRule -Name 'WarshipPilot-LAN' -DisplayName 'WarshipPilot LAN' -Direction Inbound -Action Allow -Protocol TCP -LocalPort 22680 -RemoteAddress LocalSubnet -Program $oldExecutable | Out-Null
             Start-ScheduledTask -TaskName 'WarshipPilot-Preview'
             throw
         }
