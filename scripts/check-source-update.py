@@ -54,7 +54,9 @@ def main():
         raise RuntimeError('Timed out; inspect '+str(live/'log'))
     python=live/'.venv/Scripts/python.exe'
     output=(base/'gui.log').open('w',encoding='utf-8')
-    process=subprocess.Popen([str(python),'-m','deploy.installer','--restart','--wait-gui','--no-browser'],cwd=live,stdout=output,stderr=output)
+    process=subprocess.Popen(['powershell.exe','-NoProfile','-WindowStyle','Hidden',
+        '-ExecutionPolicy','Bypass','-File',str(live/'deploy/launcher/hidden.ps1'),'--no-browser'],
+        cwd=live,stdout=output,stderr=output,creationflags=getattr(subprocess,'CREATE_NO_WINDOW',0))
     try:
         fingerprint=live/'.venv/.warship-lock'
         fingerprint_time=fingerprint.stat().st_mtime_ns
