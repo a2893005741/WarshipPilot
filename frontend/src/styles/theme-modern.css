@@ -300,4 +300,3 @@ button:disabled, input:disabled, textarea:disabled, select:disabled, .select-tri
 .button:disabled {background: var(--surface-muted); border-color: var(--border); box-shadow: none}
 .input-icon, .count-badge {background: var(--surface-muted)}
 .status {border-radius: 8px; font-weight: 500}
-

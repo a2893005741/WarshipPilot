@@ -6,4 +6,3 @@
 .wallpaper img, .wallpaper video {position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover}
 .wallpaper-media {opacity: 1; backface-visibility: hidden; transform: translateZ(0)}
 .wallpaper-media.wallpaper-hidden {opacity: 0}
-

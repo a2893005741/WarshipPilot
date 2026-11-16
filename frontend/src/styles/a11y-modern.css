@@ -19,4 +19,3 @@
 @media (prefers-contrast: more), (forced-colors: active) {
   .sidebar:where(.app-shell *), .right-rail:where(.app-shell *), .instance-menu, .group-nav, .panel, .resource-card {background: var(--theme-surface); -webkit-backdrop-filter: none; backdrop-filter: none}
 }
-
