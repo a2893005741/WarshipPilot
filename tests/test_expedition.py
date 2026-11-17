@@ -1,6 +1,8 @@
 """Native expedition task on synthetic frames and (locally) on recorded frames."""
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 import random
+import tempfile
 import unittest
 
 import cv2
@@ -223,6 +225,91 @@ class SurveyTest(unittest.TestCase):
         device = ScriptedDevice({'home': home(False)}, {}, 'home', BUTTONS)
         result = task(device).run()
         self.assertEqual((result.remaining, device.clicks), (None, []))
+
+
+MIXED, SINGLE, SHORT = 2 * 3600 + 57 * 60 + 22, 4 * 3600 + 56 * 60 + 48, 59 * 60 + 16
+
+
+class MemoryFlowTest(unittest.TestCase):
+    """The game routes collection itself and stays on the last redeployed
+    chapter; only collected chapters are re-read, the rest comes from memory."""
+    T0 = datetime(2026, 11, 17, 0, 0, tzinfo=timezone.utc)
+
+    def setUp(self):
+        self.memory_file = Path(tempfile.mkdtemp()) / 'expedition-timers.json'
+
+    def run_task(self, screens, transitions, start, at):
+        device = ScriptedDevice(screens, transitions, start, BUTTONS)
+        result = task(device, survey=True, memory_file=self.memory_file, clock=lambda: at).run()
+        return result, device.clicks
+
+    def full_walk(self):
+        """ch1 'mixed' running, ch2 idle, ch3 'single' running."""
+        screens = {'home': home(False), 'ch1': chapter(1, 'mixed'), 'ch2': chapter(2, 'idle'),
+                   'ch3': chapter(3, 'single')}
+        t = {('home', '出征'): 'ch1', ('ch1', '下一章'): 'ch2', ('ch2', '下一章'): 'ch3', ('ch3', '返回'): 'home'}
+        result, _ = self.run_task(screens, t, 'home', self.T0)
+        self.assertEqual((result.mode, result.remaining), ('full', [MIXED, SINGLE]))
+        self.assertTrue(self.memory_file.exists())
+
+    def test_collection_rereads_only_the_collected_chapter(self):
+        self.full_walk()
+        at = self.T0 + timedelta(minutes=10)
+        screens = {'home+': home(True), 'home': home(False), 'ch1+': chapter(1, lit=[387]),
+                   'ch1': chapter(1, 'short'), 'result': frame_for('战斗结果'), 'dialog': dialog()}
+        t = {('home+', '出征'): 'ch1+', ('ch1+', slot_name(387)): 'result', ('result', '点击继续'): 'dialog',
+             ('dialog', '继续远征-确认'): 'ch1', ('ch1', '返回'): 'home'}
+        result, clicks = self.run_task(screens, t, 'home+', at)
+        self.assertEqual(result.mode, 'partial')
+        self.assertEqual(result.remaining, [SHORT, SINGLE - 600])  # ch1 re-read, ch3 remembered
+        self.assertNotIn('上一章', [c[1] for c in clicks])
+        self.assertNotIn('下一章', [c[1] for c in clicks])
+
+    def test_several_collections_walk_back_to_earlier_chapters(self):
+        self.full_walk()
+        at = self.T0 + timedelta(minutes=10)
+        screens = {'home+': home(True), 'home': home(False), 'ch1+': chapter(1, lit=[387]),
+                   'ch1': chapter(1, 'short'), 'ch2': chapter(2, 'idle'), 'ch3+': chapter(3, lit=[387]),
+                   'ch3': chapter(3, 'ticking'), 'result': frame_for('战斗结果'), 'dialog': dialog(),
+                   'result3': frame_for('战斗结果'), 'dialog3': dialog()}
+        t = {('home+', '出征'): 'ch1+', ('ch1+', slot_name(387)): 'result', ('result', '点击继续'): 'dialog',
+             ('dialog', '继续远征-确认'): 'ch3+',  # the game jumps to the next finished chapter
+             ('ch3+', slot_name(387)): 'result3', ('result3', '点击继续'): 'dialog3',
+             ('dialog3', '继续远征-确认'): 'ch3', ('ch3', '上一章'): 'ch2', ('ch2', '上一章'): 'ch1',
+             ('ch1', '返回'): 'home'}
+        result, clicks = self.run_task(screens, t, 'home+', at)
+        self.assertEqual((result.collected, result.mode), (2, 'partial'))
+        self.assertEqual(result.remaining, [SHORT, 4 * 3600 + 58 * 60 + 24])
+        self.assertEqual([c[1] for c in clicks].count('上一章'), 2)
+
+    def test_nothing_finished_uses_memory_without_input(self):
+        self.full_walk()
+        result, clicks = self.run_task({'home': home(False)}, {}, 'home', self.T0 + timedelta(minutes=5))
+        self.assertEqual((result.mode, result.remaining, clicks), ('memory', [MIXED - 300, SINGLE - 300], []))
+
+    def test_overdue_fleet_without_collection_triggers_full_walk(self):
+        """Remembered ch1 fleet should be back, yet nothing is finished: the
+        player changed expeditions by hand, so everything is read again."""
+        self.full_walk()
+        at = self.T0 + timedelta(seconds=MIXED + 60)
+        screens = {'home': home(False), 'ch1': chapter(1, 'short'), 'ch2': chapter(2, 'idle'),
+                   'ch3': chapter(3, 'single')}
+        t = {('home', '出征'): 'ch3', ('ch3', '上一章'): 'ch2', ('ch2', '上一章'): 'ch1',
+             ('ch1', '下一章'): 'ch2', ('ch2', '下一章'): 'ch3', ('ch3', '返回'): 'home'}
+        result, _ = self.run_task(screens, t, 'home', at)
+        self.assertEqual((result.mode, result.remaining), ('full', [SHORT, SINGLE]))
+
+    def test_old_memory_triggers_full_walk(self):
+        self.full_walk()
+        at = self.T0 + timedelta(hours=12)
+        screens = {'home+': home(True), 'home': home(False), 'ch1+': chapter(1, lit=[387]),
+                   'ch1': chapter(1, 'short'), 'ch2': chapter(2, 'idle'), 'ch3': chapter(3, 'single'),
+                   'result': frame_for('战斗结果'), 'dialog': dialog()}
+        t = {('home+', '出征'): 'ch1+', ('ch1+', slot_name(387)): 'result', ('result', '点击继续'): 'dialog',
+             ('dialog', '继续远征-确认'): 'ch1', ('ch1', '下一章'): 'ch2', ('ch2', '下一章'): 'ch3',
+             ('ch3', '返回'): 'home'}
+        result, _ = self.run_task(screens, t, 'home+', at)
+        self.assertEqual((result.mode, result.remaining), ('full', [SHORT, SINGLE]))
 
 
 def load(name):

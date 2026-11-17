@@ -20,6 +20,7 @@ finished expedition met on any chapter during that walk is collected too.
 Every step is decided from a fresh screenshot; nothing is replayed blindly.
 """
 from dataclasses import dataclass, field
+from datetime import datetime, timezone
 import logging
 from pathlib import Path
 import time
@@ -29,6 +30,7 @@ import numpy as np
 
 from module.base.timer import Timer
 from module.expedition import timer as countdown
+from module.expedition.memory import TimerMemory, chapter_key
 from module.ui import assets
 from module.ui.navigation import UI, GameStuckError, UnknownPageError
 from module.vision import color
@@ -110,16 +112,21 @@ class ExpeditionResult:
     pages: list = field(default_factory=list)
     remaining: list = None   # seconds left per fleet away; None = not surveyed
     unreadable: int = 0      # running countdowns that could not be read
-    chapters: list = field(default_factory=list)  # per chapter walked: (seconds, unreadable)
+    chapters: list = field(default_factory=list)  # per chapter: (seconds, unreadable)
+    mode: str = ''           # full walk / partial re-read / memory only
 
 
 class Expedition(UI):
-    def __init__(self, device, redeploy=True, timeout=600, survey=True, survey_dir=None, **kwargs):
+    def __init__(self, device, redeploy=True, timeout=600, survey=True, survey_dir=None, memory_file=None,
+                 clock=None, **kwargs):
         super().__init__(device, **kwargs)
         self.redeploy = redeploy
         self.timeout = timeout
         self.survey = survey
         self.survey_dir = survey_dir
+        self.memory = TimerMemory.load(memory_file) if memory_file else None
+        self.clock = clock or (lambda: datetime.now(timezone.utc))
+        self.collected_keys = []
 
     def step_chapter(self, button, image):
         """Tap a neighbouring chapter; (new image, whether the chapter changed).
@@ -173,8 +180,9 @@ class Expedition(UI):
     def survey_chapters(self, image):
         """Read every chapter's countdowns, first to last.
 
-        Returns (seconds, unreadable), or None when a finished expedition or
-        another page turned up; the main loop then handles the screen first.
+        Returns [(chapter key, seconds, unreadable)] per chapter, or None when
+        a finished expedition or another page turned up; the main loop then
+        handles the screen first.
         """
         for _ in range(MAX_CHAPTERS):
             image, moved = self.step_chapter(CHAPTER_PREV, image)
@@ -184,22 +192,91 @@ class Expedition(UI):
                 break
         else:
             raise GameStuckError('远征章节列表无法回到第一章')
-        seconds, unreadable = [], 0
-        self.result.chapters = []
+        walked = []
         for _ in range(MAX_CHAPTERS):
             if collectable_slot(image) is not None:
                 return None
             found, missed = countdown.running(image)
-            self.result.chapters.append((found, missed))
-            self.keep_survey_frame(len(self.result.chapters), image)
-            seconds += found
-            unreadable += missed
+            walked.append((chapter_key(chapter_signature(image)), found, missed))
+            self.keep_survey_frame(len(walked), image)
             image, moved = self.step_chapter(CHAPTER_NEXT, image)
             if self.get_current_page(self.frame) != '出征-远征':
                 return None
             if not moved:
-                return sorted(seconds), unreadable
+                return walked
         raise GameStuckError('远征章节数量超出预期，停止翻页')
+
+    def reread_collected(self, image, now):
+        """Re-read only the chapters collected on this run, using the memory
+        for the rest. False = memory not trustworthy (walk everything);
+        None = another screen turned up (main loop first); True = done."""
+        memory = self.memory
+        targets = [memory.index_of(key) for key in self.collected_keys]
+        if None in targets:
+            log.info('collected chapter not in timer memory; full walk')
+            return False
+        if not memory.overdue(now) <= set(targets):
+            log.info('remembered fleet overdue but not collected; full walk')
+            return False
+        current = memory.index_of(chapter_key(chapter_signature(image)))
+        if current is None:
+            return False
+        targets = sorted(set(targets), key=lambda t: abs(t - current))
+        for target in targets:
+            while current != target:
+                button = CHAPTER_PREV if target < current else CHAPTER_NEXT
+                image, moved = self.step_chapter(button, image)
+                if self.get_current_page(self.frame) != '出征-远征':
+                    return None
+                if not moved:
+                    return False
+                current += -1 if target < current else 1
+            if memory.index_of(chapter_key(chapter_signature(image))) != target:
+                return False
+            if collectable_slot(image) is not None:
+                return None
+            memory.update(target, now, *countdown.running(image))
+        memory.save()
+        return True
+
+    def update_timers(self, image):
+        """Set result.remaining from a partial re-read or a full walk.
+        Returns False when another screen turned up first."""
+        now = self.clock()
+        memory = self.memory
+        if memory is not None and memory.usable(now) and self.collected_keys:
+            done = self.reread_collected(image, now)
+            if done is None:
+                return False
+            if done:
+                self.from_memory(now, 'partial')
+                return True
+            image = self.screenshot().image
+        walked = self.survey_chapters(image)
+        if walked is None:
+            return False
+        if memory is None:
+            memory = TimerMemory()
+        memory.rebuild(now, walked)
+        memory.save()
+        self.memory = memory
+        self.from_memory(now, 'full')
+        return True
+
+    def from_memory(self, now, mode):
+        self.result.remaining = self.memory.remaining(now)
+        self.result.unreadable = self.memory.unreadable
+        self.result.chapters = self.memory.view(now)
+        self.result.mode = mode
+        log.info('expedition countdowns (%s) %s, unreadable %d', mode, self.result.remaining,
+                 self.result.unreadable)
+
+    def leave_home(self):
+        """After tapping 出征, wait for 港区 to go away instead of tapping again."""
+        for _ in range(int(CHAPTER_REACT / CHAPTER_POLL)):
+            self.sleep(CHAPTER_POLL)
+            if self.get_current_page(self.screenshot()) != '港区':
+                return
 
     def run(self):
         result = self.result = ExpeditionResult()  # live view for the runner
@@ -233,9 +310,16 @@ class Expedition(UI):
                 if not finished and (not self.survey or result.remaining is not None):
                     log.info('no finished expedition; collected %d, remaining %s', result.collected, result.remaining)
                     return result
+                if not finished and not self.collected_keys and self.memory is not None:
+                    now = self.clock()
+                    if self.memory.usable(now) and not self.memory.overdue(now):
+                        self.from_memory(now, 'memory')  # nothing changed since the last reading
+                        return result
                 if finished and empty_visits >= 2:
                     raise GameStuckError('港区仍显示远征完成，但各章节都没有可收取的远征')
+                # With a finished expedition the game opens 出征-远征 on its chapter.
                 self.click(assets.SORTIE, '有远征完成' if finished else '查看远征倒计时')
+                self.leave_home()
                 action = ('港区', '出征')
             elif page in OTHER_TABS:
                 self.click(assets.TAB_EXPEDITION, page)
@@ -248,17 +332,17 @@ class Expedition(UI):
                     continue
                 slot = collectable_slot(image)
                 if slot is not None:
+                    # The game moves on to the next finished chapter by itself;
+                    # remember this one to re-read its new countdown afterwards.
+                    self.collected_keys.append(chapter_key(chapter_signature(image)))
                     self.click(assets.Button('收取奖励', slot, SLOT_Y, '收远征', jitter=3), f'槽位{SLOTS.index(slot) + 1}')
                     pending = True
                     action = ('出征-远征', slot)
                 elif self.survey and result.remaining is None:
-                    surveyed = self.survey_chapters(image)
-                    if surveyed is None:
-                        action = ('出征-远征', '章节中断')
-                    else:
-                        result.remaining, result.unreadable = surveyed
-                        log.info('expedition countdowns %s, unreadable %d', *surveyed)
+                    if self.update_timers(image):
                         action = ('出征-远征', '章节读取')
+                    else:
+                        action = ('出征-远征', '章节中断')
                 else:
                     empty_visits += 1
                     self.click(assets.BACK, '没有可收取的远征')

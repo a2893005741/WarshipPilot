@@ -84,7 +84,8 @@ class NativeRun:
             cls = NATIVE_TASKS[self.task]
             root = getattr(self.runtime.store, 'root', None)
             kwargs = {'redeploy': self.settings.get('redeploy', True),
-                      'survey_dir': root / 'log' / 'expedition-survey' if root else None} \
+                      'survey_dir': root / 'log' / 'expedition-survey' if root else None,
+                      'memory_file': root / 'log' / 'expedition-timers.json' if root else None} \
                 if self.task == 'expedition' else {}
             self.worker = cls(device, sleep=device.sleep, **kwargs)
             self.result = self.worker.run()

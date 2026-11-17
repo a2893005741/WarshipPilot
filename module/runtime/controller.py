@@ -19,6 +19,10 @@ EXPEDITION_MARGIN = timedelta(seconds=30)  # let the game flag the expedition fi
 EXPEDITION_MIN = timedelta(minutes=1)
 
 
+MODES = {'full': '全部章节重新读取', 'partial': '只补读本轮收取的章节，其余沿用记录',
+         'memory': '没有远征完成，沿用记录'}
+
+
 def clock(seconds):
     return f'{seconds // 3600}:{seconds // 60 % 60:02d}:{seconds % 60:02d}'
 
@@ -158,7 +162,8 @@ class TaskController:
                 self.runtime.store.event(f'原生任务 · 完成：{NAMES[task]}，收取 {self.result["collected"]} 个远征；'
                                          f'下次 {due.astimezone().strftime("%m-%d %H:%M")}（{reason}）')
                 if getattr(result, 'chapters', None):
-                    self.runtime.store.event('原生任务 · 远征逐章读数：' + chapter_summary(result.chapters))
+                    mode = MODES.get(getattr(result, 'mode', ''), '')
+                    self.runtime.store.event(f'原生任务 · 远征逐章倒计时（{mode}）：' + chapter_summary(result.chapters))
             elif status == 'stopped':
                 self.result.update(status='stopped', action=run.error or '任务已停止', ended=now())
             else:
