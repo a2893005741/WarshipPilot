@@ -1,0 +1,45 @@
+/* WarshipPilot device/tool pages inside the ALAS shell; colours come from the ALAS theme tokens. */
+.warship-page { display: grid; gap: 16px; padding: 16px; }
+.warship-settings .panel-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.warship-inline { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+.warship-inline > input, .warship-inline > [data-slot="input"] { flex: 1 1 180px; min-width: 0; }
+.warship-empty { margin: 0; padding: 14px 20px 18px; color: var(--muted); font-size: 13px; }
+.warship-empty.error, .warship-muted.error { color: var(--red); }
+.warship-muted { color: var(--muted); font-size: 12px; margin-top: 2px; }
+.warship-status { font-size: 13px; padding: 2px 10px; border-radius: 999px; background: var(--surface-muted); color: var(--muted); }
+.warship-status.ok { color: #18794e; background: #e9f7ef; }
+.warship-status.bad { color: var(--red); background: #fdecec; }
+.warship-check { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--secondary); }
+.warship-table-wrap { padding: 0 20px 12px; overflow-x: auto; }
+.warship-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.warship-table th { text-align: left; font-weight: 600; color: var(--muted); padding: 8px; border-bottom: 1px solid var(--border); }
+.warship-table td { padding: 8px; border-bottom: 1px solid var(--border); vertical-align: top; }
+.warship-table tr.bad td { color: var(--muted); }
+.warship-tag { margin-left: 6px; font-size: 11px; padding: 1px 6px; border-radius: 6px; background: var(--accent); color: var(--surface); }
+.warship-tools-nav > summary { cursor: pointer; list-style: none; display: flex; align-items: center; gap: 8px; padding: 8px 12px; font-size: 13px; color: var(--secondary); }
+.warship-tools-nav > summary::-webkit-details-marker { display: none; }
+.warship-tools-nav > summary::before { content: "▸"; font-size: 11px; transition: transform .15s; }
+.warship-tools-nav[open] > summary::before { transform: rotate(90deg); }
+.warship-tools-nav > a { padding-left: 28px; }
+.warship-preview { position: relative; margin: 0 20px; border-radius: 14px; overflow: hidden; background: var(--surface-muted); aspect-ratio: 16 / 9; user-select: none; }
+.warship-preview.croppable { cursor: crosshair; }
+.warship-preview img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.warship-preview-empty { height: 100%; display: grid; place-content: center; justify-items: center; gap: 10px; color: var(--muted); }
+.warship-preview-empty p { margin: 0; }
+.warship-roi { position: absolute; border: 2px solid #f5a524; background: #f5a52422; pointer-events: none; }
+.warship-roi span { position: absolute; top: -22px; left: -2px; font-size: 11px; padding: 1px 6px; background: #f5a524; color: #1b1b1b; border-radius: 4px; }
+.warship-badge { position: absolute; left: 12px; top: 12px; display: inline-flex; gap: 4px; align-items: center; font-size: 12px; padding: 3px 10px; border-radius: 999px; background: #000000aa; color: #fff; }
+.warship-samples { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; padding: 0 20px 20px; }
+.warship-sample { display: grid; gap: 8px; text-align: left; padding: 8px; border: 1px solid var(--border); border-radius: 14px; background: var(--surface); cursor: pointer; }
+.warship-sample:hover { border-color: var(--secondary); }
+.warship-sample h3 { margin: 0; font-size: 14px; display: flex; gap: 6px; align-items: baseline; }
+.warship-sample h3 span, .warship-sample small, .warship-sample p { font-size: 12px; color: var(--muted); margin: 0; font-weight: 400; }
+.warship-thumb { aspect-ratio: 16 / 9; border-radius: 10px; overflow: hidden; background: var(--surface-muted); }
+.warship-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.warship-replay { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: 16px; padding: 0 20px 20px; align-items: start; }
+.warship-replay img { width: 100%; border-radius: 12px; }
+.warship-replay h3 { margin: 0 0 8px; }
+.warship-replay p { margin: 4px 0; }
+.warship-sample-detail { display: grid; gap: 10px; }
+.warship-sample-detail img { width: 100%; border-radius: 12px; }
+.warship-sample-detail p { margin: 0; }

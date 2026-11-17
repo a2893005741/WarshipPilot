@@ -93,3 +93,10 @@
 - 后端 `module/api/alas/` 实现 AzurPilot 的 WebSocket RPC 协议（`/api/v1/ws`，操作/数据双通道、分片、登录限流、请求 ID 去重、慢客户端背压，移植自 AzurPilot `module/api/socket.py` 等）。单实例“舰R”；`config_adapter` 把舰R的任务/参数组/字段转换成 AzurPilot 的 menu/args/translations，读写仍走 `module.config.schema` 的校验与存储；日志来自事件表（按 id 增量），截图来自运行时最新帧，故障记录来自 `log/error/<id>`，更新器对接 Git 更新器，系统设置对接 `deploy.yaml`。公告、插件、自定义背景、启动器返回空结果。
 - 本机免密（127.0.0.1），其他地址使用访问密码（deploy.yaml 的 WebUI.AccessCode）。
 - 待做：设备页（截图/控制方式、MuMu 路径、性能测试）用 ALAS 组件重写；采集、识别规则、样本、配置导入收进“工具”分组；清理未引用的碧蓝页面源码。
+
+## v0.12.0：设备页与工具分组
+
+- 设备页（`#/i/舰R/device`）用 ALAS 设置页的卡片、字段行和控件重写：ADB 路径、ADB 地址连接、实例发现与连接、当前实例档案、模拟器 Serial、截图/控制方式、MuMu 目录、截图与点击性能测试。
+- 侧栏“工具”分组：采集、识别规则、样本、配置导入（`#/i/舰R/tools/...`），同样改为 ALAS 卡片版式；样本支持查看大图与删除。
+- 这些页面沿用原 HTTP 接口（`/api/<动作>`）。新增 RPC `warship.httpKey`：已登录的会话（本机或输入访问密码）取得同一访问码作为 Bearer，不扩大权限；运行状态改为 2.5 秒轮询。
+- 清理：按 `main.tsx` 的引用关系删除 142 个未使用的碧蓝页面/组件/测试，以及 e2e、mock、插件 SDK；Logo 改为舰R助手锚形图标，去掉新建实例入口。前端单元测试 305 项通过。

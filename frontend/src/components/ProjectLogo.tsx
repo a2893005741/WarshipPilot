@@ -2,8 +2,8 @@
 
 import type { ComponentProps } from 'react'
 
-/** 项目 logo 图源：部署基址下的内置 azurpilot.webp。 */
-export const PROJECT_LOGO_URL = `${import.meta.env.BASE_URL}azurpilot.webp`
+/** 项目 logo 图源：部署基址下的舰R助手图标 warship.svg。 */
+export const PROJECT_LOGO_URL = `${import.meta.env.BASE_URL}warship.svg`
 
 /** 禁改 src/width/height：图源固定、宽高统一由 size 控制。 */
 type LogoProps = Omit<ComponentProps<'img'>, 'src' | 'width' | 'height'> & {size?: number}

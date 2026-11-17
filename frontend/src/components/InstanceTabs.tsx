@@ -3,7 +3,7 @@
  */
 
 import { matchPath, useLocation, useNavigate, useParams } from 'react-router-dom'
-import { AlertTriangle, LoaderCircle, Play, Plus, Square, Trash2, X } from 'lucide-react'
+import { AlertTriangle, LoaderCircle, Play, Square, Trash2, X } from 'lucide-react'
 import { useLayoutEffect, useRef, useState, type ComponentType } from 'react'
 import { api } from '../api/client'
 import { useApp, useConnection } from '../app/context'
@@ -46,9 +46,8 @@ const STATUS_LABEL: Record<Status, UiKey> = {
 }
 
 /** 实例分页条：所有实例平铺在顶栏一行，一点即切，不用展开下拉。 */
-export function InstanceTabs({onCreate}: {onCreate: () => void}) {
+export function InstanceTabs(_props: {onCreate?: () => void}) {
   const {instances, ui} = useApp()
-  const connection = useConnection()
   const {instance} = useParams()
   const navigate = useNavigate()
   const {pathname} = useLocation()
@@ -91,7 +90,7 @@ export function InstanceTabs({onCreate}: {onCreate: () => void}) {
         <span className="instance-tab-cell instance-tab-remove" role="button" tabIndex={-1} aria-label={`${ui('instance.delete')} · ${ui('instance.rightClick')}`} title={`${ui('instance.delete')} · ${ui('instance.rightClick')}`} onContextMenu={event => { event.preventDefault(); setPendingDelete(item.name) }}><X size={13} aria-hidden="true"/></span>
       </button>
     })}
-    <button type="button" className="instance-tab-create" aria-label={ui('instance.create')} title={ui('instance.create')} disabled={connection !== 'ready'} onClick={onCreate}><Plus size={15}/></button>
+      {/* 舰R助手只管理一个游戏实例，不提供新建实例入口。 */}
     {pendingDelete && <DeleteInstance name={pendingDelete} onClose={() => setPendingDelete(undefined)}/>}
   </div>
 }

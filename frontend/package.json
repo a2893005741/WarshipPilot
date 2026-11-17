@@ -1,20 +1,14 @@
 {
-  "name": "azurpilot-frontend",
+  "name": "warshippilot-webui",
   "private": true,
   "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite --host 127.0.0.1",
-    "dev:mock": "node mock/server.mjs --dev",
-    "mock": "node mock/server.mjs",
     "build": "tsc -b && vite build",
     "typecheck": "tsc -b",
     "test": "vitest run",
-    "test:e2e": "playwright test",
-    "test:e2e:mock": "playwright test --config playwright.mock.config.ts",
-    "test:e2e:stock": "playwright test --config playwright.stock.config.ts",
-    "preview": "vite preview --host 127.0.0.1",
-    "test:e2e:fleet": "playwright test --config playwright.fleet.config.ts"
+    "preview": "vite preview --host 127.0.0.1"
   },
   "engines": {
     "node": ">=22.12.0"

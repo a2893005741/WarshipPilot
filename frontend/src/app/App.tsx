@@ -10,7 +10,7 @@ import { getLayout, subscribeLayout } from './layout'
 import {NavHandle} from './NavHandle'
 import {TabBarResizeHandle} from './TabBarResizeHandle'
 import {SidebarResizeHandle} from './SidebarResizeHandle'
-import { Bug, ArrowRight, CirclePause, CirclePlay, Download, LayoutDashboard, LoaderCircle, Menu, Palette, Settings2, WifiOff, X } from 'lucide-react'
+import { Bug, ArrowRight, Camera, CirclePause, CirclePlay, Download, FileJson, Images, LayoutDashboard, ListChecks, LoaderCircle, Menu, MonitorSmartphone, Palette, Settings2, WifiOff, X } from 'lucide-react'
 import { api } from '../api/client'
 import { editor } from '../config/editors'
 import {bulkAction, bulkTargets} from './instanceBulk'
@@ -52,6 +52,8 @@ import type { NavigationProps, ShellProps } from '../themes/definition'
 /* 现代外壳下也要显示居中页名的顶层路由。 */
 const PRIMARY_NAV_PATHS = ['/errors', '/updater', '/interface', '/settings']
 const SETUP_PATH = '/setup'
+/* 舰R助手的设备与工具页（/i/:instance/ 之后的路径）。 */
+const WARSHIP_TITLES: Record<string, string> = {'device': '设备', 'tools/capture': '采集', 'tools/rules': '识别规则', 'tools/samples': '样本', 'tools/import': '配置导入'}
 
 function ModernNavigation({instance, onNavigate, updateAvailable}: NavigationProps) {
   const {ui} = useApp()
@@ -59,6 +61,14 @@ function ModernNavigation({instance, onNavigate, updateAvailable}: NavigationPro
   return <nav className="primary-nav" data-apu-component="navigation" aria-label={ui('nav.primary')}>
     {instance ? <>
       <NavLink to={base + '/overview'} onClick={onNavigate}><LayoutDashboard size={17}/>{ui('nav.overview')}</NavLink>
+      <NavLink to={base + '/device'} onClick={onNavigate}><MonitorSmartphone size={17}/>设备</NavLink>
+      <details className="warship-tools-nav">
+        <summary>工具</summary>
+        <NavLink to={base + '/tools/capture'} onClick={onNavigate}><Camera size={17}/>采集</NavLink>
+        <NavLink to={base + '/tools/rules'} onClick={onNavigate}><ListChecks size={17}/>识别规则</NavLink>
+        <NavLink to={base + '/tools/samples'} onClick={onNavigate}><Images size={17}/>样本</NavLink>
+        <NavLink to={base + '/tools/import'} onClick={onNavigate}><FileJson size={17}/>配置导入</NavLink>
+      </details>
     </> : <>
       <NavLink to="/errors" onClick={onNavigate}><Bug size={17}/>{ui('errors.title')}</NavLink>
       <NavLink to="/updater" onClick={onNavigate}><Download size={17}/>{ui('nav.updater')}{updateAvailable && <span className="tiny-dot teal"/>}</NavLink>
@@ -229,7 +239,7 @@ export function App() {
   const updateAvailable = Boolean(update.data?.available)
   // 现代顶栏的第三列是居中的页面名：实例页写任务名，无实例时写导航项名。
   const pageTitle = pluginTitle ?? (instance
-    ? currentTask ? currentTaskLabel : location.pathname.endsWith('/resources') ? ui('nav.resources') : location.pathname.endsWith('/statistics') ? ui('nav.statistics') : ui('nav.overview')
+    ? currentTask ? currentTaskLabel : WARSHIP_TITLES[location.pathname.split('/').slice(3).join('/')] ?? ui('nav.overview')
     : activeSection)
   if (connection === 'auth') return <Login/>
   if (setup || (empty && !pluginManager && !globalPlugin)) return <main className="instance-setup">{setup && empty && schema ? <Suspense fallback={<Loading/>}><Outlet/></Suspense> : <Loading/>}</main>

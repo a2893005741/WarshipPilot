@@ -4,6 +4,7 @@ export interface Parameters {
   "launcher.autostart.set": { enabled: boolean }
   "launcher.command.get": { commandId: string }
   "system.ping": Record<string, never>
+  "warship.httpKey": Record<string, never>
   "schema.get": { language?: "zh-CN" | "en-US" | "ja-JP" | "zh-TW" }
   "search.content": { query: string }
   "instances.list": Record<string, never>

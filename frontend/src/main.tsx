@@ -12,6 +12,7 @@ import { PluginPage } from './plugins/views'
 import { ThemeWallpaper } from './components/ThemeWallpaper'
 import { applyTheme, getThemePreference } from './app/theme'
 import { translateCurrentUi } from './i18n'
+import { Capture, ConfigImport, Devices, LegacyRulesPage, Samples, WarshipLayout } from './warship/Layout'
 import './styles/modern.css'
 import './styles/minimal.css'
 import './styles/shadcn.css'
@@ -47,6 +48,14 @@ const router = createHashRouter([
     {path: 'overview', element: <Overview/>}, {path: 'task/:task', element: <TaskConfig/>},
     {path: 'errors', element: <Suspense fallback={<div>{translateCurrentUi('common.loading')}</div>}><ErrorRecords/></Suspense>},
     {path: 'logs', element: <Navigate to="../overview" replace/>}, {path: 'settings', element: <Navigate to="/settings" replace/>},
+    // WarshipPilot device settings and developer tools.
+    {element: <WarshipLayout/>, children: [
+      {path: 'device', element: <Devices/>},
+      {path: 'tools/capture', element: <Capture/>},
+      {path: 'tools/rules', element: <LegacyRulesPage/>},
+      {path: 'tools/samples', element: <Samples/>},
+      {path: 'tools/import', element: <ConfigImport/>},
+    ]},
   ]},
   {path: '*', element: <Navigate to="/" replace/>},
 ])

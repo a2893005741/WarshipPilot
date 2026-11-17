@@ -217,7 +217,7 @@ def create_app(runtime: Runtime, key: str, shutdown):
         return JSONResponse({"error": message}, status_code=400)
 
     # AzurPilot's WebUI protocol for the reused ALAS frontend (module/api/alas).
-    gateway = Gateway(Router(runtime), key)
+    gateway = Gateway(Router(runtime, key), key)
 
     @asynccontextmanager
     async def lifespan(app):

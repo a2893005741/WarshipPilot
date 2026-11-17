@@ -72,10 +72,7 @@ describe('系统设置页分组归属', () => {
     expect(html).not.toContain('配色方案')
   })
 
-  it('启动器卡片排在第一张', () => {
-    const html = render()
-    const launcher = html.indexOf('Gui.Launcher.StartupTitle')
-    expect(launcher).toBeGreaterThanOrEqual(0)
-    expect(launcher).toBeLessThan(html.indexOf('Gui.DeploySetting.GroupGit'))
+  it('舰R助手没有桌面启动器，不显示启动器卡片', () => {
+    expect(render()).not.toContain('Gui.Launcher.StartupTitle')
   })
 })

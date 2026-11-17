@@ -274,6 +274,7 @@ export interface Results {
   'updater.apply': {accepted: boolean}
   'updater.cancel': {accepted: boolean}
   'system.ping': {pong: boolean}
+  'warship.httpKey': {key: string}
   'auth.login': {authenticated: boolean}
   'events.subscribe': {topics: string[]; instance: string | null}
   'schema.get': Schema

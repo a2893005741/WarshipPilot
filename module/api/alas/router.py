@@ -22,8 +22,9 @@ def single_instance(_):
 
 
 class Router:
-    def __init__(self, runtime):
+    def __init__(self, runtime, key=''):
         self.runtime = runtime
+        self.key = key
         self.service = service = WarshipService(runtime)
         self.instance = INSTANCE
         self.token = secrets.token_urlsafe(32)
@@ -58,6 +59,10 @@ class Router:
             'updater.fetch': Method(p.Params, lambda _: service.update_action('fetch'), True),
             'updater.apply': Method(p.Params, lambda _: service.update_action('apply'), True),
             'updater.cancel': Method(p.Params, lambda _: service.update_action('cancel'), True),
+            # WarshipPilot device/tool pages keep the earlier HTTP API: an
+            # authenticated session (password = this access code, or local)
+            # receives the same Bearer key.
+            'warship.httpKey': Method(p.Params, lambda _: {'key': self.key}),
             # Shell features of AzurPilot that WarshipPilot does not have.
             'launcher.status': Method(p.Params, lambda _: launcher_status(), local_only=True),
             'launcher.autostart.set': Method(p.LauncherAutostartParams, lambda _: {'commandId': 'none', 'status': 'pending'}, True, True),
