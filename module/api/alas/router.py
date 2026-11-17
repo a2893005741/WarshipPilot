@@ -22,9 +22,15 @@ def single_instance(_):
 
 
 class Router:
+    @property
+    def key(self):
+        """Current access code (runtime.access_code once the app owns it)."""
+        value = getattr(self.runtime, 'access_code', None)
+        return self._key if value is None else value
+
     def __init__(self, runtime, key=''):
         self.runtime = runtime
-        self.key = key
+        self._key = key
         self.service = service = WarshipService(runtime)
         self.instance = INSTANCE
         self.token = secrets.token_urlsafe(32)

@@ -104,6 +104,25 @@ class ProtocolTest(unittest.TestCase):
             self.assertEqual(self.call(ws, 'auth.login', {'password': 'nope'})['error']['code'], 'UNAUTHORIZED')
             self.assertEqual(self.call(ws, 'auth.login', {'password': 'secret'})['error']['code'], 'RATE_LIMITED')
 
+    def test_changed_access_code_applies_without_restart(self):
+        self.runtime.access_code = 'secret'
+        with self.client.websocket_connect('/api/v1/ws') as ws:
+            self.login(ws)
+            short = self.call(ws, 'settings.patch', {'values': {'WebUI.AccessCode': 'abc'}})
+            self.assertEqual(short['error']['code'], 'INVALID_PARAMS')
+            saved = self.call(ws, 'settings.patch', {'values': {'WebUI.AccessCode': 'new-secret'}})['result']
+            self.assertEqual(saved['updated'], ['WebUI.AccessCode'])
+            # The session that changed it stays logged in and gets the new HTTP key.
+            self.assertEqual(self.call(ws, 'warship.httpKey')['result']['key'], 'new-secret')
+        from module.config.config import Config
+        self.assertEqual(Config(self.root).deploy()['WebUI']['AccessCode'], 'new-secret')
+        with self.client.websocket_connect('/api/v1/ws') as ws:
+            ws.receive_json()
+            self.assertEqual(self.call(ws, 'auth.login', {'password': 'new-secret'})['ok'], True)
+        with self.client.websocket_connect('/api/v1/ws') as ws:
+            ws.receive_json()
+            self.assertEqual(self.call(ws, 'auth.login', {'password': 'secret'})['error']['code'], 'UNAUTHORIZED')
+
     def test_azur_lane_only_methods_answer_not_found(self):
         with self.client.websocket_connect('/api/v1/ws') as ws:
             self.login(ws)

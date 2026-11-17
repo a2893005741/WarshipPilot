@@ -141,7 +141,7 @@ function useAppData() {
         .catch((e) => setToast(e.message));
   }, [authed, connected]);
   async function api(path: string, body?: any, binary = false): Promise<any> {
-    const response = await fetch("/api/" + path, {
+    const send = () => fetch("/api/" + path, {
       method: body === undefined ? "GET" : "POST",
       headers: {
         Authorization: "Bearer " + keyRef.current,
@@ -150,6 +150,19 @@ function useAppData() {
       body:
         body === undefined ? undefined : binary ? body : JSON.stringify(body),
     });
+    let response = await send();
+    if (response.status === 401) {
+      // The access code may have been changed in system settings; this page's
+      // WebSocket session stays logged in, so fetch the current key and retry once.
+      try {
+        const fresh = (await rpc.request("warship.httpKey", {})).key;
+        if (fresh && fresh !== keyRef.current) {
+          keyRef.current = fresh;
+          setKey(fresh);
+          response = await send();
+        }
+      } catch { /* session gone: fall through to the 401 handling */ }
+    }
     if (!response.ok) {
       let error;
       try {

@@ -59,8 +59,10 @@ class ConsoleFiles(StaticFiles):
 
 def create_app(runtime: Runtime, key: str, shutdown):
     configuration = ConfigService(runtime)
+    # Single source of the access code; system settings replace it in place.
+    runtime.access_code = key
     def authorized(request: Request):
-        return secrets.compare_digest(request.headers.get("authorization", ""), "Bearer " + key)
+        return secrets.compare_digest(request.headers.get("authorization", ""), "Bearer " + runtime.access_code)
 
     async def health(request):
         return JSONResponse({"product": "WarshipPilot", "version": VERSION, "read_only": False,

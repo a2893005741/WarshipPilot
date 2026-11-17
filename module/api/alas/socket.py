@@ -46,9 +46,16 @@ def is_local(ws: WebSocket) -> bool:
 
 
 class Gateway:
+    @property
+    def password(self):
+        """Read on every login so a changed access code applies immediately;
+        sessions that already logged in stay authorized."""
+        value = getattr(getattr(self.router, 'runtime', None), 'access_code', None)
+        return self._password if value is None else str(value)
+
     def __init__(self, router, password):
         self.router = router
-        self.password = str(password or '')
+        self._password = str(password or '')
         self.connections = 0
         self.data_connections = 0
         self.workers = asyncio.Semaphore(8)

@@ -24,7 +24,10 @@ export function editor(scope: string) {
   queue = new EditQueue(prefix + scope, {
     ready: () => api.getSnapshot() === 'ready',
     send: (path, value) => scope === 'deploy'
-      ? api.request('settings.patch', {values: {[path]: value}})
+      ? api.request('settings.patch', {values: {[path]: value}}).then(result => {
+        if (path === 'WebUI.AccessCode' && typeof value === 'string') api.accessCodeChanged(value)
+        return result
+      })
       : scope.startsWith('startup:')
         ? api.request('startup.set', path === 'remember'
           ? {instance: scope.slice(8), remember: value as boolean}

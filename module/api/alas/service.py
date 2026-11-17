@@ -173,7 +173,8 @@ class WarshipService:
     SETTINGS = [
         ('WebUI', '控制台', [('WebUI.Host', 'input', '监听地址', '0.0.0.0 允许局域网访问；修改后重启生效。'),
                             ('WebUI.Port', 'int', '端口', '修改后重启生效。'),
-                            ('WebUI.AccessCode', 'password', '访问密码', '留空表示不修改。')]),
+                            ('WebUI.AccessCode', 'password', '访问密码',
+                             '保存后立即生效，已打开的页面保持登录；其他设备需用新密码重新登录。至少 6 位，留空表示不修改。')]),
         ('Git', '源码更新', [('Git.Repository', 'input', '更新源', '可填镜像地址；留空使用 origin。'),
                             ('Git.Branch', 'input', '分支', '默认 main。'),
                             ('Git.AutoUpdate', 'checkbox', '允许更新', '关闭后不安装新版本。')]),
@@ -209,10 +210,15 @@ class WarshipService:
                 if kind == 'checkbox' and not isinstance(value, bool) or kind == 'int' and (
                         type(value) is not int or not 1 <= value <= 65535) or kind in ('input', 'password') and not isinstance(value, str):
                     raise ApiError('INVALID_PARAMS', f'设置值不正确：{path}')
+                if kind == 'password' and (len(value) < 6 or len(value) > 128 or value != value.strip()):
+                    raise ApiError('INVALID_PARAMS', '访问密码需 6–128 位，且首尾不能有空格')
                 section, field = path.split('.')
                 deploy.setdefault(section, {})[field] = value
                 updated.append(path)
             config.save_deploy(deploy)
+        if 'WebUI.AccessCode' in updated:
+            self.runtime.access_code = values['WebUI.AccessCode']
+            self.runtime.store.event('访问密码已修改，立即生效')
         return {'updated': updated}
 
     # --- updater -------------------------------------------------------------------------

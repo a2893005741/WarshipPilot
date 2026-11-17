@@ -91,6 +91,13 @@ export class ApiClient {
     }
   }
 
+  /** 系统设置改了访问密码后，同步本页记住的密码，数据连接重连和刷新页面不必重新登录；免密（本机）会话不保存。 */
+  accessCodeChanged(password: string) {
+    if (!this.password || !password) return
+    this.password = password
+    try { window.localStorage.setItem('azurpilot.access-password', password) } catch { /* 保留会话登录。 */ }
+  }
+
   /** 用密码认证并把操作连接置为就绪；认证成功后密码写入 localStorage 供下次自动恢复。 */
   async login(password: string) {
     await this.authenticate(password)
