@@ -1,3 +1,9 @@
 expedition.Scheduler.IntervalMinutes:
   name: 兜底间隔（分钟）
   help: 远征按游戏内倒计时调度：每轮读取各章节进行中远征的剩余时间，在最早结束的远征完成后再运行。只有没有进行中的远征或倒计时无法识别时，才按此间隔。
+campaign.Scheduler.StartTime:
+  help: 每天的战役次数在 0 点刷新；打完当天次数后，下一次在这个时间运行。
+  value: 00:10
+campaign.Scheduler.IntervalMinutes:
+  name: 重试间隔（分钟）
+  help: 当天次数打完后改到次日计划时间；有船泡澡时按原脚本等 15 分钟；其他提前结束的情况按此间隔再试。

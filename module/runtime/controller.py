@@ -12,9 +12,12 @@ from module.logger import atomic_json, now
 from module.config.task_settings import read_tasks
 from module.config.config import Config
 
-SUPPORTED = ('expedition', 'sortie')
-NAMES = {'expedition': '远征收取与继续派遣', 'sortie': '原方案C'}
-SOURCES = {'expedition': 'native', 'sortie': 'original_lua_functions'}
+SUPPORTED = ('expedition', 'sortie', 'campaign', 'reward')
+NAMES = {'expedition': '远征收取与继续派遣', 'sortie': '原方案C', 'campaign': '原脚本打战役',
+         'reward': '原脚本收任务'}
+SOURCES = {'expedition': 'native', 'sortie': 'original_lua_functions',
+           'campaign': 'original_lua_functions', 'reward': 'original_lua_functions'}
+CAMPAIGN_BATH = timedelta(milliseconds=900000)  # original: 战役泡澡时间戳 + 900000
 EXPEDITION_MARGIN = timedelta(seconds=30)  # let the game flag the expedition finished
 EXPEDITION_MIN = timedelta(minutes=1)
 
@@ -34,6 +37,35 @@ def chapter_summary(chapters):
         values = [clock(s) for s in seconds] + (['?%d' % unreadable] if unreadable else [])
         parts.append(f'{index} ' + (', '.join(values) or '-'))
     return ' · '.join(parts)
+
+
+def next_daily(current, start_time):
+    """The next local start_time (HH:MM) strictly after `current`."""
+    local = current.astimezone()
+    hour, minute = (int(v) for v in start_time.split(':'))
+    candidate = local.replace(hour=hour, minute=minute, second=0, microsecond=0)
+    if candidate <= local:
+        candidate += timedelta(days=1)
+    return candidate.astimezone(timezone.utc)
+
+
+def legacy_next_run(task, current, settings, state, elapsed_ms):
+    """(next run, reason) after an original Lua task returned at 港区.
+
+    打战役 leaves its own state: 打战役时间戳 set = the day's attempts are used
+    up ("凌晨0点后将再次检查"); 战役泡澡时间戳 set = ships are bathing and the
+    original retries 900000 ms after that stamp. Both stamps are on the VM's
+    millisecond clock, `elapsed_ms` is that clock now.
+    """
+    interval = timedelta(minutes=settings['interval_minutes'])
+    if task == 'campaign':
+        if state.get('打战役时间戳'):
+            return next_daily(current, settings['start_time']), '今日战役次数已用完'
+        if state.get('战役泡澡时间戳'):
+            wait = timedelta(milliseconds=state['战役泡澡时间戳']) + CAMPAIGN_BATH - timedelta(milliseconds=elapsed_ms)
+            return current + max(wait, timedelta(minutes=1)), '有船在泡澡，泡完继续'
+        return current + interval, f'提前结束，{settings["interval_minutes"]} 分钟后再试'
+    return current + interval, f'间隔 {settings["interval_minutes"]} 分钟'
 
 
 def next_run(current, interval_minutes, result):
@@ -107,7 +139,7 @@ class TaskController:
         if self.busy:
             raise ValueError('已有任务持有当前设备，请先停止或等待完成')
         if task not in SUPPORTED:
-            raise ValueError('目前接入远征和原方案C出征，其他任务尚未适配')
+            raise ValueError('目前接入远征、战役、任务奖励和原方案C出征，其他任务尚未适配')
         if not self.runtime.serial or self.runtime.status != 'live':
             raise ValueError('请先连接舰R并恢复实时画面')
         self.runtime.adb.ensure_input_ready(self.runtime.serial)
@@ -350,9 +382,12 @@ class TaskController:
         if task=='sortie' and self.result['battles']<settings['runs']:
             raise RuntimeError('原函数已返回，但尚未达到出征次数，保留现场供核对')
         self.result.update(status='completed', action='原流程已回港，本轮完成', ended=now())
-        self.due[task]=(datetime.now(timezone.utc)+timedelta(minutes=settings['interval_minutes'])).isoformat()
+        state = {name: self.vm.globals[identifier(name)] or 0 for name in ('打战役时间戳', '战役泡澡时间戳')}
+        elapsed = self.vm.sdk(84)  # the VM's millisecond clock (old GetTickCount)
+        due, reason = legacy_next_run(task, datetime.now(timezone.utc), settings, state, elapsed)
+        self.due[task]=due.isoformat()
         self.save_due()
-        self.event('完成：'+NAMES[task])
+        self.event(f'完成：{NAMES[task]}；下次 {due.astimezone().strftime("%m-%d %H:%M")}（{reason}）')
         self.vm=None;self.persist()
 
     def tick(self, raw):

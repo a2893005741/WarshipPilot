@@ -23,8 +23,17 @@ def text(value):
     return value.decode('utf-8', errors='replace') if isinstance(value, bytes) else str(value)
 
 
+# Desktop task -> original global function used as the entry point.
+ENTRIES = {'sortie': '出征战斗', 'campaign': '打战役', 'reward': '收任务'}
+PHYSICAL = (720, 1280)  # portrait size of the 1280x720 game frame (old GetScreen)
+CANVAS = (540, 960)     # the script's default canvas
+
+
 class LegacyVM:
     def __init__(self, resources: Path, data: Path, task: str, settings: dict, log, page_changed):
+        if task not in ENTRIES:
+            raise ValueError(f'原脚本没有对应的任务入口：{task}')
+        self.task = task
         self.resources, self.data = resources, data
         self.log, self.page_changed = log, page_changed
         self.started = time.monotonic()
@@ -32,6 +41,8 @@ class LegacyVM:
         self.portrait = None
         self.patterns = {}
         self.speed_notice = False
+        self.canvas = CANVAS
+        self.physical = False  # GetScreen answers the physical size (战役剩余次数 only)
         def template(name):
             return cv2.imdecode(np.frombuffer((resources/'assets/game'/name).read_bytes(),np.uint8),cv2.IMREAD_COLOR)
         self.continue_templates = [(390,190,template('expedition-continue-title.png')),
@@ -46,13 +57,17 @@ class LegacyVM:
             # Original code stops when count > limit (not >=). Keep that branch
             # and translate the desktop target count to its existing threshold.
             self.config['战斗次数限制'] = str(int(settings.get('runs', 1))-1)
+        if task == 'campaign':
+            # 打战役 runs only with its switch on. Its SL kills and restarts the
+            # game (KillApp/RunApp), which the desktop build does not do.
+            self.config.update({'战役开关': True, '战役SL': False})
         self.lua = LuaRuntime(encoding=None, unpack_returned_tuples=True, register_eval=False,
                               register_builtins=False, max_memory=64_000_000)
         self.lua.execute((resources / 'assets/legacy/main.lua52.luac').read_bytes())
         self.globals = self.lua.globals()
         for key, value in json.loads((resources / 'assets/legacy/global-defaults.json').read_text()).items():
             self.globals[key.encode()] = value.encode() if isinstance(value, str) else value
-        for name, value in {'现在方案': 'C', '回港': 0, '试用': 1, '心跳时间戳': 0,
+        for name, value in {'现在方案': 'C', '回港': 0, '试用': 1, '心跳时间戳': 0, '渠道服': '',
                             '点击时间点': -10000, 'X暂存': -1, 'Y暂存': -1,
                             '有用': 1, '上次养成记录': 0, '战斗次数C': 0, '快修次数C': 0}.items():
             self.globals[identifier(name)] = value.encode() if isinstance(value, str) else value
@@ -99,10 +114,24 @@ class LegacyVM:
         for marker,value in {'EXPEDITION_CONTINUE':'继续远征确认'}.items():
             page_source=page_source.replace(marker.encode(),value.encode())
         self.lua.execute(page_source)
+        # 战役剩余次数 asks the physical screen width (720 on this frame) and
+        # switches the canvas to it for its digit pattern. Elsewhere GetScreen
+        # keeps its established answer, which sortie's tap centres rely on.
+        self.globals[b'host_physical'] = self.set_physical
+        self.lua.execute(b'''
+            local original = ''' + identifier('战役剩余次数') + b'''
+            ''' + identifier('战役剩余次数') + b''' = function(...)
+                host_physical(true)
+                local result = table.pack(pcall(original, ...))
+                host_physical(false)
+                if not result[1] then error(result[2], 0) end
+                return table.unpack(result, 2, result.n)
+            end
+        ''')
         # The original sortie returns when expedition rewards are ready or the
         # configured battle limit changes its plan to expedition-only mode.
         # Run the original collection function to return home, then finish.
-        entry = self.globals[identifier('收远征')]
+        entry = self.globals[identifier(ENTRIES[task])]
         if task == 'sortie':
             entry_source = b'''function(collect, sortie)
                 return function()
@@ -114,7 +143,8 @@ class LegacyVM:
                     end
                 end
             end'''
-            entry = self.lua.eval(entry_source.replace(b'WAIT_PLAN', '挂远征'.encode()))(entry, self.globals[identifier('出征战斗')])
+            entry = self.lua.eval(entry_source.replace(b'WAIT_PLAN', '挂远征'.encode()))(
+                self.globals[identifier('收远征')], self.globals[identifier('出征战斗')])
         self.resume = self.lua.eval(b'''
             function(f)
                 local t = coroutine.create(f)
@@ -149,12 +179,17 @@ class LegacyVM:
             if float(cv2.matchTemplate(patch,template,cv2.TM_CCOEFF_NORMED)[0,0])<.96:return False
         return bool(np.all(np.abs(self.image[445,450].astype(int)-[231,194,32])<35))
 
+    def set_physical(self, value):
+        self.physical = bool(value)
+
     def pixel(self, x, y):
         x, y = int(round(float(x))), int(round(float(y)))
-        if not (0 <= x < 540 and 0 <= y < 960):
-            raise ValueError(f'原脚本坐标越界：{x},{y}')
-        # Same endpoint transform used to verify the original extracted patterns.
-        return self.image[round((539-x)*719/539), round(y*1279/959)].astype(np.int16)
+        w, h = self.canvas
+        if not (0 <= x < w and 0 <= y < h):
+            raise ValueError(f'原脚本坐标越界：{x},{y}（画布 {w}x{h}）')
+        # Same endpoint transform used to verify the original extracted patterns;
+        # a 720x1280 canvas maps 1:1 onto the 1280x720 frame.
+        return self.image[round((w-1-x)*719/(w-1)), round(y*1279/(h-1))].astype(np.int16)
 
     @staticmethod
     def colors(value):
@@ -217,8 +252,22 @@ class LegacyVM:
             return 0
         if command==84:return int((time.monotonic()-self.started)*1000)
         if command==29:return 180  # Virtual SDK canvas: 540x960, scaled from the actual frame.
-        if command==44:return 540  # GetScreenX on the virtual portrait canvas.
-        if command==191:return 960  # GetScreenY.
+        if command==44:
+            # GetScreen(axis). Established answer 540 for every caller except
+            # 战役剩余次数, which compares it with the physical width.
+            return PHYSICAL[1 if args and int(args[0] or 0) else 0] if self.physical else 540
+        if command==191:
+            # SetScreenScale(0, width, height): canvas for later colour checks.
+            if len(args)>=3 and args[1] is not None and args[2] is not None:
+                size=(int(args[1]),int(args[2]))
+                if size not in (CANVAS,PHYSICAL):
+                    raise RuntimeError(f'原脚本请求的画布 {size[0]}x{size[1]} 与 1280×720 画面不符')
+                self.canvas=size
+                return 0
+            return 960
+        if command in (177,222):
+            # KillApp / RunApp: the original restarts the game (SL, frozen screen).
+            raise RuntimeError('原脚本请求结束并重启游戏（'+text(args[0] if args else '')+'），桌面版不自动重启，已停止并保留现场')
         if command==193:
             value=self.config.get(text(args[0]), '')
             return value.encode() if isinstance(value,str) else value

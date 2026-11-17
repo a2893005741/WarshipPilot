@@ -28,6 +28,9 @@
       "exercise": [
         "Scheduler",
         "Exercise"
+      ],
+      "reward": [
+        "Scheduler"
       ]
     }
   },

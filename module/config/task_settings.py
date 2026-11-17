@@ -6,7 +6,8 @@ from pydantic import BaseModel, ConfigDict, Field
 
 from module.config.config import Config
 
-TASKS = ('expedition', 'campaign', 'exercise', 'sortie', 'sortie_a', 'sortie_b', 'decisive', 'general', 'control')
+TASKS = ('expedition', 'campaign', 'exercise', 'reward', 'sortie', 'sortie_a', 'sortie_b', 'decisive', 'general', 'control')
+EXECUTABLE = ['expedition', 'campaign', 'reward', 'sortie']
 
 
 class TaskDraft(BaseModel):
@@ -28,7 +29,7 @@ class TaskDraft(BaseModel):
 
 class TaskSettingsRequest(BaseModel):
     model_config = ConfigDict(extra='forbid')
-    task: Literal['expedition', 'campaign', 'exercise', 'sortie', 'sortie_a', 'sortie_b', 'decisive', 'general', 'control']
+    task: Literal['expedition', 'campaign', 'exercise', 'reward', 'sortie', 'sortie_a', 'sortie_b', 'decisive', 'general', 'control']
     settings: TaskDraft
 
 
@@ -97,4 +98,4 @@ def save_task(root, task, settings):
         tasks = read_tasks(root)
         tasks[task] = settings.model_dump()
         config.save_section('Tasks', grouped_tasks(root, tasks))
-    return {'tasks': read_tasks(root), 'executable': True, 'supported': ['expedition','sortie']}
+    return {'tasks': read_tasks(root), 'executable': True, 'supported': EXECUTABLE}

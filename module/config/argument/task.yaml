@@ -22,6 +22,8 @@ menu:
       exercise:
       - Scheduler
       - Exercise
+      reward:
+      - Scheduler
   Farm:
     name: 出征方案
     tasks:
@@ -70,8 +72,12 @@ tasks:
     help: 收取已完成远征，并由原舰队继续派遣。
   campaign:
     name: 战役
-    executable: false
-    help: 保存原脚本战役参数；本版尚未接入执行。
+    executable: true
+    help: 使用原脚本打战役：按所选章节和难度打完当天次数，有船泡澡时稍后继续，次日计划时间再运行。
+  reward:
+    name: 任务奖励
+    executable: true
+    help: 使用原脚本收任务：港区任务按钮有红点时进入任务页一键领取，没有红点不操作。
   exercise:
     name: 演习
     executable: false

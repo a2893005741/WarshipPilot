@@ -58,7 +58,15 @@ class SchemaTest(unittest.TestCase):
 
     def test_readonly_safety_and_unimplemented_schedule_are_rejected(self):
         with self.assertRaises(ValueError):save_field(self.root,field_path('sortie','大破出征C'),True)
-        with self.assertRaises(ValueError):save_field(self.root,'campaign.Scheduler.Enable',True)
+        with self.assertRaises(ValueError):save_field(self.root,'exercise.Scheduler.Enable',True)
+        with self.assertRaises(ValueError):save_field(self.root,field_path('campaign','战役SL'),True)
+
+    def test_campaign_and_reward_schedules_are_editable(self):
+        save_field(self.root,'campaign.Scheduler.Enable',True)
+        save_field(self.root,'reward.Scheduler.Enable',True)
+        tasks=read_tasks(self.root)
+        self.assertTrue(tasks['campaign']['enabled'] and tasks['reward']['enabled'])
+        self.assertEqual((tasks['campaign']['start_time'],tasks['reward']['interval_minutes']),('00:10',30))
 
     def test_next_run_updates_group_and_live_scheduler_document(self):
         normalize_tasks(self.root)

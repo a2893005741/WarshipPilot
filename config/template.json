@@ -140,7 +140,7 @@
       "Scheduler": {
         "Enable": false,
         "Priority": 5,
-        "StartTime": "00:00",
+        "StartTime": "00:10",
         "IntervalMinutes": 60,
         "NextRun": "",
         "Runs": 1,
@@ -650,6 +650,15 @@
         "教官用技能": true,
         "U47": false,
         "U81": false
+      }
+    },
+    "reward": {
+      "Scheduler": {
+        "Enable": false,
+        "Priority": 5,
+        "StartTime": "00:00",
+        "IntervalMinutes": 30,
+        "NextRun": ""
       }
     }
   },

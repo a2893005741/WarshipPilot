@@ -19,7 +19,7 @@ from starlette.websockets import WebSocket, WebSocketDisconnect
 
 from module.runtime.runtime import Runtime
 from module.vision.legacy import ColorProfile
-from module.config.task_settings import TaskSettingsRequest, read_tasks, save_task
+from module.config.task_settings import EXECUTABLE, TaskSettingsRequest, read_tasks, save_task
 from module.config.schema import schema
 from module.api.config_service import ConfigService
 from module.api.socket import endpoint
@@ -76,7 +76,7 @@ def create_app(runtime: Runtime, key: str, shutdown):
                 return JSONResponse(configuration.get(request.query_params.get('task', '')))
             if action == "task-configs":
                 with runtime.lock:
-                    return JSONResponse({'tasks': read_tasks(runtime.store.root), 'executable': True, 'supported':['expedition','sortie']})
+                    return JSONResponse({'tasks': read_tasks(runtime.store.root), 'executable': True, 'supported': EXECUTABLE})
             if action == "legacy-catalog":
                 return JSONResponse(runtime.legacy.index())
             if action == "legacy-rule":

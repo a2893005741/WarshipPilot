@@ -29,6 +29,9 @@
         "exercise": [
           "Scheduler",
           "Exercise"
+        ],
+        "reward": [
+          "Scheduler"
         ]
       }
     },
@@ -92,8 +95,13 @@
     },
     "campaign": {
       "name": "战役",
-      "executable": false,
-      "help": "保存原脚本战役参数；本版尚未接入执行。"
+      "executable": true,
+      "help": "使用原脚本打战役：按所选章节和难度打完当天次数，有船泡澡时稍后继续，次日计划时间再运行。"
+    },
+    "reward": {
+      "name": "任务奖励",
+      "executable": true,
+      "help": "使用原脚本收任务：港区任务按钮有红点时进入任务页一键领取，没有红点不操作。"
     },
     "exercise": {
       "name": "演习",
@@ -2163,8 +2171,7 @@
           "type": "checkbox",
           "value": false,
           "storage": "task",
-          "key": "enabled",
-          "display": "readonly"
+          "key": "enabled"
         },
         "Priority": {
           "name": "优先级",
@@ -2174,34 +2181,32 @@
           "min": 1,
           "max": 10,
           "storage": "task",
-          "key": "priority",
-          "display": "readonly"
+          "key": "priority"
         },
         "StartTime": {
           "name": "计划时间",
           "type": "time",
-          "value": "00:00",
+          "value": "00:10",
           "storage": "task",
           "key": "start_time",
-          "display": "readonly"
+          "help": "每天的战役次数在 0 点刷新；打完当天次数后，下一次在这个时间运行。"
         },
         "IntervalMinutes": {
-          "name": "执行间隔（分钟）",
+          "name": "重试间隔（分钟）",
           "type": "number",
           "value": 60,
           "min": 1,
           "max": 10080,
           "storage": "task",
           "key": "interval_minutes",
-          "display": "readonly"
+          "help": "当天次数打完后改到次日计划时间；有船泡澡时按原脚本等 15 分钟；其他提前结束的情况按此间隔再试。"
         },
         "NextRun": {
           "name": "下次运行",
           "type": "datetime-local",
           "value": "",
           "storage": "scheduler",
-          "key": "NextRun",
-          "display": "readonly"
+          "key": "NextRun"
         },
         "Runs": {
           "name": "执行次数",
@@ -2236,8 +2241,10 @@
         },
         "战役SL": {
           "name": "战役SL",
+          "help": "原脚本的 SL 会强制结束并重启游戏，桌面版不执行，固定关闭。",
           "type": "checkbox",
           "value": false,
+          "display": "readonly",
           "storage": "legacy",
           "key": "战役SL",
           "source": {
@@ -13208,6 +13215,51 @@
             "page": "功能控制台",
             "ui_line": 220
           }
+        }
+      }
+    },
+    "reward": {
+      "Scheduler": {
+        "Enable": {
+          "name": "启用任务",
+          "type": "checkbox",
+          "value": false,
+          "storage": "task",
+          "key": "enabled"
+        },
+        "Priority": {
+          "name": "优先级",
+          "help": "数字越小，优先级越高。",
+          "type": "number",
+          "value": 5,
+          "min": 1,
+          "max": 10,
+          "storage": "task",
+          "key": "priority"
+        },
+        "StartTime": {
+          "name": "计划时间",
+          "type": "time",
+          "value": "00:00",
+          "storage": "task",
+          "key": "start_time"
+        },
+        "IntervalMinutes": {
+          "name": "检查间隔（分钟）",
+          "help": "按此间隔回港区看任务按钮的红点；没有红点时不进入任务页面、不点击。",
+          "type": "number",
+          "value": 30,
+          "min": 1,
+          "max": 10080,
+          "storage": "task",
+          "key": "interval_minutes"
+        },
+        "NextRun": {
+          "name": "下次运行",
+          "type": "datetime-local",
+          "value": "",
+          "storage": "scheduler",
+          "key": "NextRun"
         }
       }
     }
