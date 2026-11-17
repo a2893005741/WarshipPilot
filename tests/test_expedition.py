@@ -151,6 +151,31 @@ class SurveyTest(unittest.TestCase):
         self.assertEqual((result.collected, result.redeployed), (1, 1))
         self.assertEqual(result.remaining, [2 * 3600 + 57 * 60 + 22, 4 * 3600 + 56 * 60 + 48])
 
+    def test_waits_for_slow_chapter_list(self):
+        """Live game: the list changes well after the tap; frames in between
+        still show the old chapter and must not read as 'first/last chapter'."""
+
+        class SlowDevice(ScriptedDevice):
+            def click(self, x, y):
+                current = self.state
+                super().click(x, y)
+                if self.clicks[-1][1] in ('上一章', '下一章'):
+                    self.pending, self.state, self.delay = self.state, current, 4
+
+            def screenshot(self):
+                if getattr(self, 'delay', 0):
+                    self.delay -= 1
+                    if not self.delay:
+                        self.state = self.pending
+                return super().screenshot()
+
+        screens = {'home': home(False), 'ch1': chapter(1, 'short'), 'ch2': chapter(2, 'idle'),
+                   'ch3': chapter(3, 'single')}
+        t = {('home', '出征'): 'ch3', ('ch3', '上一章'): 'ch2', ('ch2', '上一章'): 'ch1',
+             ('ch1', '下一章'): 'ch2', ('ch2', '下一章'): 'ch3', ('ch3', '返回'): 'home'}
+        result = task(SlowDevice(screens, t, 'home', BUTTONS), survey=True).run()
+        self.assertEqual(result.remaining, [59 * 60 + 16, 4 * 3600 + 56 * 60 + 48])
+
     def test_without_survey_nothing_finished_sends_no_input(self):
         device = ScriptedDevice({'home': home(False)}, {}, 'home', BUTTONS)
         result = task(device).run()

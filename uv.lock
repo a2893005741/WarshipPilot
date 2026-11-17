@@ -732,7 +732,7 @@ wheels = [
 
 [[package]]
 name = "warshippilot"
-version = "0.8.0"
+version = "0.8.1"
 source = { virtual = "." }
 dependencies = [
     { name = "adbutils" },

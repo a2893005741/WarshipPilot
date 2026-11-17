@@ -65,6 +65,8 @@ CONTINUE_BUTTON_PIXEL = ((450, 445), (231, 194, 32))  # (X, Y), RGB of the yello
 CHAPTER_PREV = assets.Button('上一章', 303, 90, 'live 远征章节列表 (120,315)', jitter=0)
 CHAPTER_NEXT = assets.Button('下一章', 176, 90, 'live 远征章节列表 (120,484)', jitter=0)
 MAX_CHAPTERS = 30
+CHAPTER_REACT = 3.0  # seconds to wait for the list to react to a chapter tap
+CHAPTER_POLL = 0.25
 
 
 def chapter_signature(image):
@@ -112,20 +114,31 @@ class Expedition(UI):
         self.survey = survey
 
     def step_chapter(self, button, image):
-        """Tap a neighbouring chapter; (new image, whether the chapter changed)."""
+        """Tap a neighbouring chapter; (new image, whether the chapter changed).
+
+        The list reacts with a delay (live: well over 0.5 s), so first wait
+        for the chapter column to differ from before the tap, then for it to
+        stop moving. No change within CHAPTER_REACT means first/last chapter.
+        """
         before = chapter_signature(image)
         self.click(button, '远征章节')
         self.result.inputs += 1
-        self.sleep(0.5)
-        last = None
-        for _ in range(10):
+        for _ in range(int(CHAPTER_REACT / CHAPTER_POLL)):
+            self.sleep(CHAPTER_POLL)
             image = self.screenshot().image
             signature = chapter_signature(image)
-            if last is not None and same_chapter(signature, last):
+            if not same_chapter(signature, before):
                 break
-            last = signature
-            self.sleep(0.3)
-        return image, not same_chapter(signature, before)
+        else:
+            return image, False
+        for _ in range(10):
+            self.sleep(CHAPTER_POLL)
+            image = self.screenshot().image
+            current = chapter_signature(image)
+            if same_chapter(current, signature):
+                break
+            signature = current
+        return image, True
 
     def survey_chapters(self, image):
         """Read every chapter's countdowns, first to last.
