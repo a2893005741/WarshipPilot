@@ -124,7 +124,7 @@ python <root>/deploy/launcher.py rollback --root <dir>
 
 ## 5. 改造清单
 
-### 5.1 启动器（alas-launcher）
+### 5.1 舰R独立启动器（WarshipPilotLauncher）
 
 | # | 文件 | 改动 |
 |---|---|---|
@@ -201,8 +201,10 @@ python <root>/deploy/launcher.py rollback --root <dir>
 - 已实现 Windows 启动器与后端入口，源码在相邻 WarshipLauncher。已移除后端 Node 构建调用，普通用户运行，品牌/图标与独立设置、自启项分离。
 - 独立首装、固定提交与摘要、事务更新/回退、环境备份、真实 Job 身份健康检查均已落地。额外处理 uv Windows 跳板的真实 PID，以及后台握手早于启动任务完成的竞态。
 - WS v2、一次性票据、自启设置、网页任务排空后委托更新、调度停止通知已接入。
-- 150 项 Python、109 项启用的 Rust 测试、22 项启动器前端与10项打包工具测试通过。后端前端另有原305项和新增LauncherCard状态机覆盖。
+- 150 项 Python、109 项启用的 Rust 测试、22 项启动器前端通过。打包工具11项中10项通过、1项Unix软链接布局测试在Windows跳过；后端前端313项通过。
 - EXE 隔离实测：首装、重复启动、修复保留旧环境、拒绝外部端口、坏提交健康失败回退均通过。网页→Python WS→Rust→停止/更新/回退/重启的真实进程验证通过。
 - 迁移入口 scripts/migrate-launcher.ps1 默认只读，Apply 才排空任务、备份旧入口并接管，Rollback 可恢复。远端切换结果另记验收报告，不以本地测试代替。
 
 - 用户明确的隔离要求：原 ALAS 与舰R启动器使用独立仓库。原 alas-launcher 内容已恢复到改造前版本；舰R分发迁至 WarshipPilotLauncher。
+- 原启动器源码保存在 `../ALASLauncher-Original`，只关联 `a2893005741/alas-launcher`；舰R源码保存在 `../WarshipLauncher`，只关联 `a2893005741/WarshipPilotLauncher`。两者分别发布，设置、自启项、组件与自更新清单使用各自产品身份。
+- 舰R独立发布工作流44059355516已通过，发布v3.0.7、runtime组件与manifest清单；引导固定后端提交66646052eaa2a9b5671e12156ebf041879e6f607，所有舰R下载地址均指向独立仓库。
