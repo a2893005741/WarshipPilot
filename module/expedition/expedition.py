@@ -67,6 +67,7 @@ CHAPTER_NEXT = assets.Button('下一章', 176, 90, 'live 远征章节列表 (120
 MAX_CHAPTERS = 30
 CHAPTER_REACT = 3.0  # seconds to wait for the list to react to a chapter tap
 CHAPTER_POLL = 0.25
+CHAPTER_STILL = 3    # polls without change before the list counts as settled
 
 
 def chapter_signature(image):
@@ -121,24 +122,31 @@ class Expedition(UI):
         stop moving. No change within CHAPTER_REACT means first/last chapter.
         """
         before = chapter_signature(image)
-        self.click(button, '远征章节')
-        self.result.inputs += 1
-        for _ in range(int(CHAPTER_REACT / CHAPTER_POLL)):
-            self.sleep(CHAPTER_POLL)
-            image = self.screenshot().image
-            signature = chapter_signature(image)
-            if not same_chapter(signature, before):
-                break
-        else:
-            return image, False
-        for _ in range(10):
+        # A tap that lands while the list is still easing out can be lost:
+        # only a second unanswered tap means first/last chapter.
+        for _ in range(2):
+            self.click(button, '远征章节')
+            self.result.inputs += 1
+            for _ in range(int(CHAPTER_REACT / CHAPTER_POLL)):
+                self.sleep(CHAPTER_POLL)
+                image = self.screenshot().image
+                signature = chapter_signature(image)
+                if not same_chapter(signature, before):
+                    return self.settle_chapters(image, signature), True
+        return image, False
+
+    def settle_chapters(self, image, signature):
+        """Wait until the chapter column stays still for CHAPTER_STILL polls."""
+        still = 0
+        for _ in range(20):
             self.sleep(CHAPTER_POLL)
             image = self.screenshot().image
             current = chapter_signature(image)
-            if same_chapter(current, signature):
+            still = still + 1 if same_chapter(current, signature) else 0
+            if still >= CHAPTER_STILL:
                 break
             signature = current
-        return image, True
+        return image
 
     def survey_chapters(self, image):
         """Read every chapter's countdowns, first to last.

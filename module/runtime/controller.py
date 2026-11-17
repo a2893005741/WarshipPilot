@@ -34,7 +34,8 @@ def next_run(current, interval_minutes, result):
         return fallback, f'没有进行中的远征，按间隔 {interval_minutes} 分钟'
     earliest = min(remaining)
     due = current + max(timedelta(seconds=earliest) + EXPEDITION_MARGIN, EXPEDITION_MIN)
-    reason = f'最早的远征 {earliest // 3600}:{earliest // 60 % 60:02d}:{earliest % 60:02d} 后结束'
+    reason = (f'{len(remaining)} 支远征在外，最早的 '
+              f'{earliest // 3600}:{earliest // 60 % 60:02d}:{earliest % 60:02d} 后结束')
     if unreadable and fallback < due:
         return fallback, reason + f'，但有 {unreadable} 个倒计时无法识别，按间隔 {interval_minutes} 分钟'
     return due, reason

@@ -136,8 +136,8 @@ class SurveyTest(unittest.TestCase):
         self.assertEqual(result.remaining, [2 * 3600 + 57 * 60 + 22, 4 * 3600 + 56 * 60 + 48])
         self.assertEqual(result.unreadable, 0)
         self.assertEqual(device.clicks, [
-            ('home', '出征'), ('ch2', '上一章'), ('ch1', '上一章'), ('ch1', '下一章'),
-            ('ch2', '下一章'), ('ch3', '下一章'), ('ch3', '返回')])
+            ('home', '出征'), ('ch2', '上一章'), ('ch1', '上一章'), ('ch1', '上一章'), ('ch1', '下一章'),
+            ('ch2', '下一章'), ('ch3', '下一章'), ('ch3', '下一章'), ('ch3', '返回')])
 
     def test_collects_finished_expedition_found_on_another_chapter(self):
         screens = {'home+': home(True), 'home': home(False), 'chA': chapter(2, 'single'),
@@ -174,6 +174,26 @@ class SurveyTest(unittest.TestCase):
         t = {('home', '出征'): 'ch3', ('ch3', '上一章'): 'ch2', ('ch2', '上一章'): 'ch1',
              ('ch1', '下一章'): 'ch2', ('ch2', '下一章'): 'ch3', ('ch3', '返回'): 'home'}
         result = task(SlowDevice(screens, t, 'home', BUTTONS), survey=True).run()
+        self.assertEqual(result.remaining, [59 * 60 + 16, 4 * 3600 + 56 * 60 + 48])
+
+    def test_lost_chapter_tap_is_retried(self):
+        """Live game: a tap during the list's easing is dropped; the next
+        chapter must still be read instead of ending the walk."""
+
+        class LossyDevice(ScriptedDevice):
+            dropped = False
+
+            def click(self, x, y):
+                current = self.state
+                super().click(x, y)
+                if (current, self.clicks[-1][1]) == ('ch2', '下一章') and not self.dropped:
+                    self.dropped, self.state = True, current
+
+        screens = {'home': home(False), 'ch1': chapter(1, 'short'), 'ch2': chapter(2, 'idle'),
+                   'ch3': chapter(3, 'single')}
+        t = {('home', '出征'): 'ch1', ('ch1', '下一章'): 'ch2', ('ch2', '下一章'): 'ch3',
+             ('ch3', '返回'): 'home'}
+        result = task(LossyDevice(screens, t, 'home', BUTTONS), survey=True).run()
         self.assertEqual(result.remaining, [59 * 60 + 16, 4 * 3600 + 56 * 60 + 48])
 
     def test_without_survey_nothing_finished_sends_no_input(self):

@@ -136,7 +136,7 @@ class RunTest(unittest.TestCase):
         self.assertEqual(run.result.remaining, [])  # surveyed: no fleet away
         prev, next_ = (to_screen(b.x, b.y) for b in (CHAPTER_PREV, CHAPTER_NEXT))
         self.assertEqual(runtime.emulator.clicks,
-                         [PagedEmulator.SORTIE, prev, next_, PagedEmulator.BACK])
+                         [PagedEmulator.SORTIE, prev, prev, next_, next_, PagedEmulator.BACK])
 
 
 if __name__ == '__main__':
