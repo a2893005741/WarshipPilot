@@ -6,15 +6,11 @@ Python 3.14 源码运行，ALAS 式 WebUI。安装目录就是 Git 仓库，运�
 
 Windows x64 推荐使用[舰R独立启动器](https://github.com/a2893005741/WarshipPilotLauncher/releases/tag/v3.0.7)：下载 `WarshipPilot.exe` 放在可写目录，点击“部署”，完成后点击“启动”。环境修复、托盘和开机自启在启动器中管理。原 ALAS 使用自己的启动器仓库，两者独立发布。
 
-已有源码安装接管前，应先更新后端并排空当前任务，备份旧环境和启动入口。自动迁移脚本 `scripts/migrate-launcher.ps1` 默认只读，显式使用 Apply 才执行切换；流程见[方案](docs/warship-launcher-plan.md)和[验收记录](docs/warship-launcher-acceptance.md)。
-
-手动准备源码运行环境：
-
-首次在开发电脑执行 `uv sync --frozen`，再运行 `scripts/prepare-runtime.ps1`。它按同一份 uv.lock 准备 Python、依赖、Git、uv 和 ADB，并把 Python 标准库一并带上；仅复制普通虚拟环境不能离开开发电脑运行。
-
-把仓库和准备好的 `.venv` 放到同一目录，运行 `WarshipPilot.bat`。启动器修正便携 Python 路径，运行安装器获取 Git 提交，有依赖变化才同步，再检查 ADB、启动 `gui.py`。安装器需要干净工作区和正确的更新分支。开发时直接运行 `.venv/Scripts/python.exe gui.py`。
+开发时执行 `uv sync --frozen` 后直接运行 `.venv/Scripts/python.exe gui.py`。
 
 默认监听 `0.0.0.0:22680`，首次启动生成 `config/deploy.yaml`，访问码在 `WebUI.AccessCode`。本机自动打开网页，局域网浏览器填写同一访问码。只允许本机访问时将 `WebUI.Host` 改为 `127.0.0.1`。关闭网页不停止后台，右上角电源按钮退出。
+
+局域网访问需要放行 WebUI 端口：以管理员身份运行一次 `powershell -ExecutionPolicy Bypass -File deploy\launcher\allow-lan-access.ps1`（TCP 22680，仅本地子网）。启动器以普通用户运行，无法自行修改防火墙；缺少规则时后台日志会提示。
 
 ## 配置和记录
 
@@ -50,7 +46,7 @@ npm run build --prefix frontend
 
 提交前端修改时同时提交 `frontend/dist`。源码入口为 `gui.py`，调度入口为 `alas.py`，部署代码位于 `deploy`，原脚本提取工具位于 `dev_tools/legacy_extract`。
 
-`scripts/deploy-remote.ps1` 负责首次源码部署、备份旧安装、迁移和计划任务切换。无需重复部署，此后的更新由 Git 完成。
+仓库只发布程序源码（参照 ALAS 的 `.gitignore`）：运维脚本、过程文档、运行数据和本地配置不提交。
 
 ALAS 移植部分按 GPLv3 提供，见 LICENSE 与 docs/ALAS-PORT.json；旧脚本恢复产物的权利归原作者。
 
@@ -69,5 +65,3 @@ WebUI 复用本机 AzurPilot 的现代样式、外壳和参数页结构：总览
 ```
 
 `config/warship.json` 的 `Tasks.<任务>.<参数组>.<参数>` 对齐 ALAS 配置层级。旧扁平任务配置启动时自动转换，原调度开关、间隔和下次运行时间保留。修改字段后自动保存，出错提示留在对应字段旁；运行任务前等待保存完成。
-
-浏览器回归脚本 `frontend/tests/alas-layout.mjs` 覆盖真实后台的桌面、手机、深色布局、参数目录、原脚本字段持久化和非法值恢复。它使用本地隔离的 `.deployment/alas-webui-preview` 后台（22685 端口），不向模拟器发送输入。

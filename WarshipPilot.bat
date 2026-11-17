@@ -2,7 +2,7 @@
 setlocal
 cd /d "%~dp0"
 if not exist ".venv\Scripts\python.exe" (
-  echo Missing runtime. Run scripts\prepare-runtime.ps1 first.
+  echo Missing runtime. Deploy with WarshipPilot.exe (WarshipPilotLauncher) first.
   pause
   exit /b 1
 )

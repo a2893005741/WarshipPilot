@@ -2,8 +2,7 @@
 
 The launcher and backend run as the desktop user and cannot add firewall rules;
 an unanswered Windows prompt even leaves Block rules for the interpreter. The
-port rule comes from scripts/allow-lan-access.ps1 (administrator) or the remote
-migration/deploy scripts. Reading rules needs no elevation.
+port rule comes from deploy/launcher/allow-lan-access.ps1 (administrator). Reading rules needs no elevation.
 """
 import os
 import subprocess
@@ -28,4 +27,4 @@ def check_lan_access(store, host, port, run=subprocess.run, platform=os.name):
         return
     if lan_rule_present(run) is False:
         store.event(f'局域网可能无法访问控制台：Windows 防火墙没有放行端口 {port}。'
-                    '请以管理员身份运行 scripts\\allow-lan-access.ps1（只允许本地子网）。', 'warning')
+                    '请以管理员身份运行 deploy\\launcher\\allow-lan-access.ps1（只允许本地子网）。', 'warning')

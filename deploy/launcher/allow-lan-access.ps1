@@ -10,11 +10,11 @@
   removes Block rules Windows created for this installation's interpreters when a
   firewall prompt was dismissed. Idempotent.
 .EXAMPLE
-  powershell -ExecutionPolicy Bypass -File scripts\allow-lan-access.ps1
+  powershell -ExecutionPolicy Bypass -File deploy\launcher\allow-lan-access.ps1
 #>
 [CmdletBinding()]
 param(
-    [string]$Root = (Split-Path $PSScriptRoot -Parent),
+    [string]$Root = (Split-Path (Split-Path $PSScriptRoot -Parent) -Parent),
     [int]$Port = 22680
 )
 $ErrorActionPreference = 'Stop'

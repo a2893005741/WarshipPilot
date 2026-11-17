@@ -1,26 +1,98 @@
-.venv/
-.warship/
-.venv.old-*/
-/WarshipPilot.exe
-.planning/
-__pycache__/
-node_modules/
-build/
-/dist/
-dist-v*/
+# WarshipPilot — only application source is published (layout follows ALAS/AzurPilot).
+# Tracked: alas.py, gui.py, module/, assets/, bin/, config templates, deploy/,
+# dev_tools/, frontend/ (with dist, the runtime machine has no Node), tests/,
+# license and port-provenance files.
+
+# Runtime
+log/
+*.log
+screenshots/
+cache/
 data/
 evidence/
-*.spec
-config/deploy.yaml
-config/warship.json
-config/*.tmp
-log/
-screenshots/
-*.log
-task_plan.md
-findings.md
-progress.md
-.runtime-stage/
-.deployment/
+.warship/
+/WarshipPilot.exe
 
+# User configuration and runtime data
+config/*.yaml
+!config/deploy.template.yaml
+config/*.json
+!config/template.json
+config/*.tmp
+config/backup/
+
+# Development, operations and local verification
+/scripts/
+/.deployment/
+/.runtime-stage/
+/.planning/
+dist-v*/
+/task_plan.md
+/findings.md
+/progress.md
+
+# Documentation (process notes stay local; keep license and port provenance)
+docs/*
+!docs/THIRD-PARTY-NOTICES.md
+!docs/ALAS-PORT.json
+!docs/ALAS-WEBUI-PORT.json
+
+# AI and coding tools
+.codex/
+.claude/
+.agents/
+.cursor/
+.trae/
+.workbuddy/
+.codebuddy/
+.zcode/
+AGENTS.md
+CLAUDE.md
+
+# Frontend
+node_modules/
+frontend/test-results/
+frontend/playwright-report/
 *.tsbuildinfo
+
+# Python
+.venv/
+.venv.old-*/
+/.uv-cache/
+__pycache__/
+*.py[cod]
+build/
+/dist/
+*.egg-info/
+*.spec
+.pytest_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+.python-version
+
+# Lock files
+*.lock
+!uv.lock
+
+# Packages and archives (bundled game resources are source)
+*.zip
+!assets/legacy/resources.zip
+*.cab
+*.msi
+*.lnk
+
+# IDE and editor files
+.idea/
+.vs/
+.vscode/
+
+# Windows / macOS
+Thumbs.db
+[Dd]esktop.ini
+$RECYCLE.BIN/
+/nul
+.DS_Store
+
+# Backup files
+*.bak
