@@ -208,3 +208,4 @@ python <root>/deploy/launcher.py rollback --root <dir>
 - 用户明确的隔离要求：原 ALAS 与舰R启动器使用独立仓库。原 alas-launcher 内容已恢复到改造前版本；舰R分发迁至 WarshipPilotLauncher。
 - 原启动器源码保存在 `../ALASLauncher-Original`，只关联 `a2893005741/alas-launcher`；舰R源码保存在 `../WarshipLauncher`，只关联 `a2893005741/WarshipPilotLauncher`。两者分别发布，设置、自启项、组件与自更新清单使用各自产品身份。
 - 舰R独立发布工作流44059355516已通过，发布v3.0.7、runtime组件与manifest清单；引导固定后端提交66646052eaa2a9b5671e12156ebf041879e6f607，所有舰R下载地址均指向独立仓库。
+- 远端已接管并完成网页委托更新、配置保持、MuMu自动连接和远征调用验证；完整证据、恢复位置与实测范围见[交付验收](warship-launcher-acceptance.md)。

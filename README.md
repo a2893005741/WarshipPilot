@@ -4,6 +4,12 @@ Python 3.14 源码运行，ALAS 式 WebUI。安装目录就是 Git 仓库，运�
 
 ## 安装和启动
 
+Windows x64 推荐使用[舰R独立启动器](https://github.com/a2893005741/WarshipPilotLauncher/releases/tag/v3.0.7)：下载 `WarshipPilot.exe` 放在可写目录，点击“部署”，完成后点击“启动”。环境修复、托盘和开机自启在启动器中管理。原 ALAS 使用自己的启动器仓库，两者独立发布。
+
+已有源码安装接管前，应先更新后端并排空当前任务，备份旧环境和启动入口。自动迁移脚本 `scripts/migrate-launcher.ps1` 默认只读，显式使用 Apply 才执行切换；流程见[方案](docs/warship-launcher-plan.md)和[验收记录](docs/warship-launcher-acceptance.md)。
+
+手动准备源码运行环境：
+
 首次在开发电脑执行 `uv sync --frozen`，再运行 `scripts/prepare-runtime.ps1`。它按同一份 uv.lock 准备 Python、依赖、Git、uv 和 ADB，并把 Python 标准库一并带上；仅复制普通虚拟环境不能离开开发电脑运行。
 
 把仓库和准备好的 `.venv` 放到同一目录，运行 `WarshipPilot.bat`。启动器修正便携 Python 路径，运行安装器获取 Git 提交，有依赖变化才同步，再检查 ADB、启动 `gui.py`。安装器需要干净工作区和正确的更新分支。开发时直接运行 `.venv/Scripts/python.exe gui.py`。
