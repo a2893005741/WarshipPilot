@@ -35,10 +35,10 @@ class LegacyEntryTest(unittest.TestCase):
     def test_entries_and_campaign_switch(self):
         self.assertEqual(vm('campaign').config['战役开关'], True)
         self.assertEqual(vm('campaign', {'战役SL': True}).config['战役SL'], False)
-        for task in ('campaign', 'reward', 'sortie'):
+        for task in ('campaign', 'exercise', 'reward', 'sortie'):
             self.assertIsNotNone(vm(task).resume)
         with self.assertRaises(ValueError):
-            vm('exercise')
+            vm('decisive')
 
     def test_campaign_attempts_read_on_physical_canvas(self):
         machine = vm('campaign')

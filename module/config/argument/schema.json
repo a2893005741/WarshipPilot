@@ -105,8 +105,8 @@
     },
     "exercise": {
       "name": "演习",
-      "executable": false,
-      "help": "保存原脚本演习参数；本版尚未接入执行。"
+      "executable": true,
+      "help": "使用原脚本打演习：按所选舰队、阵型和避潜艇设置打完两页可挑战对手，回港后等待 0、12、18 点刷新。沿用原快修及夜战流程。"
     },
     "sortie_a": {
       "name": "方案 A",
@@ -2377,8 +2377,7 @@
           "type": "checkbox",
           "value": false,
           "storage": "task",
-          "key": "enabled",
-          "display": "readonly"
+          "key": "enabled"
         },
         "Priority": {
           "name": "优先级",
@@ -2388,8 +2387,7 @@
           "min": 1,
           "max": 10,
           "storage": "task",
-          "key": "priority",
-          "display": "readonly"
+          "key": "priority"
         },
         "StartTime": {
           "name": "计划时间",
@@ -2397,25 +2395,24 @@
           "value": "00:00",
           "storage": "task",
           "key": "start_time",
-          "display": "readonly"
+          "help": "首次运行的计划时间；打完本轮对手后，按游戏每天 0、12、18 点刷新时间安排下次运行。"
         },
         "IntervalMinutes": {
-          "name": "执行间隔（分钟）",
+          "name": "重试间隔（分钟）",
           "type": "number",
           "value": 60,
           "min": 1,
           "max": 10080,
           "storage": "task",
           "key": "interval_minutes",
-          "display": "readonly"
+          "help": "本轮演习完成后等待下一次对手刷新；未完成时按此间隔重试。"
         },
         "NextRun": {
           "name": "下次运行",
           "type": "datetime-local",
           "value": "",
           "storage": "scheduler",
-          "key": "NextRun",
-          "display": "readonly"
+          "key": "NextRun"
         },
         "Runs": {
           "name": "执行次数",
@@ -2425,15 +2422,14 @@
           "max": 9999,
           "storage": "task",
           "key": "runs",
-          "display": "readonly"
+          "display": "hide"
         },
         "SaveScreenshots": {
           "name": "保留任务截图",
           "type": "checkbox",
           "value": true,
           "storage": "task",
-          "key": "save_screenshots",
-          "display": "readonly"
+          "key": "save_screenshots"
         }
       },
       "Exercise": {
@@ -2446,7 +2442,9 @@
           "source": {
             "page": "功能控制台",
             "ui_line": 106
-          }
+          },
+          "display": "hide",
+          "help": "演习启动时自动开启；自动调度请使用上方的“启用任务”。"
         },
         "演习舰队": {
           "name": "演习舰队",
@@ -2519,7 +2517,8 @@
           "source": {
             "page": "功能控制台",
             "ui_line": 112
-          }
+          },
+          "help": "按原脚本识别对方潜艇并尝试刷新；刷新次数用完后仍会挑战。"
         },
         "演习夜战": {
           "name": "演习夜战",
@@ -2530,7 +2529,24 @@
           "source": {
             "page": "功能控制台",
             "ui_line": 117
-          }
+          },
+          "display": "hide"
+        },
+        "NightBattle": {
+          "name": "夜战策略",
+          "type": "input",
+          "value": "继续夜战",
+          "storage": "constant",
+          "display": "readonly",
+          "help": "沿用原演习流程，在夜战选择页继续夜战。"
+        },
+        "Repair": {
+          "name": "修理方式",
+          "type": "input",
+          "value": "沿用原演习快修",
+          "storage": "constant",
+          "display": "readonly",
+          "help": "使用所选舰队，按原流程处理泡澡占用并快修受损舰船。"
         }
       }
     },

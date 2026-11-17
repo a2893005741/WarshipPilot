@@ -12,11 +12,12 @@ from module.logger import atomic_json, now
 from module.config.task_settings import read_tasks
 from module.config.config import Config
 
-SUPPORTED = ('expedition', 'sortie', 'campaign', 'reward')
+SUPPORTED = ('expedition', 'sortie', 'campaign', 'exercise', 'reward')
 NAMES = {'expedition': '远征收取与继续派遣', 'sortie': '原方案C', 'campaign': '原脚本打战役',
-         'reward': '原脚本收任务'}
+         'exercise': '原脚本打演习', 'reward': '原脚本收任务'}
 SOURCES = {'expedition': 'native', 'sortie': 'original_lua_functions',
-           'campaign': 'original_lua_functions', 'reward': 'original_lua_functions'}
+           'campaign': 'original_lua_functions', 'exercise': 'original_lua_functions',
+           'reward': 'original_lua_functions'}
 CAMPAIGN_BATH = timedelta(milliseconds=900000)  # original: 战役泡澡时间戳 + 900000
 EXPEDITION_MARGIN = timedelta(seconds=30)  # let the game flag the expedition finished
 EXPEDITION_MIN = timedelta(minutes=1)
@@ -58,6 +59,12 @@ def legacy_next_run(task, current, settings, state, elapsed_ms):
     millisecond clock, `elapsed_ms` is that clock now.
     """
     interval = timedelta(minutes=settings['interval_minutes'])
+    if task == 'exercise' and state.get('演习完成'):
+        local = current.astimezone()
+        refreshes = [local.replace(hour=hour, minute=0, second=0, microsecond=0)
+                     + timedelta(days=day) for day in (0, 1) for hour in (0, 12, 18)]
+        due = min(moment for moment in refreshes if moment > local)
+        return due.astimezone(timezone.utc), '本轮演习对手已打完，等待 0、12、18 点刷新'
     if task == 'campaign':
         if state.get('打战役时间戳'):
             return next_daily(current, settings['start_time']), '今日战役次数已用完'
@@ -112,7 +119,8 @@ class TaskController:
         return deepcopy(self.result) | {'scheduler': self.scheduler, 'supported': list(SUPPORTED),
                                       'enabled': sum(v['enabled'] for k,v in read_tasks(self.runtime.store.root).items() if k in SUPPORTED),
                                       'due': dict(self.due), 'source': SOURCES.get(self.result.get('task'), ''),
-                                      'plan': 'legacy-C', 'running': self.busy}
+                                      'plan': 'legacy-C' if self.result.get('task') == 'sortie' else self.result.get('task', ''),
+                                      'running': self.busy}
 
     @property
     def busy(self):
@@ -139,7 +147,7 @@ class TaskController:
         if self.busy:
             raise ValueError('已有任务持有当前设备，请先停止或等待完成')
         if task not in SUPPORTED:
-            raise ValueError('目前接入远征、战役、任务奖励和原方案C出征，其他任务尚未适配')
+            raise ValueError('目前接入远征、战役、演习、任务奖励和原方案C出征，其他任务尚未适配')
         if not self.runtime.serial or self.runtime.status != 'live':
             raise ValueError('请先连接舰R并恢复实时画面')
         self.runtime.adb.ensure_input_ready(self.runtime.serial)
@@ -221,7 +229,7 @@ class TaskController:
             self.start(task)
         elif action == 'scheduler-start':
             if not any(c['enabled'] for k,c in read_tasks(self.runtime.store.root).items() if k in SUPPORTED):
-                raise ValueError('请先在远征或常用图配置中启用任务')
+                raise ValueError('请先在任务参数页启用至少一项任务')
             self.scheduler = True
             self.failures.clear()
             self.runtime.auto_connect_enabled = True
@@ -297,8 +305,9 @@ class TaskController:
                                   'content': f'{NAMES.get(task, task)} 连续失败 {self.failures[task]} 次：{message[:200]}'})
             self.event(f'{NAMES.get(task, task)} 连续失败 {self.failures[task]} 次，调度器已停止：{message[:200]}')
         else:
-            self.due[task] = (datetime.now(timezone.utc) + timedelta(minutes=10)).isoformat()
-            self.event(f'{NAMES.get(task, task)} 失败（第 {self.failures[task]} 次），10 分钟后重试：{message[:200]}')
+            retry = read_tasks(self.runtime.store.root)[task]['interval_minutes'] if task == 'exercise' else 10
+            self.due[task] = (datetime.now(timezone.utc) + timedelta(minutes=retry)).isoformat()
+            self.event(f'{NAMES.get(task, task)} 失败（第 {self.failures[task]} 次），{retry} 分钟后重试：{message[:200]}')
         self.save_due()
 
     def persist(self):
@@ -379,18 +388,23 @@ class TaskController:
         # Yield the device lock so pause/stop can run between SDK bursts.
 
     def complete(self):
-        self.result['battles']=int(self.vm.globals[identifier('战斗次数C')] or 0)
         task=self.result['task'];settings=self.result['settings']
+        self.result['battles']=int(self.vm.globals[identifier('战斗次数C')] or 0) if task == 'sortie' else 0
         if self.result['page']!='港区':
             raise RuntimeError('原任务未回到母港，不能标记完成')
         if task=='sortie' and self.result['battles']<settings['runs']:
             raise RuntimeError('原函数已返回，但尚未达到出征次数，保留现场供核对')
+        if task=='exercise' and not self.vm.exercise_completed:
+            raise RuntimeError('原演习提前返回，尚未确认两页对手已打完，保留现场供核对')
         self.result.update(status='completed', action='原流程已回港，本轮完成', ended=now())
         state = {name: self.vm.globals[identifier(name)] or 0 for name in ('打战役时间戳', '战役泡澡时间戳')}
+        if task == 'exercise':
+            state['演习完成'] = self.vm.exercise_completed
         elapsed = self.vm.sdk(84)  # the VM's millisecond clock (old GetTickCount)
         due, reason = legacy_next_run(task, datetime.now(timezone.utc), settings, state, elapsed)
         self.due[task]=due.isoformat()
         self.save_due()
+        self.failures.pop(task, None)
         self.event(f'完成：{NAMES[task]}；下次 {due.astimezone().strftime("%m-%d %H:%M")}（{reason}）')
         self.vm=None;self.persist()
 
@@ -402,7 +416,8 @@ class TaskController:
                 return
             self.step(raw)
             if self.vm and self.result['status']=='running':
-                self.result['battles']=int(self.vm.globals[identifier('战斗次数C')] or 0)
+                if self.result['task'] == 'sortie':
+                    self.result['battles']=int(self.vm.globals[identifier('战斗次数C')] or 0)
                 limit=360 if '战斗' in self.result['page'] else 150
                 if time.monotonic()-self.page_time>limit:
                     raise RuntimeError('原任务页面长期没有进展：'+self.result['page'])

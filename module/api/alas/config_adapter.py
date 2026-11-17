@@ -43,7 +43,9 @@ def convert_field(field):
         out = {'type': 'textarea', 'valuetype': 'str', 'value': value}
     else:
         out = {'type': 'input', 'valuetype': 'str', 'value': value}
-    if field.get('display') == 'readonly' or field.get('storage') == 'constant':
+    if field.get('display') == 'hide':
+        out['display'] = 'hide'
+    elif field.get('display') == 'readonly' or field.get('storage') == 'constant':
         out['display'] = 'disabled'
     return out
 

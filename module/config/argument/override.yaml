@@ -7,3 +7,17 @@ campaign.Scheduler.StartTime:
 campaign.Scheduler.IntervalMinutes:
   name: 重试间隔（分钟）
   help: 当天次数打完后改到次日计划时间；有船泡澡时按原脚本等 15 分钟；其他提前结束的情况按此间隔再试。
+exercise.Scheduler.StartTime:
+  help: 首次运行的计划时间；打完本轮对手后，按游戏每天 0、12、18 点刷新时间安排下次运行。
+exercise.Scheduler.IntervalMinutes:
+  name: 重试间隔（分钟）
+  help: 本轮演习完成后等待下一次对手刷新；未完成时按此间隔重试。
+exercise.Scheduler.Runs:
+  display: hide
+exercise.Exercise.演习开关:
+  display: hide
+  help: 演习启动时自动开启；自动调度请使用上方的“启用任务”。
+exercise.Exercise.演习避潜艇:
+  help: 按原脚本识别对方潜艇并尝试刷新；刷新次数用完后仍会挑战。
+exercise.Exercise.演习夜战:
+  display: hide

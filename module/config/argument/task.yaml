@@ -80,8 +80,8 @@ tasks:
     help: 使用原脚本收任务：港区任务按钮有红点时进入任务页一键领取，没有红点不操作。
   exercise:
     name: 演习
-    executable: false
-    help: 保存原脚本演习参数；本版尚未接入执行。
+    executable: true
+    help: 使用原脚本打演习：按所选舰队、阵型和避潜艇设置打完两页可挑战对手，回港后等待 0、12、18 点刷新。沿用原快修及夜战流程。
   sortie_a:
     name: 方案 A
     executable: false

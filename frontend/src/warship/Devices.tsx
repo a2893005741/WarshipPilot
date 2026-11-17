@@ -55,7 +55,7 @@ export function Devices() {
           <Row label="安卓报告尺寸">{profile.android_size}</Row>
           <Row label="连接时的前台">{profile.game_foreground ? "战舰少女R" : "其他页面"}</Row>
           <Row label="连接时的旧脚本">{profile.legacy_running ? "仍在运行" : "未发现运行进程"}</Row>
-        </> : <p className="warship-empty">连接后读取设备与游戏档案；连接后可执行远征、战役、任务奖励与原脚本出征。</p>}
+        </> : <p className="warship-empty">连接后读取设备与游戏档案；连接后可执行远征、战役、演习、任务奖励与原脚本出征。</p>}
       </Group>
 
       <DeviceMethods api={api} device={state?.device} serial={state?.last_serial || ""}

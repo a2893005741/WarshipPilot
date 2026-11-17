@@ -1526,7 +1526,6 @@ exercise:
       value: false
       storage: task
       key: enabled
-      display: readonly
     Priority:
       name: 优先级
       help: 数字越小，优先级越高。
@@ -1536,14 +1535,12 @@ exercise:
       max: 10
       storage: task
       key: priority
-      display: readonly
     StartTime:
       name: 计划时间
       type: time
       value: 00:00
       storage: task
       key: start_time
-      display: readonly
     IntervalMinutes:
       name: 执行间隔（分钟）
       type: number
@@ -1552,14 +1549,12 @@ exercise:
       max: 10080
       storage: task
       key: interval_minutes
-      display: readonly
     NextRun:
       name: 下次运行
       type: datetime-local
       value: ''
       storage: scheduler
       key: NextRun
-      display: readonly
     Runs:
       name: 执行次数
       type: number
@@ -1575,7 +1570,6 @@ exercise:
       value: true
       storage: task
       key: save_screenshots
-      display: readonly
   Exercise:
     演习开关:
       name: 演习开关
@@ -1642,6 +1636,20 @@ exercise:
       source:
         page: 功能控制台
         ui_line: 117
+    NightBattle:
+      name: 夜战策略
+      type: input
+      value: 继续夜战
+      storage: constant
+      display: readonly
+      help: 沿用原演习流程，在夜战选择页继续夜战。
+    Repair:
+      name: 修理方式
+      type: input
+      value: 沿用原演习快修
+      storage: constant
+      display: readonly
+      help: 使用所选舰队，按原流程处理泡澡占用并快修受损舰船。
 sortie_a:
   Scheduler:
     Enable:

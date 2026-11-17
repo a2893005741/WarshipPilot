@@ -7,7 +7,7 @@ from pydantic import BaseModel, ConfigDict, Field
 from module.config.config import Config
 
 TASKS = ('expedition', 'campaign', 'exercise', 'reward', 'sortie', 'sortie_a', 'sortie_b', 'decisive', 'general', 'control')
-EXECUTABLE = ['expedition', 'campaign', 'reward', 'sortie']
+EXECUTABLE = ['expedition', 'campaign', 'exercise', 'reward', 'sortie']
 
 
 class TaskDraft(BaseModel):

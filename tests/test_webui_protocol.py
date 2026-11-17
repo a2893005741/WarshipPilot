@@ -97,6 +97,21 @@ class ProtocolTest(unittest.TestCase):
             self.call(ws, 'tasks.run', {'instance': INSTANCE, 'task': 'reward'})
             self.assertEqual(self.runtime.automation.started, ['reward'])
 
+    def test_exercise_can_be_configured_queued_and_run_through_webui(self):
+        with self.client.websocket_connect('/api/v1/ws') as ws:
+            self.login(ws)
+            patched = self.call(ws, 'config.patch', {'instance': INSTANCE, 'changes': [
+                {'path': 'exercise.Scheduler.Enable', 'value': True},
+                {'path': 'exercise.Exercise.演习舰队', 'value': 3},
+                {'path': 'exercise.Exercise.演习阵型', 'value': 4}]})
+            self.assertTrue(patched['ok'])
+            overview = self.call(ws, 'overview.get', {'instance': INSTANCE})['result']
+            self.assertIn('exercise', [row['name'] for row in overview['tasks']])
+            self.assertTrue(self.call(ws, 'tasks.runNow', {'instance': INSTANCE, 'task': 'exercise'})['ok'])
+            self.assertIn('exercise', self.runtime.automation.due)
+            self.assertTrue(self.call(ws, 'tasks.run', {'instance': INSTANCE, 'task': 'exercise'})['ok'])
+            self.assertEqual(self.runtime.automation.started, ['exercise'])
+
     def test_wrong_password_is_refused_and_rate_limited(self):
         with self.client.websocket_connect('/api/v1/ws') as ws:
             ws.receive_json()

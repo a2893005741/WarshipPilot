@@ -97,6 +97,37 @@ test('桌面显示侧栏及双列总览', async ({page}) => {
   await expect(page.locator('.monitor-panel')).toBeVisible()
 })
 
+test('演习参数可保存，显示真实执行策略并可安排立刻运行', async ({page}) => {
+  const base = new URL(page.url()).hash.slice(1).replace(/\/overview$/, '')
+  await page.goto(`/#${base}/task/exercise`)
+  const enabled = page.getByRole('switch', {name: '启用任务', exact: true})
+  await expect(enabled).toBeEnabled()
+  await enabled.click()
+  await page.getByRole('combobox', {name: '演习舰队', exact: true}).click()
+  await page.getByRole('option', {name: '第四舰队', exact: true}).click()
+  await page.getByRole('combobox', {name: '演习阵型', exact: true}).click()
+  await page.getByRole('option', {name: '单横', exact: true}).click()
+  await expect(page.locator('[id="exercise.Scheduler.Runs"]')).toHaveCount(0)
+  await expect(page.locator('[id="exercise.Exercise.演习夜战"]')).toHaveCount(0)
+  await expect(page.locator('[id="exercise.Exercise.NightBattle"]')).toHaveValue('继续夜战')
+  await expect(page.locator('[id="exercise.Exercise.Repair"]')).toHaveValue('沿用原演习快修')
+  await expect.poll(async () => {
+    const response = await page.request.get('/api/config?task=exercise', {headers: {Authorization: 'Bearer mobile-e2e'}})
+    const values = (await response.json()).values
+    return [values.Scheduler.Enable, values.Exercise.演习舰队, values.Exercise.演习阵型]
+  }).toEqual([true, 3, 4])
+  await page.reload()
+  await expect(enabled).toBeChecked()
+  await expect(page.getByRole('combobox', {name: '演习舰队', exact: true})).toHaveText('第四舰队')
+  await page.getByRole('button', {name: '立刻运行', exact: true}).click()
+  await expect.poll(async () => {
+    const response = await page.request.get('/api/config?task=exercise', {headers: {Authorization: 'Bearer mobile-e2e'}})
+    return (await response.json()).values.Scheduler.NextRun
+  }).not.toBe('')
+  await expect(page.locator('.edit-error')).toHaveCount(0)
+  await page.screenshot({path: test.info().outputPath('exercise-config.png'), animations: 'disabled', fullPage: true})
+})
+
 test('手机可阅读全局设置和故障记录', async ({page}) => {
   await page.setViewportSize({width: 320, height: 740})
   for (const path of ['/settings', '/interface', '/updater', '/errors']) {

@@ -14,6 +14,8 @@ import cv2
 import numpy as np
 from lupa.lua52 import LuaRuntime
 
+from module.vision.color import _scan_order
+
 
 def identifier(name):
     return ('id' + name.encode().hex()).encode()
@@ -24,7 +26,7 @@ def text(value):
 
 
 # Desktop task -> original global function used as the entry point.
-ENTRIES = {'sortie': '出征战斗', 'campaign': '打战役', 'reward': '收任务'}
+ENTRIES = {'sortie': '出征战斗', 'campaign': '打战役', 'exercise': '打演习', 'reward': '收任务'}
 PHYSICAL = (720, 1280)  # portrait size of the 1280x720 game frame (old GetScreen)
 CANVAS = (540, 960)     # the script's default canvas
 
@@ -38,9 +40,10 @@ class LegacyVM:
         self.log, self.page_changed = log, page_changed
         self.started = time.monotonic()
         self.image = None
-        self.portrait = None
         self.patterns = {}
+        self.search_images = {}
         self.speed_notice = False
+        self.exercise_completed = False
         self.canvas = CANVAS
         self.physical = False  # GetScreen answers the physical size (战役剩余次数 only)
         def template(name):
@@ -61,6 +64,10 @@ class LegacyVM:
             # 打战役 runs only with its switch on. Its SL kills and restarts the
             # game (KillApp/RunApp), which the desktop build does not do.
             self.config.update({'战役开关': True, '战役SL': False})
+        if task == 'exercise':
+            # The desktop scheduler owns the switch; a manual run also runs
+            # when scheduling is disabled. Fleet/formation remain original enums.
+            self.config['演习开关'] = True
         self.lua = LuaRuntime(encoding=None, unpack_returned_tuples=True, register_eval=False,
                               register_builtins=False, max_memory=64_000_000)
         self.lua.execute((resources / 'assets/legacy/main.lua52.luac').read_bytes())
@@ -132,6 +139,21 @@ class LegacyVM:
         # configured battle limit changes its plan to expedition-only mode.
         # Run the original collection function to return home, then finish.
         entry = self.globals[identifier(ENTRIES[task])]
+        if task == 'exercise':
+            # 打演习时间戳 is set on ENTRY, not on completion. Only the normal
+            # two-pages-exhausted/home return clears 演习关闭加速. An ineligible
+            # early return must not be mistaken for a completed run.
+            self.globals[b'host_exercise_done'] = lambda: setattr(self, 'exercise_completed', True)
+            entry = self.lua.eval(b'''function(exercise)
+                return function()
+                    local eligible = ''' + identifier('打演习时间戳') + b''' == 0
+                        and LuaAuxLib.LuaAuxLid(193, ''' + repr('演习开关').encode() + b''') == true
+                    exercise()
+                    if eligible and ''' + identifier('演习关闭加速') + b''' == 0 then
+                        host_exercise_done()
+                    end
+                end
+            end''')(entry)
         if task == 'sortie':
             entry_source = b'''function(collect, sortie)
                 return function()
@@ -167,7 +189,7 @@ class LegacyVM:
         if bgr is None or bgr.shape[:2] != (720, 1280):
             raise ValueError('原脚本适配当前仅支持1280×720舰R画面')
         self.image = cv2.cvtColor(bgr, cv2.COLOR_BGR2RGB)
-        self.portrait = cv2.resize(cv2.rotate(self.image, cv2.ROTATE_90_CLOCKWISE), (540, 960), interpolation=cv2.INTER_NEAREST)
+        self.search_images.clear()
 
     def expedition_continue(self):
         # This confirmation was added after the recovered script version. Match
@@ -219,10 +241,21 @@ class LegacyVM:
         return all(self.compare(x,y,color,similarity) for x,y,color in self.patterns[expression])
 
     def find_colors(self, x1, y1, x2, y2, color, offsets, direction, similarity):
+        w, h = self.canvas
         x1,y1,x2,y2=map(lambda v:int(round(float(v))), (x1,y1,x2,y2))
-        x1,y1=max(0,x1),max(0,y1);x2,y2=min(539,x2),min(959,y2)
+        if (x1,y1,x2,y2) == (0,0,0,0):
+            x2,y2=w-1,h-1
+        x1,x2=sorted((x1,x2));y1,y2=sorted((y1,y2))
+        x1,y1=max(0,x1),max(0,y1);x2,y2=min(w-1,x2),min(h-1,y2)
         if x2<x1 or y2<y1:return -1,-1
-        image=self.portrait[y1:y2+1,x1:x2+1].astype(np.int16)
+        # Use the same endpoint mapping as pixel(), including on the temporary
+        # 720x1280 canvas used by 演习是否有潜艇 (its sixth slot is below y=960).
+        if self.canvas not in self.search_images:
+            columns=np.rint(np.arange(w)*(719/(w-1))).astype(int)
+            rows=np.rint(np.arange(h)*(1279/(h-1))).astype(int)
+            self.search_images[self.canvas]=self.image[719-columns[None,:],rows[:,None]]
+        portrait=self.search_images[self.canvas]
+        image=portrait[y1:y2+1,x1:x2+1].astype(np.int16)
         tolerance=round((1-float(similarity))*255) + 2
         mask=np.zeros(image.shape[:2],bool)
         for expected,extra in self.colors(color):
@@ -232,14 +265,15 @@ class LegacyVM:
         if offsets and text(offsets) not in ('','nil'):
             for point in text(offsets).split(','):
                 dx,dy,c=point.split('|',2);xx=xs+int(float(dx));yy=ys+int(float(dy))
-                keep=(xx>=0)&(xx<540)&(yy>=0)&(yy<960)
-                xx=np.clip(xx,0,539);yy=np.clip(yy,0,959)
-                actual=self.portrait[yy,xx].astype(np.int16);passed=np.zeros(len(xs),bool)
+                keep=(xx>=0)&(xx<w)&(yy>=0)&(yy<h)
+                xx=np.clip(xx,0,w-1);yy=np.clip(yy,0,h-1)
+                actual=portrait[yy,xx].astype(np.int16);passed=np.zeros(len(xs),bool)
                 for expected,extra in self.colors(c):passed|=np.all(np.abs(actual-expected)<=np.maximum(extra,tolerance),axis=1)
                 keep&=passed;xs,ys=xs[keep],ys[keep]
         if not len(xs):return -1,-1
-        # Old FindMultiColor direction: 0 left-to-right/top-to-bottom.
-        order=np.lexsort((xs if int(direction)%2==0 else -xs,ys if int(direction)<2 else -ys))
+        # Share the original scan order with native tasks. Exercise uses 2
+        # (bottom/right first); only sampling/colour compatibility stays in VM.
+        order=_scan_order(xs,ys,int(direction),(x1+x2)/2,(y1+y2)/2)
         index=order[0];return int(xs[index]),int(ys[index])
 
     def sdk(self, command, *args):
