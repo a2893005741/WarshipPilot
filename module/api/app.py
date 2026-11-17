@@ -22,7 +22,8 @@ from module.vision.legacy import ColorProfile
 from module.config.task_settings import EXECUTABLE, TaskSettingsRequest, read_tasks, save_task
 from module.config.schema import schema
 from module.api.config_service import ConfigService
-from module.api.socket import endpoint
+from module.api.alas.router import Router
+from module.api.alas.socket import Gateway
 
 
 class SampleRequest(BaseModel):
@@ -215,19 +216,8 @@ def create_app(runtime: Runtime, key: str, shutdown):
         runtime.store.event(message, "warning")
         return JSONResponse({"error": message}, status_code=400)
 
-    async def websocket(ws: WebSocket):
-        await ws.accept()
-        try:
-            login = await asyncio.wait_for(ws.receive_json(), timeout=10)
-            if not secrets.compare_digest(str(login.get("key", "")), key):
-                await ws.close(code=1008)
-                return
-            while True:
-                state = await asyncio.to_thread(runtime.state)
-                await ws.send_json({"state": state, "events": runtime.store.events()})
-                await asyncio.sleep(2)
-        except (WebSocketDisconnect, asyncio.TimeoutError, RuntimeError, OSError):
-            pass
+    # AzurPilot's WebUI protocol for the reused ALAS frontend (module/api/alas).
+    gateway = Gateway(Router(runtime), key)
 
     @asynccontextmanager
     async def lifespan(app):
@@ -235,8 +225,7 @@ def create_app(runtime: Runtime, key: str, shutdown):
         await asyncio.to_thread(runtime.close)
 
     return Starlette(routes=[Route("/health", health), Route("/api/{action}", api, methods=["GET", "POST"]),
-                              WebSocketRoute('/api/v1/ws', endpoint(runtime, key, api)),
-                              WebSocketRoute("/ws", websocket), Mount("/", ConsoleFiles(directory=runtime.resources / "frontend" / "dist", html=True))],
+                              WebSocketRoute('/api/v1/ws', gateway.endpoint), Mount("/", ConsoleFiles(directory=runtime.resources / "frontend" / "dist", html=True))],
                      exception_handlers={ValueError: error, RuntimeError: error, ValidationError: error, OSError: error}, lifespan=lifespan)
 
 

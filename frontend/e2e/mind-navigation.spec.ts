@@ -1,0 +1,118 @@
+/**
+ * @fileoverview 养成页导航用例：资源管理与舰队管理的入口与跳转记忆，舰队扫描开关与其他任务的互斥禁用。
+ */
+
+import {routeRpc} from './rpc-route'
+import {expect, test} from '@playwright/test'
+
+test.beforeEach(async ({page}) => {
+  await page.addInitScript(() => {localStorage.setItem('azurpilot.theme', 'light'); localStorage.setItem('azurpilot.language', 'zh-CN')})
+})
+
+test('资源管理位于资源趋势旁边，旧入口跳转且刷新保持选择', async ({page}) => {
+  await page.goto('/#/i/demo-main/resources')
+  await expect(page).toHaveURL(url => url.hash === '#/i/demo-main/statistics?view=management')
+  const tabs = page.locator('.statistics-category-control').getByRole('tab')
+  await expect(tabs.nth(0)).toHaveText('资源趋势')
+  await expect(tabs.nth(1)).toHaveText('资源管理')
+  await expect(page.getByRole('link', {name: '资源管理', exact: true})).toHaveCount(0)
+  // 资源管理改为统计页内的页签，页面不再单独渲染同名标题。
+  await expect(page.locator('.resource-management')).toBeVisible()
+  await page.reload()
+  await expect(page.getByRole('tab', {name: '资源管理', exact: true})).toHaveAttribute('aria-selected', 'true')
+  await page.getByRole('tab', {name: '资源趋势', exact: true}).click()
+  await expect(page).toHaveURL(url => url.hash === '#/i/demo-main/statistics')
+  await expect(page.locator('.resource-management')).toHaveCount(0)
+  await expect(page.locator('.statistics-page-sections')).toBeVisible()
+  await page.getByRole('tab', {name: '资源管理', exact: true}).click()
+  await page.screenshot({path: test.info().outputPath('statistics-management-tabs.png'), fullPage: true})
+})
+
+test('舰队管理打开舰船数据与智能换船，扫描开关只运行工具并刷新结果', async ({page}) => {
+  const requests: string[] = []
+  let finished = false
+  await routeRpc(page, socket => {
+    const server = socket.connectToServer(), methods = new Map<string, string>()
+    socket.onMessage(message => {
+      const request = JSON.parse(String(message))
+      methods.set(request.id, request.method); requests.push(request.method)
+      if (request.method === 'scheduler.stop') finished = true
+      if (request.method === 'tasks.run') expect(request.params).toEqual({instance: 'demo-alt', task: 'FleetScan'})
+      server.send(message)
+    })
+    server.onMessage(message => {
+      const response = JSON.parse(String(message))
+      if (response.ok && methods.get(response.id) === 'config.get') response.result.values.FleetInfo = {FleetInfo: {Result: {vanguard: {1: [{name: finished ? '新扫描舰' : '原有舰船', level: 100, emotion: 119}]}}}}
+      socket.send(JSON.stringify(response))
+    })
+  })
+  await page.goto('/#/i/demo-alt/task/FleetAnalysis?tab=mind')
+  await expect(page).toHaveURL(url => url.hash === '#/i/demo-alt/task/FleetAnalysis?tab=mind')
+  await expect(page.getByRole('heading', {name: '养成计算', exact: true})).toBeVisible({timeout: 15000})
+  await expect(page.locator('.primary-nav').getByRole('link', {name: '养成计算', exact: true})).toHaveCount(0)
+  // 新版侧栏用可展开的任务树替代悬停菜单；当前页属于舰队管理，分组默认展开。
+  await expect(page.getByRole('button', {name: '舰队管理', exact: true})).toHaveAttribute('aria-expanded', 'true')
+  const menu = page.locator('#task-group-FleetManagement')
+  await expect(menu.getByRole('link', {name: '舰船数据', exact: true})).toHaveAttribute('href', '#/i/demo-alt/task/FleetAnalysis')
+  await menu.getByRole('link', {name: '智能换船', exact: true}).click()
+  await expect(page).toHaveURL(url => url.hash === '#/i/demo-alt/task/FleetSwitch')
+  await expect(page.getByRole('tab', {name: '养成计算', exact: true})).toHaveCount(0)
+  await expect(page.locator('.fleet-grid')).toContainText('原有舰船')
+  const scan = page.getByRole('switch', {name: '舰队扫描', exact: true})
+  await expect(scan).not.toBeChecked()
+  await scan.click()
+  await expect(scan).toBeChecked()
+  // 组件库开关以 data-state 表示视觉状态，不再挂 on 类。
+  await expect(scan).toHaveAttribute('data-state', 'checked')
+  await expect(page.getByRole('heading', {name: '日志', exact: true})).toBeVisible()
+  await scan.click()
+  await expect(scan).not.toBeChecked()
+  await expect(scan).toHaveAttribute('data-state', 'unchecked')
+  await expect(page.locator('.fleet-grid')).toContainText('新扫描舰')
+  expect(requests.filter(method => method === 'tasks.run')).toHaveLength(1)
+  expect(requests.filter(method => method === 'scheduler.stop')).toHaveLength(1)
+  expect(requests.some(method => method === 'startup.set' || method === 'scheduler.start')).toBe(false)
+  await page.screenshot({path: test.info().outputPath('fleet-info-scan-switch.png'), fullPage: true, animations: 'disabled'})
+  await menu.getByRole('link', {name: '舰船数据', exact: true}).click()
+  await expect(page).toHaveURL(url => url.hash === '#/i/demo-alt/task/FleetAnalysis')
+  // 顶栏的实例标签同为 tab，只统计页面内的页签。
+  await expect(page.locator('main').getByRole('tab')).toHaveCount(4)
+  // 页签记忆恢复上次的养成计算；组件库 Tabs 点击已选中页签不触发切换，URL 保持不带 tab。
+  await expect(page.getByRole('tab', {name: '养成计算', exact: true})).toHaveAttribute('aria-selected', 'true')
+  await page.reload()
+  await expect(page.getByRole('heading', {name: '养成计算', exact: true})).toBeVisible({timeout: 15000})
+  await expect(page.getByRole('checkbox', {name: '全选当前筛选'})).toBeVisible()
+  await expect(page.locator('input[type=file]')).toHaveCount(0)
+  // 实例页使用居中页名，不再有面包屑。
+  await expect(page.locator('.modern-topbar-title')).toHaveText('舰船数据')
+  await expect(menu.getByRole('link', {name: '舰船数据', exact: true})).toBeVisible()
+  await page.screenshot({path: test.info().outputPath('fleet-management-calculator.png'), fullPage: true, animations: 'disabled'})
+})
+
+test('舰队扫描开关遇到其他运行任务或更新时禁用，不发送停止请求', async ({page}) => {
+  let status = 'running'
+  const sent: string[] = []
+  await routeRpc(page, socket => {
+    const server = socket.connectToServer(), methods = new Map<string, string>()
+    socket.onMessage(message => {
+      const request = JSON.parse(String(message)); methods.set(request.id, request.method); sent.push(request.method); server.send(message)
+    })
+    server.onMessage(message => {
+      const response = JSON.parse(String(message))
+      const instances = response.type === 'event' && response.topic === 'instances' ? response.data : response.ok && methods.get(response.id) === 'instances.list' ? response.result : null
+      const current = instances?.find((item: {name: string}) => item.name === 'demo-alt')
+      if (current) Object.assign(current, {status, currentTask: status === 'running' ? 'Commission' : null})
+      socket.send(JSON.stringify(response))
+    })
+  })
+  await page.goto('/#/i/demo-alt/task/FleetInfo')
+  await expect(page.getByRole('switch', {name: '舰队扫描'})).toBeDisabled()
+  await expect(page.getByRole('status').filter({hasText: '请先停止当前任务'})).toBeVisible()
+  status = 'updating'
+  await page.reload()
+  await expect(page.getByRole('switch', {name: '舰队扫描'})).toBeDisabled()
+  await expect(page.getByRole('status').filter({hasText: '请等待更新完成'})).toBeVisible()
+  expect(sent.some(method => method === 'tasks.run' || method === 'scheduler.stop')).toBe(false)
+  await page.setViewportSize({width: 390, height: 844})
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
+})

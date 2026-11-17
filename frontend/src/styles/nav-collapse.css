@@ -33,3 +33,4 @@
 @media (prefers-reduced-motion: reduce) {
   .app-shell, .sidebar:where(.app-shell *) {transition: none}
 }
+

@@ -49,3 +49,4 @@
 .badge-shape {font-size: 9px; padding: 1px 5px; border-radius: 4px; background: var(--surface-muted); border: 1px solid var(--border); color: var(--muted); font-family: var(--theme-font-mono)}
 .badge-pill {font-size: 9px; padding: 1px 6px; border-radius: 9px; font-weight: 500}
 .badge-pill.duration {background: #0ea5e920; color: #0ea5e9}
+

@@ -1,98 +1,150 @@
-import { Download, Image, Terminal } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
-import { time, useApp } from "../app/context";
-import { SegmentedControl } from "./SegmentedControl";
-export function MonitorPanel() {
-  const { events, imageUrl, state } = useApp();
-  const [view, setView] = useState(
-    () => localStorage.getItem("wp-monitor") || "logs",
-  );
-  const end = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    localStorage.setItem("wp-monitor", view);
-    if (view === "logs") end.current?.scrollIntoView({ block: "nearest" });
-  }, [view, events[0]?.id]);
-  return (
-    <section className="panel monitor-panel">
-      <div className="monitor-tabs">
-        <SegmentedControl
-          label="监控视图"
-          value={view}
-          onChange={setView}
-          options={[
-            {
-              value: "logs",
-              label: (
-                <>
-                  <Terminal size={15} />
-                  日志
-                </>
-              ),
-            },
-            {
-              value: "preview",
-              label: (
-                <>
-                  <Image size={15} />
-                  截图
-                </>
-              ),
-            },
-          ]}
-        />
-        {view === "preview" && imageUrl && (
-          <a
-            className="text-button"
-            href={imageUrl}
-            download="warship-screenshot.png"
-          >
-            <Download size={14} />
-            保存截图
-          </a>
-        )}
-      </div>
-      <div className="monitor-view" hidden={view !== "logs"}>
-        <div className="wp-log-panel" role="log" aria-label="运行日志">
-          {[...events].reverse().map((event) => (
-            <div className={`log-line ${event.level}`} key={event.id}>
-              <span className="log-ts">{time(event.time)}</span>
-              <span className={`log-lvl lvl-${event.level}`}>
-                {event.level === "warning" ? "WARN" : "INFO"}
-              </span>
-              <span className="log-msg">{event.message}</span>
-            </div>
-          ))}
-          {!events.length && <div className="rail-empty">等待运行日志</div>}
-          <div ref={end} />
-        </div>
-      </div>
-      <div className="monitor-view" hidden={view !== "preview"}>
-        <div className="preview-log">
-          {events
-            .slice(0, 3)
-            .reverse()
-            .map((event) => (
-              <div className="preview-log-line" key={event.id}>
-                <span className="preview-log-ts">{time(event.time)}</span>
-                <span className="preview-log-msg">{event.message}</span>
-              </div>
-            ))}
-        </div>
-        <div className="preview-stage">
-          <div className="preview-screen">
-            {imageUrl ? (
-              <img src={imageUrl} alt="舰R实时截图" />
-            ) : (
-              <div className="rail-empty">连接设备后显示实时画面</div>
-            )}
-          </div>
-        </div>
-        <div className="wp-frame-caption">
-          {state?.frame
-            ? `${state.frame.width} × ${state.frame.height} · ${state.device?.screenshot_method} · ${time(state.frame.time)}`
-            : "等待截图"}
-        </div>
-      </div>
-    </section>
-  );
+/**
+ * @fileoverview 模拟器画面监控与截图捕获面板组件。
+ */
+
+import { memo, useEffect, useRef, useState } from 'react'
+import { Download, Image, Terminal } from 'lucide-react'
+import { api } from '../api/client'
+import type { LogEntry, Logs as LogsData, Preview } from '../api/types'
+import { useApp, useConnection } from '../app/context'
+import { Empty } from './ui'
+import { LogPanel, LOG_LINE_RE, PURE_RULE_RE, RULE_RE } from './LogPanel'
+import { SegmentedControl } from './SegmentedControl'
+
+/** 截图视图顶部展示的日志条数，够看清当前进度即可，再多会挤掉画面。 */
+export const RECENT_LOG_LINES = 3
+
+/** 监控视图的单行日志摘要。 */
+export interface CompactLine {
+  /** 来源日志条目 id，用于去重与合并。 */
+  id: number
+  /** 小写等级。 */
+  level: string
+  /** 时间文本；分割线摘要没有时间，为空串。 */
+  time: string
+  /** 摘要正文或分割线标题。 */
+  text: string
 }
+
+/**
+ * 把一条渲染后的日志压成单行摘要。
+ *
+ * 纯分割线没有信息量，返回 null 由调用方丢弃。
+ */
+export function compactLine(entry: LogEntry): CompactLine | null {
+  const raw = entry.text.replace(/[\r\n]+/g, ' ').trim()
+  if (!raw || PURE_RULE_RE.test(raw)) return null
+  const rule = RULE_RE.exec(raw)
+  const ruleTitle = rule?.[1]
+  if (rule && ruleTitle !== undefined) return {id: entry.id, level: entry.level.toLowerCase(), time: '', text: ruleTitle}
+  const log = LOG_LINE_RE.exec(raw)
+  const level = log?.[1]
+  const date = log?.[2]
+  const time = log?.[3]
+  const message = log?.[4]
+  if (log && level !== undefined && time !== undefined && message !== undefined) {
+    return {id: entry.id, level: level.toLowerCase(), time: `${date ? `${date} ` : ''}${time}`, text: message}
+  }
+  // Traceback 等原始行格式不固定，整体折成一行。
+  return {id: entry.id, level: entry.level.toLowerCase(), time: '', text: raw}
+}
+
+/** 按 id 合并增量，服务端重置游标时整体替换，最后只保留尾部若干条。 */
+export function mergeLines(previous: CompactLine[], entries: (LogEntry | CompactLine)[], reset: boolean): CompactLine[] {
+  const byId = new Map((reset ? [] : previous).map(line => [line.id, line]))
+  entries.forEach(entry => {
+    const line = 'time' in entry ? entry : compactLine(entry)
+    if (line) byId.set(line.id, line)
+  })
+  return [...byId.values()].sort((a, b) => a.id - b.id).slice(-RECENT_LOG_LINES)
+}
+
+/**
+ * 截图视图顶部的最近日志。
+ *
+ * 只读展示最后几条，不参与日志视图的搜索、级别筛选与清空，
+ * 也不影响日志视图已滚到的位置。
+ */
+function RecentLogs({instance}: {instance: string}) {
+  const [lines, setLines] = useState<CompactLine[]>([])
+  const connection = useConnection()
+  const {notify, ui} = useApp()
+  useEffect(() => {
+    if (connection !== 'ready') return
+    let active = true
+    setLines([])
+    void api.request('logs.get', {instance}).then(value => {
+      if (active) setLines(mergeLines([], value.entries, true))
+    }).catch(error => notify(error.message, true))
+    return () => { active = false }
+  }, [connection, instance, notify])
+  /* 服务端每条日志发一个事件；这里按帧归并后再进 state。 */
+  const pending = useRef<{entries: CompactLine[]; reset: boolean}>({entries: [], reset: false})
+  const frame = useRef<number | null>(null)
+  useEffect(() => {
+    const flush = () => {
+      frame.current = null
+      const batch = pending.current
+      if (!batch.entries.length && !batch.reset) return
+      pending.current = {entries: [], reset: false}
+      setLines(previous => mergeLines(previous, batch.entries, batch.reset))
+    }
+    const unsubscribe = api.onEvent(event => {
+      if (event.topic !== 'logs') return
+      const data = event.data as LogsData
+      if (data.instance !== instance) return
+      const batch = pending.current
+      batch.entries = mergeLines(batch.entries, data.entries, !!data.reset)
+      batch.reset ||= !!data.reset
+      if (frame.current === null) frame.current = requestAnimationFrame(flush)
+    })
+    return () => {
+      unsubscribe()
+      if (frame.current !== null) cancelAnimationFrame(frame.current)
+      frame.current = null
+      pending.current = {entries: [], reset: false}
+    }
+  }, [instance])
+  if (!lines.length) return null
+  return <div className="preview-log" aria-label={ui('monitor.recentLogs')}>
+    {lines.map(line => <div className="preview-log-line" key={line.id} title={line.text}>
+      <span className={`log-lvl lvl-${line.level}`}>{line.level.toUpperCase()}</span>
+      {line.time && <span className="preview-log-ts">{line.time}</span>}
+      <span className="preview-log-msg">{line.text}</span>
+    </div>)}
+  </div>
+}
+
+/**
+ * 监控面板：日志视图与截图视图二选一。
+ *
+ * 切到截图视图才开启预览流，离开视图或卸载即关闭；截图顶部常驻最近几条日志，
+ * 画面占满面板时仍能看清当前进度。
+ *
+ * @param instance 目标实例名，预览事件与日志订阅都按它过滤。
+ */
+export const MonitorPanel = memo(function MonitorPanel({instance}: {instance: string}) {
+  const [view, setView] = useState('logs')
+  const [frame, setFrame] = useState<Preview>()
+  const {setPreviewEnabled, ui} = useApp()
+  useEffect(() => {
+    setPreviewEnabled(view === 'preview')
+    return () => setPreviewEnabled(false)
+  }, [view, setPreviewEnabled])
+  useEffect(() => api.onEvent(event => {
+    if (event.topic === 'preview' && (event.data as Preview).instance === instance) setFrame(event.data as Preview)
+  }), [instance])
+  return <section className="panel monitor-panel"><div className="monitor-tabs" aria-label={ui('monitor.title')}>
+    <SegmentedControl label={ui('monitor.view')} value={view} onChange={setView} options={[
+      {value: 'logs', label: <><Terminal size={15}/>{ui('monitor.logs')}</>},
+      {value: 'preview', label: <><Image size={15}/>{ui('monitor.preview')}</>},
+    ]}/>
+    {view === 'preview' && frame?.image && <a className="text-button" href={frame.image} download={`${instance}-screenshot.jpg`}><Download size={14}/>{ui('monitor.saveScreenshot')}</a>}
+  </div>
+    <div className="monitor-view" hidden={view !== 'logs'}><LogPanel active={view === 'logs'}/></div>
+    <div className="monitor-view" hidden={view !== 'preview'}>
+      {view === 'preview' && <RecentLogs instance={instance}/>}
+      <div className="preview-stage"><div className="preview-screen">{frame?.image ? <img src={frame.image} alt={ui('monitor.screenshotAlt')}/> : <Empty icon={<Image size={42}/>} title={ui('monitor.waitingScreenshot')}>{ui('monitor.screenshotHint')}</Empty>}</div></div>
+    </div>
+  </section>
+})

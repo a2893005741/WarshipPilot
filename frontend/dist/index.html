@@ -1,4 +1,55 @@
 <!doctype html>
-<html lang="zh-CN"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="theme-color" content="#112b3a"/><title>舰R助手 · WarshipPilot</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23112b3a'/%3E%3Cpath d='M12 22l10 24 10-17 10 17 10-24' stroke='%2376d9cb' fill='none' stroke-width='5'/%3E%3C/svg%3E"/>  <script type="module" crossorigin src="/assets/index-CF1hOPPm.js"></script>
-  <link rel="stylesheet" crossorigin href="/assets/index-CdBAIYOG.css">
-</head><body><div id="root"></div></body></html>
+<html lang="zh-CN" data-motion-strength="strong">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#101e2c" />
+    <meta name="description" content="AzurPilot" />
+    <meta name="robots" content="noindex, nofollow" />
+    <script>
+      // 隧道反代入口形如 /<peer_id>，不带尾斜杠时相对路径会丢掉前缀而打到服务端。
+      // 只在单段路径（隧道入口形态）补斜杠；根路径、已带斜杠与多段路径一律不动。
+      if (/^\/[^/]+$/.test(location.pathname)) {
+        document.write('<base href="' + location.pathname + '/">');
+      }
+    </script>
+    <script>
+      // 应用挂载前按上次会话的记录预载主题样式，避免默认主题先闪现再被皮肤覆盖。
+      // 插件停用或更新后旧链接会 404，应用挂载后写入的新记录会把缓存纠正回来。
+      // 插件管理页保持中性外观，不在该页预载。
+      try {
+        if (!/^#\/plugins$/.test(location.hash)) {
+          var apuCached = JSON.parse(localStorage.getItem('azurpilot.apu-styles') || 'null');
+          if (apuCached && typeof apuCached.id === 'string' && typeof apuCached.revision === 'string') {
+            Object.keys(apuCached.styles || {}).forEach(function (component) {
+              var link = document.createElement('link');
+              link.rel = 'stylesheet';
+              link.href = './api/v1/plugins/' + apuCached.id + '/' + apuCached.revision + '/' +
+                String(apuCached.styles[component]).split('/').map(encodeURIComponent).join('/') + '?component=' + component;
+              document.head.appendChild(link);
+            });
+          }
+        }
+      } catch (error) { /* 缓存不可用时交给应用按正常流程加载。 */ }
+    </script>
+    <link rel="icon" type="image/webp" href="./azurpilot.webp" />
+    <title>AzurPilot</title>
+    <script type="text/javascript">
+      (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+      })(window, document, "clarity", "script", "yhqqveymur");
+    </script>
+    <script type="module" crossorigin src="./assets/index-Bz56ms8s.js"></script>
+    <link rel="modulepreload" crossorigin href="./assets/rolldown-runtime-WkwZ5CU-.js">
+    <link rel="modulepreload" crossorigin href="./assets/react-runtime-tHP1bgi8.js">
+    <link rel="modulepreload" crossorigin href="./assets/createLucideIcon-DpMJvdCv.js">
+    <link rel="modulepreload" crossorigin href="./assets/theme-OGMqb1vK.js">
+    <link rel="modulepreload" crossorigin href="./assets/context-Bh-QZ9K0.js">
+    <link rel="modulepreload" crossorigin href="./assets/dist-BdeL2mRt.js">
+    <link rel="modulepreload" crossorigin href="./assets/alert-Dh410pca.js">
+    <link rel="stylesheet" crossorigin href="./assets/index-sMBqg-lC.css">
+  </head>
+  <body><div id="root"></div></body>
+</html>

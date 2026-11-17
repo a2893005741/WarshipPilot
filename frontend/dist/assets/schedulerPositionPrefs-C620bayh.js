@@ -1,0 +1,1 @@
+function e(e,t){let n=new Set;return{read:()=>{try{return t(localStorage.getItem(e))}catch{return t(null)}},subscribe:e=>(n.add(e),()=>{n.delete(e)}),write:t=>{try{localStorage.setItem(e,t)}catch{}n.forEach(e=>e())}}}var t=e(`azurpilot.layout.scheduler-position`,e=>e===`right`?`right`:`left`),n=t.read,r=t.subscribe,i=t.write;export{e as i,i as n,r,n as t};

@@ -53,6 +53,20 @@ class Store:
             return [dict(zip(("id", "time", "level", "message"), row)) for row in
                     self.db.execute("SELECT id,time,level,message FROM events ORDER BY id DESC LIMIT 120")]
 
+    def events_after(self, after: int, limit: int = 500):
+        """Events with id > after, oldest first (WebUI log cursor), and the newest id."""
+        with self.lock:
+            newest = self.db.execute("SELECT COALESCE(MAX(id),0) FROM events").fetchone()[0]
+            if after > newest:
+                after = 0  # the store was reset; send the tail again
+            rows = self.db.execute("SELECT id,time,level,message FROM (SELECT * FROM events WHERE id > ? "
+                                   "ORDER BY id DESC LIMIT ?) ORDER BY id", (after, limit)).fetchall()
+            return [dict(zip(("id", "time", "level", "message"), row)) for row in rows], newest
+
+    def latest_event_id(self):
+        with self.lock:
+            return self.db.execute("SELECT COALESCE(MAX(id),0) FROM events").fetchone()[0]
+
     def samples(self):
         with self.lock:
             return [json.loads(row[0]) for row in self.db.execute("SELECT metadata FROM samples ORDER BY time DESC LIMIT 1000")]

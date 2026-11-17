@@ -1,0 +1,76 @@
+/**
+ * @fileoverview 品牌配色的对比度、令牌生成与自定义调色板校验测试。
+ */
+import { describe, expect, it } from 'vitest'
+import { accentTokens, contrastRatio, paletteColors, palettes, presetColors, readCustomPalettes, stockBrands, type CustomPalette } from './palettes'
+
+const custom: CustomPalette = {id: 'custom:test', primary: '#ffffff', secondary: '#ffff00'}
+
+describe('品牌配色生成与校验', () => {
+  it('预设在明暗模式下具有不同配色且保留可读性', () => {
+    for (const id of palettes) {
+      expect(presetColors[id].light).not.toEqual(presetColors[id].dark)
+      for (const mode of ['light', 'dark'] as const) {
+        const tokens = accentTokens(presetColors[id][mode], mode)
+        const accent = tokens['--accent']
+        const accentSoft = tokens['--accent-soft']
+        const onAccent = tokens['--theme-on-accent']
+        expect(contrastRatio(accent ?? '', accentSoft ?? '')).toBeGreaterThanOrEqual(4.5)
+        expect(contrastRatio(onAccent ?? '', accent ?? '')).toBeGreaterThanOrEqual(4.5)
+      }
+    }
+  })
+  it('极端自定义颜色也能生成清晰的实色界面，浅色深色通用', () => {
+    for (const mode of ['light', 'dark'] as const) {
+      expect(paletteColors(custom.id, [custom], mode)).toEqual({primary: '#ffffff', secondary: '#ffff00'})
+      const tokens = accentTokens(paletteColors(custom.id, [custom], mode), mode)
+      expect(Object.values(tokens).every(value => /^#[\da-f]{6}$/i.test(value))).toBe(true)
+      const accent = tokens['--accent']
+      const secondary = tokens['--secondary']
+      const secondarySoft = tokens['--secondary-soft']
+      expect(contrastRatio(accent ?? '', secondarySoft ?? '')).toBeGreaterThanOrEqual(4.5)
+      expect(contrastRatio(secondary ?? '', secondarySoft ?? '')).toBeGreaterThanOrEqual(4.5)
+    }
+  })
+  it('损坏、重复和非实色的存储条目不进入可选方案，并兼容旧版双色模式数据', () => {
+    expect(readCustomPalettes('broken')).toEqual([])
+    expect(readCustomPalettes('{}')).toEqual([])
+    const legacy = {id: 'custom:legacy', name: '旧版配色', light: {primary: '#112233', secondary: '#445566'}, dark: {primary: '#778899', secondary: '#aabbcc'}}
+    expect(readCustomPalettes(JSON.stringify([
+      null, custom, custom,
+      {...custom, id: 'custom:invalid', primary: 'red; background: url(test)', secondary: '#000000'},
+      legacy,
+    ]))).toEqual([
+      custom,
+      {id: 'custom:legacy', primary: '#112233', secondary: '#445566'},
+    ])
+    expect(paletteColors('custom:deleted', [], 'dark')).toEqual(presetColors.ocean.dark)
+  })
+})
+
+describe('品牌配色只动强调色', () => {
+  const ACCENT_KEYS = ['--accent', '--accent-hover', '--accent-soft', '--secondary', '--secondary-soft', '--theme-on-accent']
+
+  it('材质与现代主题用它换色：不碰表面/文字/边框，材质层与底图才不会被冲掉', () => {
+    const tokens = accentTokens({primary: '#7050a3', secondary: '#a14865'}, 'light')
+    expect(Object.keys(tokens).sort()).toEqual([...ACCENT_KEYS].sort())
+    expect(tokens['--accent']).toBe('#7050a3')
+  })
+
+  it('现代主题的标准中性强调色在深浅色模式下均符合 WCAG 4.5:1 对比度标准', () => {
+    const light = stockBrands.light
+    const dark = stockBrands.dark
+    expect(light.primary).toBe('#262626')
+    expect(dark.primary).toBe('#e5e5e5')
+    const lightTokens = accentTokens(light, 'light')
+    const darkTokens = accentTokens(dark, 'dark')
+    const lightAccent = lightTokens['--accent']
+    const lightOnAccent = lightTokens['--theme-on-accent']
+    const darkAccent = darkTokens['--accent']
+    const darkOnAccent = darkTokens['--theme-on-accent']
+    expect(contrastRatio(lightAccent ?? '', '#ffffff')).toBeGreaterThanOrEqual(4.5)
+    expect(contrastRatio(lightOnAccent ?? '', lightAccent ?? '')).toBeGreaterThanOrEqual(4.5)
+    expect(contrastRatio(darkAccent ?? '', '#20252d')).toBeGreaterThanOrEqual(4.5)
+    expect(contrastRatio(darkOnAccent ?? '', darkAccent ?? '')).toBeGreaterThanOrEqual(4.5)
+  })
+})

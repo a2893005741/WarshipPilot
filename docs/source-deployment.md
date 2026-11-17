@@ -85,3 +85,11 @@
 
 - v0.10.1远端实机：战役、奖励与远征均复跑完成；已启用三项调度，战役次日00:10、奖励30分钟、远征按游戏倒计时。访问码和原任务参数保留。
 - 分支整理后的远端单分支fetch映射与upstream已同步到main/origin/main，避免继续引用已删除分支。
+
+## v0.11.0：WebUI 直接复用 AzurPilot（ALAS）界面
+
+- 前端整套取自 `H:\ALAS\AzurPilot\frontend`（React 19 + Tailwind 4 + Radix），外壳、主题、组件、多语言、任务配置、总览、日志/截图监控、故障记录、更新器、界面设置、系统设置原样使用。删去碧蓝专用页面：统计、交易所、舰队系列、调度方案编辑器、插件页、远程访问、公告、多实例引导；总览不显示碧蓝资源卡。品牌改为“舰R助手”。
+- 前端唯一的功能性改动：任务配置页先查 `translations.TaskArgs[任务]` 再回落到组级文案（舰R同一参数组在不同任务里措辞不同，如 Scheduler.IntervalMinutes）。
+- 后端 `module/api/alas/` 实现 AzurPilot 的 WebSocket RPC 协议（`/api/v1/ws`，操作/数据双通道、分片、登录限流、请求 ID 去重、慢客户端背压，移植自 AzurPilot `module/api/socket.py` 等）。单实例“舰R”；`config_adapter` 把舰R的任务/参数组/字段转换成 AzurPilot 的 menu/args/translations，读写仍走 `module.config.schema` 的校验与存储；日志来自事件表（按 id 增量），截图来自运行时最新帧，故障记录来自 `log/error/<id>`，更新器对接 Git 更新器，系统设置对接 `deploy.yaml`。公告、插件、自定义背景、启动器返回空结果。
+- 本机免密（127.0.0.1），其他地址使用访问密码（deploy.yaml 的 WebUI.AccessCode）。
+- 待做：设备页（截图/控制方式、MuMu 路径、性能测试）用 ALAS 组件重写；采集、识别规则、样本、配置导入收进“工具”分组；清理未引用的碧蓝页面源码。
