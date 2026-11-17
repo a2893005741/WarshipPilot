@@ -131,9 +131,21 @@ try {
             Start-Sleep -Milliseconds 300
         }
         Copy-Item -LiteralPath $Launcher -Destination "$Root\WarshipPilot.exe" -Force
-        $action=New-ScheduledTaskAction -Execute "$Root\WarshipPilot.exe" -Argument '--start-minimized --skip-update' -WorkingDirectory $Root
+        $action=New-ScheduledTaskAction -Execute "$Root\WarshipPilot.exe" -Argument '--deploy-only' -WorkingDirectory $Root
         $principal=New-ScheduledTaskPrincipal -UserId $oldTask.Principal.UserId -LogonType Interactive -RunLevel Limited
         Register-ScheduledTask -TaskName 'WarshipPilot-LauncherMigration' -Action $action -Principal $principal -Settings (New-ScheduledTaskSettingsSet -ExecutionTimeLimit ([TimeSpan]::Zero) -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries) | Out-Null
+        $deployStarted=(Get-Date).AddSeconds(-1)
+        Start-ScheduledTask -TaskName 'WarshipPilot-LauncherMigration'
+        $deadline=(Get-Date).AddMinutes($TimeoutMinutes)
+        do {
+            Start-Sleep -Milliseconds 500
+            $taskState=Get-ScheduledTask -TaskName 'WarshipPilot-LauncherMigration'
+            $taskInfo=Get-ScheduledTaskInfo -TaskName 'WarshipPilot-LauncherMigration'
+            if ((Get-Date) -ge $deadline) { throw 'Component deployment timed out' }
+        } while ($taskInfo.LastRunTime -lt $deployStarted -or $taskState.State -in @('Running','Queued'))
+        if ($taskInfo.LastTaskResult -ne 0 -or !(Test-Path -LiteralPath "$Root\.warship\bootstrap\deploy\launcher.py")) { throw 'Component deployment failed; inspect launcher logs' }
+        $action=New-ScheduledTaskAction -Execute "$Root\WarshipPilot.exe" -Argument '--start-minimized --skip-update' -WorkingDirectory $Root
+        Set-ScheduledTask -TaskName 'WarshipPilot-LauncherMigration' -Action $action | Out-Null
         Start-ScheduledTask -TaskName 'WarshipPilot-LauncherMigration'
         $newHealth=Wait-Healthy ($TimeoutMinutes*60)
         $after=Invoke-Console state $null
