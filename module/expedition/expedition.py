@@ -105,14 +105,16 @@ class ExpeditionResult:
     pages: list = field(default_factory=list)
     remaining: list = None   # seconds left per fleet away; None = not surveyed
     unreadable: int = 0      # running countdowns that could not be read
+    chapters: list = field(default_factory=list)  # per chapter walked: (seconds, unreadable)
 
 
 class Expedition(UI):
-    def __init__(self, device, redeploy=True, timeout=600, survey=True, **kwargs):
+    def __init__(self, device, redeploy=True, timeout=600, survey=True, survey_dir=None, **kwargs):
         super().__init__(device, **kwargs)
         self.redeploy = redeploy
         self.timeout = timeout
         self.survey = survey
+        self.survey_dir = survey_dir
 
     def step_chapter(self, button, image):
         """Tap a neighbouring chapter; (new image, whether the chapter changed).
@@ -148,6 +150,21 @@ class Expedition(UI):
             signature = current
         return image
 
+    def keep_survey_frame(self, index, image):
+        """log/expedition-survey/NN.jpg: what each chapter looked like when read."""
+        if self.survey_dir is None:
+            return
+        try:
+            if index == 1:
+                self.survey_dir.mkdir(parents=True, exist_ok=True)
+                for old in self.survey_dir.glob('*.jpg'):
+                    old.unlink()
+            ok, data = cv2.imencode('.jpg', cv2.cvtColor(image, cv2.COLOR_RGB2BGR), [cv2.IMWRITE_JPEG_QUALITY, 80])
+            if ok:
+                data.tofile(str(self.survey_dir / f'{index:02d}.jpg'))
+        except OSError as exc:
+            log.warning('survey frame not saved: %s', exc)
+
     def survey_chapters(self, image):
         """Read every chapter's countdowns, first to last.
 
@@ -163,10 +180,13 @@ class Expedition(UI):
         else:
             raise GameStuckError('远征章节列表无法回到第一章')
         seconds, unreadable = [], 0
+        self.result.chapters = []
         for _ in range(MAX_CHAPTERS):
             if collectable_slot(image) is not None:
                 return None
             found, missed = countdown.running(image)
+            self.result.chapters.append((found, missed))
+            self.keep_survey_frame(len(self.result.chapters), image)
             seconds += found
             unreadable += missed
             image, moved = self.step_chapter(CHAPTER_NEXT, image)

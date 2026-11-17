@@ -19,6 +19,19 @@ EXPEDITION_MARGIN = timedelta(seconds=30)  # let the game flag the expedition fi
 EXPEDITION_MIN = timedelta(minutes=1)
 
 
+def clock(seconds):
+    return f'{seconds // 3600}:{seconds // 60 % 60:02d}:{seconds % 60:02d}'
+
+
+def chapter_summary(chapters):
+    """'1 - · 2 0:30:12 · 3 0:35:53, ?1' for the chapters walked, first to last."""
+    parts = []
+    for index, (seconds, unreadable) in enumerate(chapters, 1):
+        values = [clock(s) for s in seconds] + (['?%d' % unreadable] if unreadable else [])
+        parts.append(f'{index} ' + (', '.join(values) or '-'))
+    return ' · '.join(parts)
+
+
 def next_run(current, interval_minutes, result):
     """(next run time, reason). Expeditions come back when the earliest fleet
     away returns, as read from the game's own countdowns; the configured
@@ -144,6 +157,8 @@ class TaskController:
                 self.save_due()
                 self.runtime.store.event(f'原生任务 · 完成：{NAMES[task]}，收取 {self.result["collected"]} 个远征；'
                                          f'下次 {due.astimezone().strftime("%m-%d %H:%M")}（{reason}）')
+                if getattr(result, 'chapters', None):
+                    self.runtime.store.event('原生任务 · 远征逐章读数：' + chapter_summary(result.chapters))
             elif status == 'stopped':
                 self.result.update(status='stopped', action=run.error or '任务已停止', ended=now())
             else:

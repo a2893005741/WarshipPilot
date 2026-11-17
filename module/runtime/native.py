@@ -82,7 +82,10 @@ class NativeRun:
         status = 'completed'
         try:
             cls = NATIVE_TASKS[self.task]
-            kwargs = {'redeploy': self.settings.get('redeploy', True)} if self.task == 'expedition' else {}
+            root = getattr(self.runtime.store, 'root', None)
+            kwargs = {'redeploy': self.settings.get('redeploy', True),
+                      'survey_dir': root / 'log' / 'expedition-survey' if root else None} \
+                if self.task == 'expedition' else {}
             self.worker = cls(device, sleep=device.sleep, **kwargs)
             self.result = self.worker.run()
         except TaskStopped as exc:
