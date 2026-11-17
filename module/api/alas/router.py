@@ -28,6 +28,9 @@ class Router:
         self.service = service = WarshipService(runtime)
         self.instance = INSTANCE
         self.token = secrets.token_urlsafe(32)
+        if not hasattr(runtime, 'launcher'):
+            from module.runtime.launcher import LauncherService
+            runtime.launcher = LauncherService()
         self.methods = {
             'system.ping': Method(p.Params, lambda _: {'pong': True}),
             'schema.get': Method(p.SchemaParams, lambda _: copy_schema(), data_channel=True),
@@ -64,9 +67,9 @@ class Router:
             # receives the same Bearer key.
             'warship.httpKey': Method(p.Params, lambda _: {'key': self.key}),
             # Shell features of AzurPilot that WarshipPilot does not have.
-            'launcher.status': Method(p.Params, lambda _: launcher_status(), local_only=True),
-            'launcher.autostart.set': Method(p.LauncherAutostartParams, lambda _: {'commandId': 'none', 'status': 'pending'}, True, True),
-            'launcher.command.get': Method(p.LauncherCommandParams, lambda x: {'id': x.commandId, 'status': 'expired', 'deadline': 0}, local_only=True),
+            'launcher.status': Method(p.Params, lambda _: runtime.launcher.status(), local_only=True),
+            'launcher.autostart.set': Method(p.LauncherAutostartParams, lambda x: runtime.launcher.set_autostart(x.enabled), True, True),
+            'launcher.command.get': Method(p.LauncherCommandParams, lambda x: runtime.launcher.command(x.commandId), local_only=True),
             'announcement.get': Method(p.AnnouncementParams, lambda _: None),
             'background.access': Method(p.Params, lambda _: {'token': self.token}),
             'background.gallery.list': Method(p.Params, lambda _: []),

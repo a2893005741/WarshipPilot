@@ -291,6 +291,10 @@ class TaskController:
         self.failures[task] = self.failures.get(task, 0) + 1
         if self.failures[task] >= 3:
             self.scheduler = False
+            launcher = getattr(self.runtime, 'launcher', None)
+            if launcher:
+                launcher.publish({'instance': '舰R', 'title': '调度器已停止',
+                                  'content': f'{NAMES.get(task, task)} 连续失败 {self.failures[task]} 次：{message[:200]}'})
             self.event(f'{NAMES.get(task, task)} 连续失败 {self.failures[task]} 次，调度器已停止：{message[:200]}')
         else:
             self.due[task] = (datetime.now(timezone.utc) + timedelta(minutes=10)).isoformat()

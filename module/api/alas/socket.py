@@ -221,7 +221,11 @@ class Session:
                 if request_id in self.responses:
                     raise ApiError('DUPLICATE_REQUEST', '请求 ID 已使用，请检查状态后使用新 ID')
                 if request.method == 'auth.launcher':
-                    raise ApiError('UNAUTHORIZED', '舰R助手没有启动器登录票据')
+                    ticket = request.params.get('ticket', '')
+                    if not self.local or not isinstance(ticket, str) or not self.router.runtime.launcher.trust.consume(ticket):
+                        raise ApiError('UNAUTHORIZED', '启动器登录票据无效或已过期')
+                    self.authorized = True
+                    result = {'authenticated': True}
                 elif request.method == 'auth.login':
                     params = AuthParams.model_validate(request.params)
                     peer = self.ws.client.host if self.ws.client else 'unknown'
@@ -300,7 +304,7 @@ class Session:
                         action = service.overview
                     elif topic == 'launcher':
                         from module.api.alas.service import launcher_status
-                        action = launcher_status
+                        action = self.router.runtime.launcher.status
                     else:  # plugins
                         action = list
                     async with self.workers:

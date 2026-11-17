@@ -5,6 +5,7 @@
  * `.field-row`（标签与说明在左、控件在右侧固定列）。
  */
 
+import { LauncherCard } from '../components/LauncherCard'
 import { AlertCircle } from 'lucide-react'
 import { useApp } from '../app/context'
 import { Alert, AlertDescription } from '../components/ui/alert'
@@ -24,6 +25,7 @@ export function Settings() {
   return <>
     <h1 className="modern-sr-title">{ui('nav.settings')}</h1>
     <div className="settings-page">
+      <LauncherCard/>
       {error && <Alert variant="destructive"><AlertCircle/><AlertDescription>{error}</AlertDescription></Alert>}
       {edits.storageError && <Alert variant="destructive"><AlertCircle/><AlertDescription>{edits.storageError}</AlertDescription></Alert>}
       

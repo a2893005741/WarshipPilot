@@ -68,6 +68,11 @@ class Config:
     def deploy(self):
         with self.lock:
             value = deploy_defaults()
+            for section, relative in (('Git', '.warship/tools/git/cmd/git.exe'), ('Adb', '.warship/tools/adb/adb.exe')):
+                if (self.root / relative).is_file():
+                    value[section]['Executable'] = relative
+            if (self.root / '.venv/Scripts/uv.exe').is_file():
+                value['Python']['Uv'] = '.venv/Scripts/uv.exe'
             if self.deploy_file.exists():
                 saved = yaml.safe_load(self.deploy_file.read_text(encoding='utf-8-sig'))
                 if not isinstance(saved, dict):

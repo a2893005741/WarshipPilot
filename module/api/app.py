@@ -64,7 +64,8 @@ def create_app(runtime: Runtime, key: str, shutdown):
 
     async def health(request):
         return JSONResponse({"product": "WarshipPilot", "version": VERSION, "read_only": False,
-                             "pid": os.getpid(), "commit": getattr(runtime, 'commit', '')})
+                             "pid": os.getpid(), "commit": getattr(runtime, 'commit', ''),
+                             "root": str(runtime.store.root.resolve())})
 
     async def api(request: Request):
         if not authorized(request):
@@ -200,6 +201,13 @@ def create_app(runtime: Runtime, key: str, shutdown):
                 return JSONResponse({"id": await asyncio.to_thread(runtime.save_fault, str(body.get("reason", "手动保存现场"))[:300])})
             elif action == "legacy-report":
                 return JSONResponse(legacy_report(runtime, body))
+            elif action == "launcher-prepare":
+                # Used by installation migration: drain the current task while
+                # preserving the scheduler switch and due times.
+                runtime.updater.quiesce(True)
+                return JSONResponse({'ready': not (runtime.automation.busy or runtime.benchmark['running'])})
+            elif action == "launcher-cancel":
+                runtime.updater.quiesce(False)
             elif action == "shutdown":
                 runtime.store.event("已收到退出后台请求")
                 shutdown()
@@ -217,15 +225,21 @@ def create_app(runtime: Runtime, key: str, shutdown):
         return JSONResponse({"error": message}, status_code=400)
 
     # AzurPilot's WebUI protocol for the reused ALAS frontend (module/api/alas).
+    from module.runtime.launcher import LauncherService
+    from module.api.launcher_api import routes as launcher_routes
+    runtime.launcher = LauncherService(os.environ.get('AP_WEBUI_TRUST_SECRET') or os.environ.get('ALAS_WEBUI_TRUST_SECRET'))
+    if runtime.updater:
+        runtime.updater.launcher = runtime.launcher
     gateway = Gateway(Router(runtime, key), key)
 
     @asynccontextmanager
     async def lifespan(app):
         yield
+        await runtime.launcher.close()
         await asyncio.to_thread(runtime.close)
 
     return Starlette(routes=[Route("/health", health), Route("/api/{action}", api, methods=["GET", "POST"]),
-                              WebSocketRoute('/api/v1/ws', gateway.endpoint), Mount("/", ConsoleFiles(directory=runtime.resources / "frontend" / "dist", html=True))],
+                              WebSocketRoute('/api/v1/ws', gateway.endpoint), *launcher_routes(runtime.launcher), Mount("/", ConsoleFiles(directory=runtime.resources / "frontend" / "dist", html=True))],
                      exception_handlers={ValueError: error, RuntimeError: error, ValidationError: error, OSError: error}, lifespan=lifespan)
 
 

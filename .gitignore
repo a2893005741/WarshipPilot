@@ -1,4 +1,8 @@
 .venv/
+.warship/
+.venv.old-*/
+/WarshipPilot.exe
+.planning/
 __pycache__/
 node_modules/
 build/

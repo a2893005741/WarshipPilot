@@ -66,6 +66,12 @@ def alas_schema():
     translations = {'Menu': {}, 'Task': {}, 'TaskArgs': {},
                     # Settings page group titles (WarshipService.SETTINGS keys).
                     'Gui': {'DeploySetting': {'GroupWebUI': '控制台', 'GroupGit': '源码更新', 'GroupUpdate': '检查更新'}}}
+    translations['Gui']['Launcher'] = {
+        'Loading': '正在读取启动器状态', 'RemoteUnavailable': '远程连接无法设置本机启动器',
+        'Unsupported': '当前启动器不支持开机自启', 'Disconnected': '启动器未连接',
+        'Setting': '正在设置', 'Failed': '设置失败', 'Enabled': '开机自启已开启',
+        'Disabled': '开机自启已关闭', 'Connected': '启动器已连接', 'StartupTitle': '启动器',
+        'AutoStart': '开机自启', 'AutoStartHelp': '登录 Windows 后启动，并最小化到托盘。'}
     for key, item in source['menu'].items():
         menu[key] = {'menu': 'collapse', 'page': 'setting', 'tasks': list(item['tasks'])}
         translations['Menu'][key] = {'name': item['name'], 'help': ''}

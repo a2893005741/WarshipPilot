@@ -72,7 +72,7 @@ describe('系统设置页分组归属', () => {
     expect(html).not.toContain('配色方案')
   })
 
-  it('舰R助手没有桌面启动器，不显示启动器卡片', () => {
-    expect(render()).not.toContain('Gui.Launcher.StartupTitle')
+  it('显示启动器连接与开机自启卡片', () => {
+    expect(render()).toContain('Gui.Launcher.StartupTitle')
   })
 })

@@ -30,6 +30,11 @@ def main():
                 state=json.load(response)
             assert state['automation']['scheduler'] is False
             assert health['product']=='WarshipPilot'
+            for action in ('launcher-prepare', 'launcher-cancel'):
+                with urllib.request.urlopen(urllib.request.Request('http://127.0.0.1:22683/api/'+action,data=b'{}',headers=headers)) as response:
+                    result=json.load(response)
+                assert result.get('ready',result.get('ok')) is True
+
             with urllib.request.urlopen(urllib.request.Request('http://127.0.0.1:22683/api/shutdown',data=b'{}',headers=headers)) as response:response.read()
             process.wait(timeout=30)
             print(json.dumps({'health':health,'scheduler_default':False,'authenticated_state':True,'clean_shutdown':process.returncode==0},ensure_ascii=False))
