@@ -1,6 +1,6 @@
 # 舰R ALAS 启动器改造方案
 
-> 对象：`a2893005741/alas-launcher`（fork 自 `wess09/AzurPilotLauncher`，Tauri 2 + Rust + React，版本 3.0.7）
+> 对象：独立仓库 `a2893005741/WarshipPilotLauncher`（基于 `a2893005741/alas-launcher` / `wess09/AzurPilotLauncher`，Tauri 2 + Rust + React，版本 3.0.7）
 > 目标：改造成“舰R助手启动器”，负责 WarshipPilot 的首次部署、启动/停止、更新、修复、托盘与开机自启。
 > 后端：`a2893005741/WarshipPilot`（main，v0.12.0，Python 3.14 + uv，WebUI 已是 AzurPilot 界面）。
 > 日期：2026-11-17（审查修订版）
@@ -73,7 +73,7 @@
 
 ### 4.1 复用方式：长期 fork，改契约不改机制
 
-在 `alas-launcher` 上开分支 `warship`（或直接 main），保持模块结构，只改与后端契约相关的代码，便于以后从上游 `wess09/AzurPilotLauncher` 合并修复（Job、更新下载、托盘等）。所有“AzurPilot”专名集中替换为常量（产品名、目录名 `.warship`、环境变量前缀保留 `AP_/ALAS_` 兼容，不改协议）。
+舰R启动器在独立仓库 `a2893005741/WarshipPilotLauncher`、本地 `../WarshipLauncher` 维护；原 ALAS 启动器保留在 `a2893005741/alas-launcher`、本地 `../ALASLauncher-Original`。两者 Git 元数据、main 分支、CI、Release、清单、自更新地址、产品标识、设置数据库和自启项全部独立。仅按需参考或移植上游修复，不把舰R改动推送回原 ALAS 仓库。环境协议前缀保留 AP_/ALAS_ 兼容，不表示共享后端或分发。
 
 ### 4.2 独立引导与稳定命令入口
 
@@ -204,3 +204,5 @@ python <root>/deploy/launcher.py rollback --root <dir>
 - 150 项 Python、109 项启用的 Rust 测试、22 项启动器前端与10项打包工具测试通过。后端前端另有原305项和新增LauncherCard状态机覆盖。
 - EXE 隔离实测：首装、重复启动、修复保留旧环境、拒绝外部端口、坏提交健康失败回退均通过。网页→Python WS→Rust→停止/更新/回退/重启的真实进程验证通过。
 - 迁移入口 scripts/migrate-launcher.ps1 默认只读，Apply 才排空任务、备份旧入口并接管，Rollback 可恢复。远端切换结果另记验收报告，不以本地测试代替。
+
+- 用户明确的隔离要求：原 ALAS 与舰R启动器使用独立仓库。原 alas-launcher 内容已恢复到改造前版本；舰R分发迁至 WarshipPilotLauncher。
