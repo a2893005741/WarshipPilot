@@ -15,6 +15,29 @@ from module.config.config import Config
 SUPPORTED = ('expedition', 'sortie')
 NAMES = {'expedition': '远征收取与继续派遣', 'sortie': '原方案C'}
 SOURCES = {'expedition': 'native', 'sortie': 'original_lua_functions'}
+EXPEDITION_MARGIN = timedelta(seconds=30)  # let the game flag the expedition finished
+EXPEDITION_MIN = timedelta(minutes=1)
+
+
+def next_run(current, interval_minutes, result):
+    """(next run time, reason). Expeditions come back when the earliest fleet
+    away returns, as read from the game's own countdowns; the configured
+    interval is only a fallback when nothing was read."""
+    fallback = current + timedelta(minutes=interval_minutes)
+    remaining = getattr(result, 'remaining', None)
+    unreadable = getattr(result, 'unreadable', 0)
+    if remaining is None:
+        return fallback, f'未读取远征倒计时，按间隔 {interval_minutes} 分钟'
+    if not remaining:
+        if unreadable:
+            return fallback, f'{unreadable} 个远征倒计时无法识别，按间隔 {interval_minutes} 分钟'
+        return fallback, f'没有进行中的远征，按间隔 {interval_minutes} 分钟'
+    earliest = min(remaining)
+    due = current + max(timedelta(seconds=earliest) + EXPEDITION_MARGIN, EXPEDITION_MIN)
+    reason = f'最早的远征 {earliest // 3600}:{earliest // 60 % 60:02d}:{earliest % 60:02d} 后结束'
+    if unreadable and fallback < due:
+        return fallback, reason + f'，但有 {unreadable} 个倒计时无法识别，按间隔 {interval_minutes} 分钟'
+    return due, reason
 
 
 class TaskController:
@@ -115,10 +138,11 @@ class TaskController:
                 self.result['collected'] = getattr(result, 'collected', 0)
                 self.result.update(status='completed', action='原生任务完成，已回港', ended=now())
                 task = self.result['task']
-                self.due[task] = (datetime.now(timezone.utc) +
-                                  timedelta(minutes=self.result['settings']['interval_minutes'])).isoformat()
+                due, reason = next_run(datetime.now(timezone.utc), self.result['settings']['interval_minutes'], result)
+                self.due[task] = due.isoformat()
                 self.save_due()
-                self.runtime.store.event(f'原生任务 · 完成：{NAMES[task]}，收取 {self.result["collected"]} 个远征')
+                self.runtime.store.event(f'原生任务 · 完成：{NAMES[task]}，收取 {self.result["collected"]} 个远征；'
+                                         f'下次 {due.astimezone().strftime("%m-%d %H:%M")}（{reason}）')
             elif status == 'stopped':
                 self.result.update(status='stopped', action=run.error or '任务已停止', ended=now())
             else:

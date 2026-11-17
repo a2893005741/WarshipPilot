@@ -1972,13 +1972,14 @@
         "key": "start_time"
       },
       "IntervalMinutes": {
-        "name": "执行间隔（分钟）",
+        "name": "兜底间隔（分钟）",
         "type": "number",
         "value": 60,
         "min": 1,
         "max": 10080,
         "storage": "task",
-        "key": "interval_minutes"
+        "key": "interval_minutes",
+        "help": "远征按游戏内倒计时调度：每轮读取各章节进行中远征的剩余时间，在最早结束的远征完成后再运行。只有没有进行中的远征或倒计时无法识别时，才按此间隔。"
       },
       "NextRun": {
         "name": "下次运行",

@@ -12,6 +12,11 @@ Behaviour follows the original 收远征 (see dev_tools/legacy_extract/policies.
     继续远征 dialog (newer game)     -> 确认 (redeploy) or 取消
     anything else                    -> original default handling
 
+After everything is collected the task (new, not in the original) walks every
+chapter of 出征-远征 once and reads the countdown of each fleet still away, so
+the scheduler can come back exactly when the next expedition finishes. A
+finished expedition met on any chapter during that walk is collected too.
+
 Every step is decided from a fresh screenshot; nothing is replayed blindly.
 """
 from dataclasses import dataclass, field
@@ -23,6 +28,7 @@ import cv2
 import numpy as np
 
 from module.base.timer import Timer
+from module.expedition import timer as countdown
 from module.ui import assets
 from module.ui.navigation import UI, GameStuckError, UnknownPageError
 from module.vision import color
@@ -53,6 +59,23 @@ CONTINUE_TEMPLATES = ((390, 190, _template('expedition-continue-title.png')),
                       (515, 315, _template('expedition-continue-question.png')))
 CONTINUE_BUTTON_PIXEL = ((450, 445), (231, 194, 32))  # (X, Y), RGB of the yellow 确认
 
+# Chapter list on 出征-远征: the selected chapter sits at screen y≈395; tapping
+# the entry above (y 315) / below (y 484) moves exactly one chapter, and a tap
+# past the first/last chapter changes nothing (measured on the live game).
+CHAPTER_PREV = assets.Button('上一章', 303, 90, 'live 远征章节列表 (120,315)', jitter=0)
+CHAPTER_NEXT = assets.Button('下一章', 176, 90, 'live 远征章节列表 (120,484)', jitter=0)
+MAX_CHAPTERS = 30
+
+
+def chapter_signature(image):
+    """Downscaled chapter column; changes whenever another chapter is selected."""
+    gray = cv2.cvtColor(image[100:650, 0:300], cv2.COLOR_RGB2GRAY)
+    return cv2.resize(gray, (30, 55), interpolation=cv2.INTER_AREA).astype(np.int16)
+
+
+def same_chapter(a, b):
+    return float(np.abs(a - b).mean()) < 3
+
 
 def continue_dialog(image):
     for x, y, template in CONTINUE_TEMPLATES:
@@ -77,13 +100,60 @@ class ExpeditionResult:
     redeployed: int = 0
     inputs: int = 0
     pages: list = field(default_factory=list)
+    remaining: list = None   # seconds left per fleet away; None = not surveyed
+    unreadable: int = 0      # running countdowns that could not be read
 
 
 class Expedition(UI):
-    def __init__(self, device, redeploy=True, timeout=600, **kwargs):
+    def __init__(self, device, redeploy=True, timeout=600, survey=True, **kwargs):
         super().__init__(device, **kwargs)
         self.redeploy = redeploy
         self.timeout = timeout
+        self.survey = survey
+
+    def step_chapter(self, button, image):
+        """Tap a neighbouring chapter; (new image, whether the chapter changed)."""
+        before = chapter_signature(image)
+        self.click(button, '远征章节')
+        self.result.inputs += 1
+        self.sleep(0.5)
+        last = None
+        for _ in range(10):
+            image = self.screenshot().image
+            signature = chapter_signature(image)
+            if last is not None and same_chapter(signature, last):
+                break
+            last = signature
+            self.sleep(0.3)
+        return image, not same_chapter(signature, before)
+
+    def survey_chapters(self, image):
+        """Read every chapter's countdowns, first to last.
+
+        Returns (seconds, unreadable), or None when a finished expedition or
+        another page turned up; the main loop then handles the screen first.
+        """
+        for _ in range(MAX_CHAPTERS):
+            image, moved = self.step_chapter(CHAPTER_PREV, image)
+            if self.get_current_page(self.frame) != '出征-远征':
+                return None
+            if not moved:
+                break
+        else:
+            raise GameStuckError('远征章节列表无法回到第一章')
+        seconds, unreadable = [], 0
+        for _ in range(MAX_CHAPTERS):
+            if collectable_slot(image) is not None:
+                return None
+            found, missed = countdown.running(image)
+            seconds += found
+            unreadable += missed
+            image, moved = self.step_chapter(CHAPTER_NEXT, image)
+            if self.get_current_page(self.frame) != '出征-远征':
+                return None
+            if not moved:
+                return sorted(seconds), unreadable
+        raise GameStuckError('远征章节数量超出预期，停止翻页')
 
     def run(self):
         result = self.result = ExpeditionResult()  # live view for the runner
@@ -113,12 +183,13 @@ class Expedition(UI):
                     self.click(CONTINUE_CANCEL, '不继续远征')
                 action = ('dialog', self.redeploy)
             elif page == '港区':
-                if not color.cmp_points(image, FINISHED_BADGE, 0.9):
-                    log.info('no finished expedition; collected %d', result.collected)
+                finished = color.cmp_points(image, FINISHED_BADGE, 0.9)
+                if not finished and (not self.survey or result.remaining is not None):
+                    log.info('no finished expedition; collected %d, remaining %s', result.collected, result.remaining)
                     return result
-                if empty_visits >= 2:
-                    raise GameStuckError('港区仍显示远征完成，但远征页当前章节没有可收取的远征（可能在其他章节）')
-                self.click(assets.SORTIE, '有远征完成')
+                if finished and empty_visits >= 2:
+                    raise GameStuckError('港区仍显示远征完成，但各章节都没有可收取的远征')
+                self.click(assets.SORTIE, '有远征完成' if finished else '查看远征倒计时')
                 action = ('港区', '出征')
             elif page in OTHER_TABS:
                 self.click(assets.TAB_EXPEDITION, page)
@@ -134,6 +205,14 @@ class Expedition(UI):
                     self.click(assets.Button('收取奖励', slot, SLOT_Y, '收远征', jitter=3), f'槽位{SLOTS.index(slot) + 1}')
                     pending = True
                     action = ('出征-远征', slot)
+                elif self.survey and result.remaining is None:
+                    surveyed = self.survey_chapters(image)
+                    if surveyed is None:
+                        action = ('出征-远征', '章节中断')
+                    else:
+                        result.remaining, result.unreadable = surveyed
+                        log.info('expedition countdowns %s, unreadable %d', *surveyed)
+                        action = ('出征-远征', '章节读取')
                 else:
                     empty_visits += 1
                     self.click(assets.BACK, '没有可收取的远征')

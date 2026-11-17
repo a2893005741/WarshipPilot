@@ -3,7 +3,10 @@ import threading
 import time
 import unittest
 
+from module.expedition.expedition import CHAPTER_NEXT, CHAPTER_PREV
 from module.runtime.native import GatedDevice, NativeRun, TaskStopped
+from module.ui import assets
+from module.vision.color import to_screen
 from tests.synthetic import frame_for
 
 
@@ -104,16 +107,36 @@ class GateTest(unittest.TestCase):
             errors.append('stopped')
 
 
+class PagedEmulator(FakeEmulator):
+    """港区 <-> 出征-远征 (one empty chapter), switched by 出征 / 返回."""
+    SORTIE, BACK = to_screen(assets.SORTIE.x, assets.SORTIE.y), to_screen(assets.BACK.x, assets.BACK.y)
+
+    def __init__(self):
+        super().__init__(frame_for('港区'))
+        self.pages = {'港区': frame_for('港区'), '出征-远征': frame_for('出征-远征')}
+
+    def click(self, x, y):
+        super().click(x, y)
+        if (x, y) == self.SORTIE:
+            self.image = self.pages['出征-远征']
+        elif (x, y) == self.BACK:
+            self.image = self.pages['港区']
+
+
 class RunTest(unittest.TestCase):
-    def test_expedition_with_nothing_finished_completes_without_input(self):
+    def test_expedition_with_nothing_finished_reads_countdowns_and_returns(self):
         runtime = FakeRuntime(frame_for('港区'))  # no finished badge
+        runtime.emulator = PagedEmulator()
         finished = []
         run = NativeRun(runtime, 'expedition', {}, lambda r, status: finished.append(status))
         run.start()
-        run.thread.join(10)
-        self.assertEqual(finished, ['completed'])
-        self.assertEqual(runtime.emulator.clicks, [])
+        run.thread.join(20)
+        self.assertEqual(finished, ['completed'], run.error)
         self.assertEqual(run.result.collected, 0)
+        self.assertEqual(run.result.remaining, [])  # surveyed: no fleet away
+        prev, next_ = (to_screen(b.x, b.y) for b in (CHAPTER_PREV, CHAPTER_NEXT))
+        self.assertEqual(runtime.emulator.clicks,
+                         [PagedEmulator.SORTIE, prev, next_, PagedEmulator.BACK])
 
 
 if __name__ == '__main__':

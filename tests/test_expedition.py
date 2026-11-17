@@ -22,7 +22,7 @@ def slot_name(x):
 
 BUTTONS = {b.name: to_screen(b.x, b.y) for b in (
     assets.SORTIE, assets.BACK, assets.TAB_EXPEDITION, assets.TAB_EXERCISE, assets.CONTINUE,
-    exp.CONTINUE_CONFIRM, exp.CONTINUE_CANCEL)}
+    exp.CONTINUE_CONFIRM, exp.CONTINUE_CANCEL, exp.CHAPTER_PREV, exp.CHAPTER_NEXT)}
 BUTTONS.update({slot_name(x): to_screen(x, exp.SLOT_Y) for x in exp.SLOTS})
 
 
@@ -48,9 +48,24 @@ def dialog():
     return image
 
 
-def task(device, **kwargs):
+def task(device, survey=False, **kwargs):
     return Expedition(device, detector=DETECTOR, handlers=handlers(), interval=0,
-                      sleep=lambda s: None, rng=random.Random(1), **kwargs)
+                      sleep=lambda s: None, rng=random.Random(1), survey=survey, **kwargs)
+
+
+def chapter(index, timers=None, lit=()):
+    """出征-远征 on chapter `index`: a distinct chapter column, optionally a live
+    timer panel (tests/fixtures/expedition) and lit 收获奖励 slots."""
+    base = expedition_list(lit)
+    image = np.zeros_like(base)
+    image[100:650, 0:300] = 40 + 30 * index
+    if timers:
+        crop = cv2.imdecode(np.fromfile(ROOT / 'tests/fixtures/expedition' / f'{timers}.png', np.uint8),
+                            cv2.IMREAD_COLOR)
+        image[100:680, 1040:1250] = cv2.cvtColor(crop, cv2.COLOR_BGR2RGB)
+    painted = base.any(axis=2)  # keep every pixel the page / slot checks look at
+    image[painted] = base[painted]
+    return image
 
 
 class FramesTest(unittest.TestCase):
@@ -105,6 +120,41 @@ class FlowTest(unittest.TestCase):
         with self.assertRaises(GameStuckError):
             task(device).run()
         self.assertEqual(device.clicks.count(('list0', '返回')), 2)
+
+
+class SurveyTest(unittest.TestCase):
+    """After collecting, every chapter's countdowns are read (first to last)."""
+
+    def test_reads_countdowns_on_every_chapter(self):
+        screens = {'home': home(False), 'ch1': chapter(1, 'mixed'), 'ch2': chapter(2, 'idle'),
+                   'ch3': chapter(3, 'single')}
+        t = {('home', '出征'): 'ch2',
+             ('ch2', '上一章'): 'ch1', ('ch1', '下一章'): 'ch2', ('ch2', '下一章'): 'ch3',
+             ('ch3', '返回'): 'home'}
+        device = ScriptedDevice(screens, t, 'home', BUTTONS)
+        result = task(device, survey=True).run()
+        self.assertEqual(result.remaining, [2 * 3600 + 57 * 60 + 22, 4 * 3600 + 56 * 60 + 48])
+        self.assertEqual(result.unreadable, 0)
+        self.assertEqual(device.clicks, [
+            ('home', '出征'), ('ch2', '上一章'), ('ch1', '上一章'), ('ch1', '下一章'),
+            ('ch2', '下一章'), ('ch3', '下一章'), ('ch3', '返回')])
+
+    def test_collects_finished_expedition_found_on_another_chapter(self):
+        screens = {'home+': home(True), 'home': home(False), 'chA': chapter(2, 'single'),
+                   'chB+': chapter(1, lit=[387]), 'chB': chapter(1, 'mixed'),
+                   'result': frame_for('战斗结果'), 'dialog': dialog()}
+        t = {('home+', '出征'): 'chA', ('chA', '上一章'): 'chB+',
+             ('chB+', slot_name(387)): 'result', ('result', '点击继续'): 'dialog',
+             ('dialog', '继续远征-确认'): 'chB', ('chB', '下一章'): 'chA', ('chA', '返回'): 'home'}
+        device = ScriptedDevice(screens, t, 'home+', BUTTONS)
+        result = task(device, survey=True).run()
+        self.assertEqual((result.collected, result.redeployed), (1, 1))
+        self.assertEqual(result.remaining, [2 * 3600 + 57 * 60 + 22, 4 * 3600 + 56 * 60 + 48])
+
+    def test_without_survey_nothing_finished_sends_no_input(self):
+        device = ScriptedDevice({'home': home(False)}, {}, 'home', BUTTONS)
+        result = task(device).run()
+        self.assertEqual((result.remaining, device.clicks), (None, []))
 
 
 def load(name):

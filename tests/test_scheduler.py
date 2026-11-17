@@ -6,7 +6,7 @@ import threading
 from pathlib import Path
 import unittest
 
-from module.runtime.controller import TaskController
+from module.runtime.controller import TaskController, next_run
 from module.config.task_settings import TaskDraft, save_task
 from module.config.config import Config
 
@@ -120,6 +120,34 @@ class PersistenceTest(unittest.TestCase):
         c.task_failed('expedition', 'boom')
         c.task_failed('expedition', 'boom')
         self.assertFalse(c.scheduler)
+
+
+class NextRunTest(unittest.TestCase):
+    """Expeditions return when the earliest fleet away is back."""
+    now = datetime(2026, 11, 17, 0, 0, tzinfo=timezone.utc)
+
+    def result(self, remaining, unreadable=0):
+        from module.expedition.expedition import ExpeditionResult
+        return ExpeditionResult(remaining=remaining, unreadable=unreadable)
+
+    def test_earliest_countdown_wins_over_interval(self):
+        due, reason = next_run(self.now, 60, self.result([3 * 3600 + 5, 2 * 3600]))
+        self.assertEqual(due, self.now + timedelta(hours=2, seconds=30))
+        self.assertIn('2:00:00', reason)
+
+    def test_short_countdown_has_a_floor(self):
+        due, _ = next_run(self.now, 60, self.result([0]))
+        self.assertEqual(due, self.now + timedelta(minutes=1))
+
+    def test_interval_when_nothing_was_read(self):
+        for result in (self.result(None), self.result([]), self.result([], unreadable=1), object()):
+            with self.subTest(result=result):
+                self.assertEqual(next_run(self.now, 45, result)[0], self.now + timedelta(minutes=45))
+
+    def test_unreadable_timer_caps_the_wait_at_the_interval(self):
+        due, reason = next_run(self.now, 60, self.result([5 * 3600], unreadable=1))
+        self.assertEqual(due, self.now + timedelta(minutes=60))
+        self.assertIn('无法识别', reason)
 
 
 if __name__ == '__main__':
