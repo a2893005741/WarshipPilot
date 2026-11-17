@@ -51,5 +51,7 @@
 | 遗留迁移计划任务 | 导出到备份目录 `migration-task.xml` 后注销 `WarshipPilot-LauncherMigration`；启动器 PID 9400 注销前后都在运行，后台健康不变。以后登录由 HKCU Run 自启接管。迁移脚本成功路径同样会导出并注销该任务。 | 远端核对输出 |
 | 版本号 | 0.12.0 → 0.13.0（`module/version.py`、`pyproject.toml`、`uv.lock`），标签 `v0.13.0`。 | Python 155 项通过 |
 | 组件只有一个镜像 | `tools/build_components.py` 为 git/adb 组件与引导 raw 地址都列出 ghfast.top、gh-proxy.com、GitHub 直连（WarshipPilotLauncher 69fbf7a，新增测试）。已发布的 `stable.json` 只改地址列表、其余字段逐项不变后重新上传。远端经 gh-proxy.com 下载 adb 组件与引导脚本，摘要与清单一致。 | `.deployment/manifest-mirror-fix/` |
-| 任务失败系统通知 | 新增需访问码的 `POST /api/notify-test`：走与“连续失败停止调度”相同的 `LauncherService.publish`，等待启动器 `notifications.ack` 回执。 | 见下方远端结果 |
+| 任务失败系统通知 | 新增需访问码的 `POST /api/notify-test`：走与“连续失败停止调度”相同的 `LauncherService.publish`，等待启动器 `notifications.ack` 回执。 | 远端 v0.13.0 上调用返回 `acknowledged: true`（事件 a7a2bc5a…），启动器已收到并回执；弹窗外观待用户在桌面确认 |
 | 关闭首页最小化到托盘 | 需在远端桌面上手动点一次窗口关闭按钮确认，远程会话无法操作交互式桌面窗口。 | 待用户目视确认 |
+
+远端升级：网页更新接口请求 87c79a4 → d1511ee（v0.13.0），由启动器执行；启动器 PID 9400 保持运行，后台 PID 23820→22780，健康检查版本 0.13.0、提交 d1511ee，事务文件已清除，Git 工作区干净，调度保持开启；规则存在，启动日志无防火墙提示。
