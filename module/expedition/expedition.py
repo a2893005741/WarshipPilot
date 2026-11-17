@@ -71,13 +71,18 @@ CHAPTER_STILL = 3    # polls without change before the list counts as settled
 
 
 def chapter_signature(image):
-    """Downscaled chapter column; changes whenever another chapter is selected."""
-    gray = cv2.cvtColor(image[100:650, 0:300], cv2.COLOR_RGB2GRAY)
-    return cv2.resize(gray, (30, 55), interpolation=cv2.INTER_AREA).astype(np.int16)
+    """The selected chapter tile (label + chapter art, fixed at y≈395).
+
+    The whole chapter column is a poor signature: the highlight stays put
+    and only small labels shift, so neighbouring chapters differed by just
+    2.5 (mean grey) on live frames. The tile differs by >= 17 between any two
+    chapters and by 0 between frames of the same chapter.
+    """
+    return cv2.cvtColor(image[368:424, 28:286], cv2.COLOR_RGB2GRAY).astype(np.int16)
 
 
 def same_chapter(a, b):
-    return float(np.abs(a - b).mean()) < 3
+    return float(np.abs(a - b).mean()) < 6
 
 
 def continue_dialog(image):

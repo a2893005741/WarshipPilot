@@ -1,2 +1,2 @@
 """Single source of the application version (release tags are v<VERSION>)."""
-VERSION = "0.8.3"
+VERSION = "0.8.4"

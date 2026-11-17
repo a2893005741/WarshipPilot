@@ -122,6 +122,29 @@ class FlowTest(unittest.TestCase):
         self.assertEqual(device.clicks.count(('list0', '返回')), 2)
 
 
+def live_tile(name):
+    """A live frame's chapter column around the selected tile (x 20-294, y 360-432)."""
+    crop = cv2.imdecode(np.fromfile(ROOT / 'tests/fixtures/expedition' / f'{name}.png', np.uint8), cv2.IMREAD_COLOR)
+    image = np.zeros((720, 1280, 3), np.uint8)
+    image[360:432, 20:294] = cv2.cvtColor(crop, cv2.COLOR_BGR2RGB)
+    return exp.chapter_signature(image)
+
+
+class ChapterSignatureTest(unittest.TestCase):
+    """On the live list neighbouring chapters look alike; the tile must not."""
+
+    def test_every_pair_of_live_chapters_differs(self):
+        chapters = [f'tile-ch{i}' for i in range(1, 11)]
+        for a in range(len(chapters)):
+            for b in range(a + 1, len(chapters)):
+                with self.subTest(a=chapters[a], b=chapters[b]):
+                    self.assertFalse(exp.same_chapter(live_tile(chapters[a]), live_tile(chapters[b])))
+
+    def test_frames_of_one_chapter_match(self):
+        self.assertTrue(exp.same_chapter(live_tile('tile-ch4'), live_tile('tile-ch4b')))
+        self.assertTrue(exp.same_chapter(live_tile('tile-ch9'), live_tile('tile-ch9b')))
+
+
 class SurveyTest(unittest.TestCase):
     """After collecting, every chapter's countdowns are read (first to last)."""
 
