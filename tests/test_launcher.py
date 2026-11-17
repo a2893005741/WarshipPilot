@@ -118,14 +118,12 @@ class LauncherTransactionTest(UpdateTest):
         launcher.main(['commit', '--root', str(self.live)])
         self.assertIsNone(launcher.read_transaction(self.live))
 
-    def test_managed_mode_blocks_legacy_handover(self):
+    def test_managed_mode_updates_without_launcher_connection(self):
         self.push('new')
         self.u.check()
-        with patch.dict(os.environ, {'AP_LAUNCHER_PID': '123'}), patch.object(self.u, '_handover') as handover:
-            with self.assertRaisesRegex(ValueError, '启动器'):
-                self.u.install()
-            handover.assert_not_called()
-        self.assertEqual(self.quiesced, [])
+        with patch.dict(os.environ, {'AP_LAUNCHER_PID': '123', 'WARSHIP_WEBUI_SUPERVISED': '1'}):
+            self.u.install()
+        self.assertEqual(self.quiesced, [True])
 
 
 if __name__ == '__main__':

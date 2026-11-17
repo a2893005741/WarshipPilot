@@ -1,4 +1,4 @@
-"""Git update check and deferred handover after the current task completes."""
+"""Web-triggered source updates after the current task completes."""
 from copy import deepcopy
 import os
 from pathlib import Path
@@ -7,6 +7,7 @@ import sys
 import threading
 
 from deploy.git import Git
+from deploy.webui_supervisor import SUPERVISED_ENV, UPDATE_EXIT_CODE
 from module.config.config import Config
 from module.logger import atomic_json, now
 from module.version import VERSION
@@ -16,6 +17,7 @@ class Updater:
     def __init__(self, root, launch, busy, shutdown, event, quiesce=lambda value: None, stop_event=None):
         self.root, self.launch = Path(root), launch
         self.launcher = None
+        self.exit_code = 0
         self.busy, self.shutdown, self.event = busy, shutdown, event
         self.quiesce = quiesce
         self.stop_event = stop_event or threading.Event()
@@ -67,10 +69,8 @@ class Updater:
         return self.state()
 
     def install(self):
-        if os.environ.get('AP_LAUNCHER_PID') or os.environ.get('ALAS_LAUNCHER_PID'):
-            status = self.launcher.status() if self.launcher else {}
-            if not status.get('connected') or 'backend.update' not in status.get('capabilities', []):
-                raise ValueError('后台由启动器管理，请在启动器中停止后重新启动以更新')
+        if (os.environ.get('AP_LAUNCHER_PID') or os.environ.get('ALAS_LAUNCHER_PID')) and os.environ.get(SUPERVISED_ENV) != '1':
+            raise ValueError('请先重新启动后台一次，以启用网页直接更新')
         with self.lock:
             if self.status['state'] != 'available':
                 raise ValueError('请先检查可用更新')
@@ -102,22 +102,15 @@ class Updater:
             self.event(f'更新启动失败：{exc}', 'warning')
 
     def _handover(self):
-        if os.environ.get('AP_LAUNCHER_PID') or os.environ.get('ALAS_LAUNCHER_PID'):
-            command_id = self.launcher.request_update(self.status['latest']['version'])
-            with self.lock:
-                self.status.update(state='restarting', progress='启动器正在接管更新')
-            import time
-            deadline = time.monotonic() + 12
-            while time.monotonic() < deadline and not self.stop_event.wait(.1):
-                command = self.launcher.command(command_id)
-                if command['status'] == 'succeeded':
-                    return
-                if command['status'] in ('failed', 'expired'):
-                    raise ValueError(command.get('error', {}).get('message', '启动器更新请求失败'))
-            if not self.stop_event.is_set():
-                raise ValueError('启动器接管更新超时')
-            return
         arguments = self.root / 'log' / 'update-arguments.json'
+        if os.environ.get(SUPERVISED_ENV) == '1':
+            atomic_json(arguments, ['--webui-worker', *self.launch.get('argv', ['--no-browser'])])
+            atomic_json(self.root / 'log' / 'update-request.json', {'target': self.status['latest']['version']})
+            with self.lock:
+                self.status.update(state='restarting', progress='正在后台安装更新并重启网页服务')
+                self.exit_code = UPDATE_EXIT_CODE
+            self.shutdown()
+            return
         atomic_json(arguments, self.launch.get('argv', ['--no-browser']))
         command = [sys.executable, '-m', 'deploy.installer', '--root', str(self.root),
                    '--wait-pid', str(os.getpid()), '--restart', '--target',

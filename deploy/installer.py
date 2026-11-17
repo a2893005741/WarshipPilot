@@ -39,7 +39,10 @@ def wait_pid(pid):
 
 def start_gui(root, argv):
     executable = Path(Config(root).executable('Python')).with_name('pythonw.exe')
-    return subprocess.Popen([str(executable), str(root / 'gui.py'), '--root', str(root), *argv],
+    # Health checks and --wait-gui must observe the actual serving worker, not
+    # an additional supervisor. The owning supervisor (when present) stays up.
+    worker_args = argv if '--webui-worker' in argv else ['--webui-worker', *argv]
+    return subprocess.Popen([str(executable), str(root / 'gui.py'), '--root', str(root), *worker_args],
                      cwd=root, close_fds=True,
                      creationflags=getattr(subprocess, 'CREATE_NO_WINDOW', 0))
 
@@ -94,6 +97,7 @@ def main():
     parser.add_argument('--wait-pid', type=int, default=0)
     parser.add_argument('--restart', action='store_true')
     parser.add_argument('--wait-gui', action='store_true')
+    parser.add_argument('--supervised', action='store_true')
     parser.add_argument('--target')
     parser.add_argument('--skip-update', action='store_true')
     parser.add_argument('--gui-args-file', type=Path)
@@ -115,29 +119,34 @@ def main():
     except Exception as exc:
         atomic_json(result, {'ok': False, 'time': now(), 'error': str(exc)})
         (root / 'log' / 'installer-error.txt').write_text(traceback.format_exc(), encoding='utf-8')
-        if args.wait_pid and args.restart:
+        if args.restart and (args.wait_pid or args.supervised):
             # Git/network/uv errors must not leave the console permanently unavailable.
-            start_gui(root, gui_args)
+            process = start_gui(root, gui_args)
+            if args.supervised:
+                return process.wait()
         raise
     if args.restart:
-        process = start_gui(root, gui_args)
+        process = None
         try:
+            process = start_gui(root, gui_args)
             wait_healthy(root, process, gui_args)
         except Exception as exc:
-            if process.poll() is None:
+            if process is not None and process.poll() is None:
                 process.terminate()
                 process.wait(timeout=15)
             if previous:
                 with instance_lock(root):
                     rollback(root, previous)
-                start_gui(root, gui_args)
+                process = start_gui(root, gui_args)
             atomic_json(result, {'ok': False, 'time': now(), 'error': str(exc)})
+            if previous and args.supervised:
+                return process.wait()
             raise
     atomic_json(result, {'ok': True, 'time': now()})
     if args.restart and args.wait_gui:
         # Keep the scheduled task's wrapper alive while its GUI child runs.
-        process.wait()
+        return process.wait()
 
 
 if __name__ == '__main__':
-    main()
+    sys.exit(main())

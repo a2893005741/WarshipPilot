@@ -8,16 +8,6 @@ import threading
 import traceback
 import webbrowser
 
-import uvicorn
-
-from alas import Runtime
-from deploy.lock import instance_lock
-from module.config.config import Config
-from module.config.migration import migrate
-from module.api.app import create_app
-from module.api.update_service import Updater
-from module.config.task_settings import normalize_tasks
-
 APP_DIR = Path(__file__).resolve().parent
 
 
@@ -27,8 +17,23 @@ def main():
     parser.add_argument('--host')
     parser.add_argument('--port', type=int)
     parser.add_argument('--no-browser', action='store_true')
+    parser.add_argument('--webui-worker', action='store_true', help=argparse.SUPPRESS)
     args = parser.parse_args()
     root = args.root.resolve()
+    if not args.webui_worker:
+        from deploy.webui_supervisor import supervise
+        return supervise(root, sys.argv[1:], entry=APP_DIR / 'gui.py')
+
+    # The supervisor must not import native runtime libraries: on Windows they
+    # need to be released when this worker exits for dependency installation.
+    import uvicorn
+    from alas import Runtime
+    from deploy.lock import instance_lock
+    from module.config.config import Config
+    from module.config.migration import migrate
+    from module.api.app import create_app
+    from module.api.update_service import Updater
+    from module.config.task_settings import normalize_tasks
     with instance_lock(root):
         migrated = migrate(root)
         normalize_tasks(root)
@@ -89,11 +94,12 @@ def main():
             server.run()
         finally:
             runtime.close()
+        return runtime.updater.exit_code
 
 
 if __name__ == '__main__':
     try:
-        main()
+        sys.exit(main())
     except Exception:
         folder = APP_DIR / 'log'
         folder.mkdir(exist_ok=True)
