@@ -122,7 +122,9 @@ c.save_deploy(d)
             $trigger = New-ScheduledTaskTrigger -AtLogOn -User $desktopUser
             Register-ScheduledTask -TaskName 'WarshipPilot-Preview' -Action $action -Settings $settings -Principal $principal -Trigger $trigger -Force | Out-Null
             Get-NetFirewallRule -Name 'WarshipPilot-LAN' -ErrorAction SilentlyContinue | Remove-NetFirewallRule
-            New-NetFirewallRule -Name 'WarshipPilot-LAN' -DisplayName 'WarshipPilot LAN' -Direction Inbound -Action Allow -Protocol TCP -LocalPort 22680 -RemoteAddress LocalSubnet -Program "$live\.venv\Scripts\pythonw.exe" | Out-Null
+            # Port rule: the interpreter path changes with uv/Python upgrades.
+            Get-NetFirewallRule -Name 'WarshipPilot-WebUI-LAN' -ErrorAction SilentlyContinue | Remove-NetFirewallRule
+            New-NetFirewallRule -Name 'WarshipPilot-WebUI-LAN' -DisplayName 'WarshipPilot WebUI (LAN)' -Direction Inbound -Action Allow -Protocol TCP -LocalPort 22680 -RemoteAddress LocalSubnet -Profile Any | Out-Null
             Start-ScheduledTask -TaskName 'WarshipPilot-Preview'
             $healthy=$false
             for ($i=0;$i -lt 120;$i++) {

@@ -55,6 +55,17 @@ class LauncherProtocolTest(unittest.TestCase):
             self.assertTrue(ws.receive_json()['result']['pong'])
             self.assertEqual(self.service.command(command_id)['status'], 'succeeded')
 
+    def test_notification_is_pending_until_the_launcher_acknowledges_it(self):
+        with self.connect() as ws:
+            self.hello(ws)
+            event_id = self.service.publish({'instance': '舰R', 'title': 't', 'content': 'c'})
+            event = ws.receive_json()
+            self.assertEqual((event['type'], event['topic'], event['id']), ('event', 'notification', event_id))
+            self.assertFalse(self.service.acknowledged(event_id))
+            ws.send_json({'type': 'request', 'id': 'ack', 'method': 'notifications.ack', 'params': {'ids': [event_id]}})
+            self.assertTrue(ws.receive_json()['ok'])
+            self.assertTrue(self.service.acknowledged(event_id))
+
     def test_update_requires_capability_and_valid_commit(self):
         with self.assertRaises(ValueError):
             self.service.request_update('not-a-commit')

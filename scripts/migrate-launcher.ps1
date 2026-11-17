@@ -34,6 +34,24 @@ function Wait-Healthy([int]$Seconds) {
     }
     throw 'Launcher startup timed out'
 }
+function Set-LanFirewall([string]$Backup) {
+    # The backend's Python moves with uv (".venv\python\cpython-<version>\python.exe"),
+    # so a program rule breaks on every interpreter change and an unanswered
+    # firewall prompt leaves Block rules behind. Allow the WebUI port instead.
+    $ruleName='WarshipPilot-WebUI-LAN'
+    $owned=Get-NetFirewallRule | Where-Object {
+        $_.Name -ne $ruleName -and (($_ | Get-NetFirewallApplicationFilter).Program -like "$Root\*")
+    }
+    $owned | ForEach-Object {
+        [pscustomobject]@{name=$_.Name;display=$_.DisplayName;action="$($_.Action)";profile="$($_.Profile)";
+            program=($_ | Get-NetFirewallApplicationFilter).Program;port=($_ | Get-NetFirewallPortFilter).LocalPort}
+    } | ConvertTo-Json -Depth 3 | Set-Content -LiteralPath "$Backup\firewall.json" -Encoding UTF8
+    $owned | Remove-NetFirewallRule
+    Get-NetFirewallRule -Name $ruleName -ErrorAction SilentlyContinue | Remove-NetFirewallRule
+    New-NetFirewallRule -Name $ruleName -DisplayName 'WarshipPilot WebUI (LAN)' -Direction Inbound -Action Allow `
+        -Protocol TCP -LocalPort $Port -RemoteAddress LocalSubnet -Profile Any `
+        -Description 'WarshipPilot WebUI, local subnet only (port rule: survives Python path changes).' | Out-Null
+}
 function Restore-Migration([string]$Backup) {
     $record=Get-Content -LiteralPath "$Backup\migration.json" -Raw | ConvertFrom-Json
     if ($record.root -ne $Root) { throw 'Backup belongs to a different installation' }
@@ -152,6 +170,7 @@ try {
         $newHealth=Wait-Healthy ($TimeoutMinutes*60)
         $after=Invoke-Console state $null
         if ($after.automation.scheduler -ne $state.automation.scheduler) { throw 'Scheduler state changed during migration' }
+        Set-LanFirewall $backup
         foreach ($shortcut in $shortcuts) {
             $link=$shell.CreateShortcut($shortcut.path)
             $link.TargetPath="$Root\WarshipPilot.exe"; $link.Arguments=''; $link.WorkingDirectory=$Root; $link.Save()
@@ -159,6 +178,10 @@ try {
         if (!(Test-Path -LiteralPath $run)) { New-Item -Path $run -Force | Out-Null }
         Set-ItemProperty -LiteralPath $run -Name WarshipPilot -Value ('"'+$Root+'\WarshipPilot.exe" --start-minimized')
         @{ok=$true;root=$Root;backup=$backup;pid=$newHealth.pid;commit=$newHealth.commit;scheduler=$after.automation.scheduler;due=$after.automation.due} | ConvertTo-Json -Depth 4 | Set-Content -LiteralPath "$backup\acceptance.json" -Encoding UTF8
+        # The task only carried the launcher into the interactive session; the
+        # running launcher survives its removal and later logons use the Run key.
+        Export-ScheduledTask -TaskName 'WarshipPilot-LauncherMigration' | Set-Content -LiteralPath "$backup\migration-task.xml" -Encoding Unicode
+        Unregister-ScheduledTask -TaskName 'WarshipPilot-LauncherMigration' -Confirm:$false
         Write-Output "Migration verified; recovery backup: $backup"
     } catch {
         $original=$_

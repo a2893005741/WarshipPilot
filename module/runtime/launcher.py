@@ -172,6 +172,12 @@ class LauncherService:
             connection = self.connection
             if connection and connection.ready:
                 connection.loop.call_soon_threadsafe(self._enqueue, connection, message)
+        return message['id']
+
+    def acknowledged(self, event_id):
+        """The launcher acknowledges a notification after showing it."""
+        with self.lock:
+            return event_id not in self.notifications
 
     def acknowledge(self, ids):
         with self.lock:

@@ -41,3 +41,15 @@
 恢复入口备份：`D:\WarshipPilot-launcher-backup-20261117-180451`。其中保存deploy.yaml、旧任务XML、快捷方式和迁移记录；新环境与原环境都保留。迁移脚本支持Rollback指定该目录。
 
 远端证据：`D:\WarshipPilot-launcher-evidence`。本地副本：`.deployment/launcher-before-remote.json`、`launcher-after-remote.json`、`launcher-migration-comparison.json`、`launcher-remote-verification.json`、`launcher-remote-expedition.png`。访问码仅保存摘要。
+
+## v0.13.0：验收收尾（2026-11-17）
+
+| 项 | 处理 | 证据 |
+|---|---|---|
+| 局域网访问被防火墙挡住（必须修） | uv 托管后解释器路径变为 `.venv\python\cpython-…\python.exe`，旧规则按程序路径放行 `.venv\Scripts\pythonw.exe`，Windows 弹窗未处理又留下两条 Block。远端已备份并移除 7 条舰R旧规则（旧 pythonw 放行、0.5.1/0.5.2 打包版 exe、两条 Block），改为**端口规则** `WarshipPilot-WebUI-LAN`：TCP 22680、仅本地子网、所有配置文件。未动原 ALAS 规则。 | 备份 `D:\WarshipPilot-launcher-backup-20261117-180451\firewall-before-lanfix.txt`；本机经局域网 `http://DESKTOP-3F63TNA:22680/health` 返回 200 |
+| 防火墙步骤固化 | `scripts/migrate-launcher.ps1 -Apply` 在新后台健康后调用 `Set-LanFirewall`（导出本安装的旧规则到 `firewall.json` 后移除，建端口规则）；`scripts/deploy-remote.ps1` 改用同名端口规则；新增管理员脚本 `scripts/allow-lan-access.ps1` 供启动器首装后执行（启动器以普通用户运行，无法自行改防火墙）。后台启动时若监听非回环地址且缺少该规则，会在日志里提示运行此脚本（`module/runtime/firewall.py`）。 | `tests/test_firewall.py` 4 项 |
+| 遗留迁移计划任务 | 导出到备份目录 `migration-task.xml` 后注销 `WarshipPilot-LauncherMigration`；启动器 PID 9400 注销前后都在运行，后台健康不变。以后登录由 HKCU Run 自启接管。迁移脚本成功路径同样会导出并注销该任务。 | 远端核对输出 |
+| 版本号 | 0.12.0 → 0.13.0（`module/version.py`、`pyproject.toml`、`uv.lock`），标签 `v0.13.0`。 | Python 155 项通过 |
+| 组件只有一个镜像 | `tools/build_components.py` 为 git/adb 组件与引导 raw 地址都列出 ghfast.top、gh-proxy.com、GitHub 直连（WarshipPilotLauncher 69fbf7a，新增测试）。已发布的 `stable.json` 只改地址列表、其余字段逐项不变后重新上传。远端经 gh-proxy.com 下载 adb 组件与引导脚本，摘要与清单一致。 | `.deployment/manifest-mirror-fix/` |
+| 任务失败系统通知 | 新增需访问码的 `POST /api/notify-test`：走与“连续失败停止调度”相同的 `LauncherService.publish`，等待启动器 `notifications.ack` 回执。 | 见下方远端结果 |
+| 关闭首页最小化到托盘 | 需在远端桌面上手动点一次窗口关闭按钮确认，远程会话无法操作交互式桌面窗口。 | 待用户目视确认 |

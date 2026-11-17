@@ -208,6 +208,21 @@ def create_app(runtime: Runtime, key: str, shutdown):
                 return JSONResponse({'ready': not (runtime.automation.busy or runtime.benchmark['running'])})
             elif action == "launcher-cancel":
                 runtime.updater.quiesce(False)
+            elif action == "notify-test":
+                # Same path as the scheduler-stopped notification; reports
+                # whether the launcher acknowledged it (i.e. showed the toast).
+                launcher = getattr(runtime, 'launcher', None)
+                connection = launcher and launcher.connection
+                if not (connection and connection.ready):
+                    raise ValueError("启动器未连接，无法发送系统通知")
+                event_id = launcher.publish({'instance': '舰R', 'title': '测试通知',
+                                             'content': '这是一条测试通知；任务连续失败时会以同样方式提醒。'})
+                for _ in range(50):
+                    if launcher.acknowledged(event_id):
+                        break
+                    await asyncio.sleep(0.1)
+                runtime.store.event('已发送测试通知')
+                return JSONResponse({'id': event_id, 'acknowledged': launcher.acknowledged(event_id)})
             elif action == "shutdown":
                 runtime.store.event("已收到退出后台请求")
                 shutdown()

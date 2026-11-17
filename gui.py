@@ -41,6 +41,9 @@ def main():
             if probe.connect_ex(('127.0.0.1', port)) == 0:
                 raise RuntimeError(f'端口 {port} 已被占用，请先退出旧后台')
         runtime = Runtime(root, APP_DIR)
+        from module.runtime.firewall import check_lan_access
+        threading.Thread(target=check_lan_access, args=(runtime.store, host, port),
+                         name='firewall-check', daemon=True).start()
         from deploy.git import Git
         runtime.commit = Git(APP_DIR).run('rev-parse', 'HEAD')
         if migrated:
