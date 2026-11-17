@@ -20,6 +20,27 @@ class SchemaTest(unittest.TestCase):
         self.tmp=tempfile.TemporaryDirectory();self.addCleanup(self.tmp.cleanup)
         self.root=Path(self.tmp.name)
 
+    def test_missing_tasks_use_schema_defaults(self):
+        Config(self.root).save_section('Tasks', {})
+        tasks = read_tasks(self.root)
+        self.assertEqual(tasks['reward']['interval_minutes'], 30)
+        self.assertEqual(tasks['campaign']['start_time'], '00:10')
+
+    def test_partial_grouped_tasks_use_schema_defaults(self):
+        Config(self.root).save_section('Tasks', {'campaign': {'Campaign': {'战役章节': 2}},
+                                                'reward': {'Scheduler': {'Enable': False}}})
+        tasks = read_tasks(self.root)
+        self.assertEqual(tasks['campaign']['start_time'], '00:10')
+        self.assertEqual(tasks['reward']['interval_minutes'], 30)
+        normalize_tasks(self.root)
+        self.assertEqual(config_values(self.root, 'reward')['values']['Scheduler']['IntervalMinutes'], 30)
+
+    def test_saved_values_override_schema_defaults(self):
+        Config(self.root).save_section('Tasks', {'campaign': {'start_time': '00:00'},
+                                                'reward': {'Scheduler': {'IntervalMinutes': 60}}})
+        self.assertEqual(read_tasks(self.root)['campaign']['start_time'], '00:00')
+        self.assertEqual(read_tasks(self.root)['reward']['interval_minutes'], 60)
+
     def test_original_enum_order_and_defaults_are_preserved(self):
         inventory=json.loads((ROOT/'assets/legacy-fields.json').read_text(encoding='utf-8'))
         original={f['legacy_key']:f for f in inventory['fields']}

@@ -38,6 +38,9 @@ def read_tasks(root):
     saved = Config(root).section('Tasks')
     tasks = {}
     for task in TASKS:
+        defaults = {field['key']: field['value']
+                    for fields in schema()['args'][task].values()
+                    for field in fields.values() if field['storage'] == 'task'}
         raw = saved.get(task, {})
         if any(group in raw for group in schema()['args'][task]):
             flattened = {'legacy': {}}
@@ -51,7 +54,7 @@ def read_tasks(root):
                     elif field['storage'] == 'legacy':
                         flattened['legacy'][field['key']] = value
             raw = flattened
-        tasks[task] = TaskDraft.model_validate(raw).model_dump()
+        tasks[task] = TaskDraft.model_validate(defaults | raw).model_dump()
     # v0.3 stored inert drafts. The executable release uses the user's selected C.
     tasks['sortie'].update(fleet=2,stage='6-1',route='α',night_battle='never',repair='quick')
     return tasks
