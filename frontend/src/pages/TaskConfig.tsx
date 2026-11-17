@@ -64,6 +64,8 @@ export function TaskConfig() {
   const railFolded = useFoldFlag('(min-width: 951px) and (max-width: 1089px)')
   // 抽屉一次只开一个；窗口跨回宽档或用户手动隐藏调度器栏时自动收回。
   const [popout, setPopout] = useState<'directory' | 'rail' | null>(null)
+  const [mobileRailOpen, setMobileRailOpen] = useState(false)
+  useEffect(() => { setMobileRailOpen(false) }, [task])
   useEffect(() => {
     if (popout === 'directory' && !directoryFolded) setPopout(null)
     if (popout === 'rail' && (!railFolded || railVisibility !== 'shown')) setPopout(null)
@@ -423,7 +425,7 @@ export function TaskConfig() {
   // 调度器列的宽度沿用总览页那套 `--modern-rail-width`，边上挂同一个拖拽把手。
   return <>
     <div
-      className={`task-config-page task-config-modern${schedulerPosition === 'left' ? ' rail-left' : ''}${railVisibility === 'hidden' ? ' rail-hidden' : ''}${popout ? ` pop-${popout}` : ''}`}
+      className={`task-config-page task-config-modern${schedulerPosition === 'left' ? ' rail-left' : ''}${railVisibility === 'hidden' ? ' rail-hidden' : ''}${popout ? ` pop-${popout}` : ''}${mobileRailOpen ? ' mobile-rail-open' : ''}`}
       style={layout.railWidth ? ({'--modern-rail-width': `${layout.railWidth}px`} as CSSProperties) : undefined}
     >
       <h1 className="modern-sr-title">{t(`Task.${task}.name`)}</h1>
@@ -432,7 +434,8 @@ export function TaskConfig() {
         <div className="task-config-settings-inner" key={task}>{head}{groupsSection}{scorePanel}{toolPanel}</div>
       </div>
       {directory}
-      <div className="task-config-rail-slot" aria-label={ui('scheduler.rail')}>
+      {railVisibility === 'shown' && <button type="button" className="mobile-rail-toggle" aria-expanded={mobileRailOpen} aria-controls="task-config-scheduler" onClick={() => setMobileRailOpen(open => !open)}><ListTree size={18}/>{mobileRailOpen ? '收起运行状态与任务计划' : '查看运行状态与任务计划'}</button>}
+      <div id="task-config-scheduler" className="task-config-rail-slot" aria-label={ui('scheduler.rail')}>
         <div className="instance-page-rail-wrap">
           {rail}
           <ModernRailResizeHandle side={schedulerPosition}/>

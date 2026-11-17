@@ -23,10 +23,11 @@ const groupIcons: Record<string, LucideIcon> = {
  * 搜索时命中的分组也一律展开，清空搜索后回到用户自己的展开选择。
  */
 export function TaskNavTree({ defaultOpenKey, onNavigate }: { defaultOpenKey?: string; onNavigate?: () => void } = {}) {
-  const { schema, t, ui } = useApp()
-  const { instance } = useParams()
+  const { schema, t, ui, instances } = useApp()
+  const { instance: routeInstance } = useParams()
+  const instance = routeInstance ?? instances[0]?.name
   const location = useLocation()
-  const base = instance ? `/i/${instance}` : ''
+  const base = instance ? `/i/${encodeURIComponent(instance)}` : ''
 
   const [search, setSearch] = useState('')
   const [openKeys, setOpenKeys] = useState<string[]>(() => (defaultOpenKey ? [defaultOpenKey] : []))

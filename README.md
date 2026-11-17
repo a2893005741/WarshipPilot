@@ -12,6 +12,8 @@ Windows x64 推荐使用[舰R独立启动器](https://github.com/a2893005741/War
 
 局域网访问需要放行 WebUI 端口：以管理员身份运行一次 `powershell -ExecutionPolicy Bypass -File deploy\launcher\allow-lan-access.ps1`（TCP 22680，仅本地子网）。启动器以普通用户运行，无法自行修改防火墙；缺少规则时后台日志会提示。
 
+手机连接同一局域网后，用浏览器打开 `http://运行电脑的局域网IP:22680`，填写同一访问码。小屏自动显示“总览、任务、设备、更多”底部导航，可启停调度器、查看日志和截图、修改任务参数；不需要安装手机应用。
+
 ## 配置和记录
 
 - `config/deploy.yaml`：Git 分支、更新源、Git/Python/uv/ADB 路径、监听地址和访问码。不提交到仓库。

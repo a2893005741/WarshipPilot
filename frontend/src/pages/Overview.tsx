@@ -15,6 +15,7 @@ import { defaultResourceKeys } from '../components/ResourceCards'
 import { ModernRail } from '../components/ModernRail'
 import { ModernRailResizeHandle } from '../components/ModernRailResizeHandle'
 import { PluginPanels } from '../plugins/views'
+import { useMediaQuery } from '../app/useMediaQuery'
 
 function loadResourceSelection(instance: string) {
   try {
@@ -65,15 +66,22 @@ function OverviewController({instance}: {instance: string}) {
 
 /** 默认总览视图：调度器一列，日志 / 截图监控一列（舰R没有资源卡与统计页）。 */
 export function ModernOverview({instance, data, onData}: OverviewViewProps) {
+  const [mobileView, setMobileView] = useState('schedule')
+  const mobile = useMediaQuery('(max-width: 950px)')
   const layout = useSyncExternalStore(subscribeLayout, getLayout, getLayout)
   const schedulerPosition = useSyncExternalStore(subscribeSchedulerPosition, readSchedulerPosition, readSchedulerPosition)
   return <div
     className={`instance-page-grid ${schedulerPosition === 'right' ? 'rail-right' : 'rail-left'}`}
     data-apu-component="overview"
     data-scheduler-position={schedulerPosition}
+    data-mobile-view={mobileView}
     style={layout.railWidth ? ({'--modern-rail-width': `${layout.railWidth}px`} as React.CSSProperties) : undefined}
   >
     <h1 className="modern-sr-title">{instance}</h1>
+    <div className="mobile-overview-switch" role="group" aria-label="总览视图">
+      <button type="button" aria-pressed={mobileView === 'schedule'} onClick={() => setMobileView('schedule')}>运行与任务</button>
+      <button type="button" aria-pressed={mobileView === 'monitor'} onClick={() => setMobileView('monitor')}>日志与画面</button>
+    </div>
     <div className="instance-page-rail-wrap">
       <ModernRail instance={instance} data={data} onData={onData}/>
       <ModernRailResizeHandle side={schedulerPosition} />
@@ -81,7 +89,7 @@ export function ModernOverview({instance, data, onData}: OverviewViewProps) {
     <div className="instance-page-main">
       <PluginPanels instance={instance}/>
       <div className="instance-page-panel panel-rise">
-        <MonitorPanel instance={instance}/>
+        <MonitorPanel instance={instance} active={!mobile || mobileView === 'monitor'}/>
       </div>
     </div>
   </div>

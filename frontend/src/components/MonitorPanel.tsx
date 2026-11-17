@@ -123,14 +123,14 @@ function RecentLogs({instance}: {instance: string}) {
  *
  * @param instance 目标实例名，预览事件与日志订阅都按它过滤。
  */
-export const MonitorPanel = memo(function MonitorPanel({instance}: {instance: string}) {
+export const MonitorPanel = memo(function MonitorPanel({instance, active = true}: {instance: string; active?: boolean}) {
   const [view, setView] = useState('logs')
   const [frame, setFrame] = useState<Preview>()
   const {setPreviewEnabled, ui} = useApp()
   useEffect(() => {
-    setPreviewEnabled(view === 'preview')
+    setPreviewEnabled(active && view === 'preview')
     return () => setPreviewEnabled(false)
-  }, [view, setPreviewEnabled])
+  }, [active, view, setPreviewEnabled])
   useEffect(() => api.onEvent(event => {
     if (event.topic === 'preview' && (event.data as Preview).instance === instance) setFrame(event.data as Preview)
   }), [instance])
@@ -141,9 +141,9 @@ export const MonitorPanel = memo(function MonitorPanel({instance}: {instance: st
     ]}/>
     {view === 'preview' && frame?.image && <a className="text-button" href={frame.image} download={`${instance}-screenshot.jpg`}><Download size={14}/>{ui('monitor.saveScreenshot')}</a>}
   </div>
-    <div className="monitor-view" hidden={view !== 'logs'}><LogPanel active={view === 'logs'}/></div>
+    <div className="monitor-view" hidden={view !== 'logs'}><LogPanel active={active && view === 'logs'}/></div>
     <div className="monitor-view" hidden={view !== 'preview'}>
-      {view === 'preview' && <RecentLogs instance={instance}/>}
+      {active && view === 'preview' && <RecentLogs instance={instance}/>}
       <div className="preview-stage"><div className="preview-screen">{frame?.image ? <img src={frame.image} alt={ui('monitor.screenshotAlt')}/> : <Empty icon={<Image size={42}/>} title={ui('monitor.waitingScreenshot')}>{ui('monitor.screenshotHint')}</Empty>}</div></div>
     </div>
   </section>

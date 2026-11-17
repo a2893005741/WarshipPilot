@@ -18,10 +18,11 @@ type Hit = SearchContentHit & {card?: boolean}
 
 /** 侧栏搜索的配置项命中列表：关键词防抖 200ms 后查后端索引，点击命中跳到所属任务页并定位。查询失败静默清空；关键词为空或无命中时不渲染。 */
 export function SearchHits({search, onNavigate}: {search: string; onNavigate?: () => void}) {
-  const {schema, ui} = useApp()
-  const {instance} = useParams()
+  const {schema, ui, instances} = useApp()
+  const {instance: routeInstance} = useParams()
+  const instance = routeInstance ?? instances[0]?.name
   const navigate = useNavigate()
-  const base = instance ? `/i/${instance}` : ''
+  const base = instance ? `/i/${encodeURIComponent(instance)}` : ''
   const [hits, setHits] = useState<Hit[]>([])
   const keyword = search.trim()
 

@@ -1,0 +1,140 @@
+/* 手机沿用主题令牌与业务组件；桌面栅格不参与这里的布局。 */
+.mobile-bottom-nav, .mobile-overview-switch, .mobile-rail-toggle {display: none}
+
+.mobile-menu-backdrop {position: fixed; inset: 0; z-index: 100; background: rgb(12 24 36 / .4); backdrop-filter: blur(3px)}
+.mobile-menu {
+  position: fixed; inset: auto 0 0; z-index: 101;
+  display: flex; flex-direction: column; gap: 20px;
+  max-height: calc(100dvh - max(24px, env(safe-area-inset-top)));
+  padding: 24px 20px max(20px, env(safe-area-inset-bottom));
+  border: 1px solid var(--border); border-bottom: 0; border-radius: 24px 24px 0 0;
+  color: var(--text); background: var(--surface); outline: none;
+  box-shadow: 0 -12px 48px rgb(12 24 36 / .12);
+}
+.mobile-menu-heading {display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-shrink: 0}
+.mobile-menu-heading span {font-size: 12px; color: var(--muted)}
+.mobile-menu-heading h2 {margin: 4px 0 0; font-size: 23px; line-height: 1.4; font-weight: 650}
+.mobile-menu .icon-button {min-width: 44px; min-height: 44px}
+.mobile-menu .task-nav-container {min-height: 0; max-height: 65dvh; gap: 12px}
+.mobile-menu .task-nav-heading {display: none}
+.mobile-menu .task-nav {overscroll-behavior: contain; padding-bottom: 8px}
+.mobile-menu .task-group-button, .mobile-menu .task-submenu-item {min-height: 48px; font-size: 15px}
+.mobile-menu input[data-slot] {height: 48px; font-size: 16px}
+.mobile-menu .primary-nav {overflow-y: auto; margin: 0; gap: 4px; overscroll-behavior: contain}
+.mobile-menu .primary-nav a {min-height: 48px; font-size: 15px}
+.mobile-menu .nav-search-hits {max-height: 28dvh; overflow-y: auto; flex-shrink: 0}
+.mobile-menu .nav-search-hit {min-height: 44px}
+
+@media (max-width: 950px) {
+  :root {--mobile-nav-height: calc(64px + env(safe-area-inset-bottom)); --topbar-height: calc(60px + env(safe-area-inset-top))}
+  /* 一屏外壳，正文只有一个滚动区；底栏预留空间，不遮挡最后一个字段。 */
+  .app-shell, .app-shell.modern-shell {
+    display: flex; flex-direction: column;
+    height: 100dvh; min-height: 0; overflow: hidden;
+    padding-bottom: var(--mobile-nav-height);
+  }
+  .app-shell > .sidebar, .app-shell > .nav-handle {display: none !important}
+  .app-shell > .main-shell {flex: 1; min-height: 0; overflow: hidden}
+  .app-shell .main-shell > main,
+  .app-shell.modern-shell > .main-shell > main,
+  .app-shell.modern-shell > .main-shell > main:has(> .instance-page-grid, > .task-config-modern) {
+    display: block; flex: 1; min-height: 0;
+    overflow-y: auto; overscroll-behavior-y: contain;
+    padding: 16px max(16px, env(safe-area-inset-right)) 24px max(16px, env(safe-area-inset-left));
+  }
+  .app-shell .topbar {
+    height: var(--topbar-height); min-height: var(--topbar-height);
+    padding: env(safe-area-inset-top) 16px 0; gap: 12px;
+    background: var(--surface); border-bottom: 1px solid var(--border);
+  }
+  .app-shell .topbar .modern-topbar-brand {display: none}
+  .app-shell .topbar .mobile-toggle {width: 44px; height: 44px; flex-shrink: 0}
+  .app-shell .modern-topbar-title {position: static; transform: none; flex: 1; text-align: left; max-width: none; font-size: 18px; font-weight: 650; overflow: hidden; text-overflow: ellipsis; white-space: nowrap}
+  .app-shell.modern-shell .modern-page-nav {display: none !important}
+  .connection-banner {font-size: 13px; padding: 10px 16px}
+
+  .mobile-bottom-nav {
+    position: fixed; inset: auto 0 0; z-index: 80;
+    display: flex; justify-content: space-around; align-items: stretch;
+    height: var(--mobile-nav-height); padding: 6px max(8px, env(safe-area-inset-right)) env(safe-area-inset-bottom) max(8px, env(safe-area-inset-left));
+    background: var(--surface); border-top: 1px solid var(--border);
+  }
+  .mobile-bottom-nav > :is(a, button) {
+    display: flex; flex: 1; flex-direction: column; align-items: center; justify-content: center;
+    gap: 3px; min-height: 52px; min-width: 44px; margin: 0 4px; padding: 4px;
+    border-radius: 12px; color: var(--muted); font-size: 11px; line-height: 1.4;
+  }
+  .mobile-bottom-nav > :is(a, button).active {color: var(--accent); background: var(--accent-soft); font-weight: 650}
+  .mobile-bottom-nav > :is(a, button):active {background: var(--surface-muted)}
+  .mobile-bottom-nav span {display: inline-flex; align-items: center; gap: 4px}
+  .mobile-bottom-nav > :is(a, button) > svg:first-child {width: 21px; height: 21px}
+  .mobile-overview-switch {display: flex; gap: 4px; padding: 4px; margin-bottom: 16px; border-radius: 12px; background: var(--surface-muted)}
+  .mobile-overview-switch button {flex: 1; min-height: 44px; font-size: 14px; border-radius: 9px; color: var(--muted)}
+  .mobile-overview-switch button[aria-pressed='true'] {background: var(--surface); color: var(--text); font-weight: 650; box-shadow: 0 1px 4px rgb(12 24 36 / .07)}
+  .instance-page-grid {display: block; min-width: 0}
+  .instance-page-grid[data-mobile-view='monitor'] > .instance-page-rail-wrap,
+  .instance-page-grid[data-mobile-view='schedule'] > .instance-page-main {display: none}
+  .instance-page-grid .instance-page-rail {height: auto; overflow: visible}
+  .app-shell .instance-page-rail .scheduler-widget {margin: 0; padding: 16px; border: 0}
+  .app-shell .instance-page-rail .scheduler-toggle {height: 48px; min-height: 48px; font-size: 15px}
+  .app-shell .instance-page-rail .rail-schedule {padding: 16px; border-radius: 14px; overflow: visible}
+  .instance-page-rail .rail-task-list {max-height: none; overflow: visible}
+  .instance-page-rail .rail-task-item {min-height: 68px; padding: 12px}
+  .instance-page-rail .rail-task-heading strong {font-size: 14px}
+  .modern-rail-resize-handle {display: none}
+  .instance-page-main, .instance-page-panel {min-width: 0}
+  .monitor-panel {height: min(680px, 65dvh); min-height: 320px; display: flex; flex-direction: column}
+  .monitor-panel .monitor-tabs {flex-wrap: wrap; gap: 8px; padding: 12px}
+  .monitor-panel .monitor-segmented button {min-height: 44px; font-size: 14px}
+  .monitor-panel .log-toolbar .icon-button {min-width: 44px; min-height: 44px}
+  .monitor-panel .monitor-view:not([hidden]) {display: flex; flex-direction: column; flex: 1; min-height: 0; overflow: hidden}
+  .monitor-panel .log-panel {flex: 1; min-height: 0}
+  .monitor-panel .preview-stage {min-height: 0; flex: 1}
+  .monitor-panel .preview-screen {max-width: 100%; max-height: 100%}
+
+  /* 目录变为可横向滑动的分组入口，调度器按需展开。 */
+  .task-config-page.task-config-modern {display: flex; flex-direction: column; gap: 12px; min-width: 0}
+  :root .app-shell .task-config-page.task-config-modern .task-config-directory {order: -3; position: static; display: block; padding: 0; border: 0; background: transparent; box-shadow: none; backdrop-filter: none}
+  .task-config-directory > .rail-section-heading {display: none}
+  .task-config-directory .group-nav {position: static; display: flex; flex-direction: row; gap: 8px; overflow-x: auto; white-space: nowrap; padding: 2px 0 6px; margin: 0; border: 0; overscroll-behavior-x: contain}
+  .task-config-directory .group-nav a {flex-shrink: 0; min-height: 44px; display: flex; align-items: center; padding: 8px 14px; border: 1px solid var(--border); border-radius: 999px; background: var(--surface); font-size: 13px}
+  .task-config-page .mobile-rail-toggle {order: -2; display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 8px 12px; color: var(--secondary); border: 1px solid var(--border); border-radius: 10px; font-size: 13px}
+  .task-config-page.task-config-modern .task-config-rail-slot {display: none; order: -1}
+  .task-config-page.task-config-modern.mobile-rail-open:not(.rail-hidden) .task-config-rail-slot {display: block}
+  .task-config-settings {min-width: 0; overflow: visible}
+  .config-groups {min-width: 0}
+  .app-shell .config-group .field-row {display: flex; flex-direction: column; align-items: stretch; padding: 16px; gap: 12px !important}
+  .app-shell .field-label {min-width: 0 !important; width: 100%; overflow-wrap: anywhere}
+  .app-shell .field-label label, .app-shell .field-name {font-size: 15px; line-height: 1.5}
+  .app-shell .field-label p {font-size: 13px; line-height: 1.7}
+  .app-shell .field-control {min-width: 0; max-width: 100%; width: 100% !important}
+  .app-shell .config-group :is(input:not([type='checkbox'], [type='radio'], [type='range']), textarea, .select-trigger),
+  .app-shell .input-icon {min-height: 44px; font-size: 16px}
+  .app-shell .input-icon > input {font-size: 16px; min-width: 0}
+  .app-shell .config-group [data-slot='select-trigger'] {width: 100%; min-height: 44px; font-size: 16px}
+  .app-shell .button {min-height: 44px; font-size: 14px}
+  .app-shell .config-group .field-actions .icon-only {width: 44px; height: 44px; min-height: 44px}
+  .app-shell .field-control > .field-actions {position: static; flex-shrink: 0}
+  .app-shell .field-control > :is(input, textarea, .select-root) {min-width: 0}
+  .app-shell .field-control > .edit-status {max-width: 100%}
+  .app-shell .config-group > .panel-heading {padding: 16px !important; flex-wrap: wrap}
+  .app-shell .config-group > .panel-heading h2 {font-size: 15px}
+  .app-shell .config-group {scroll-margin-top: 12px}
+  .app-shell .warship-page {padding: 0; min-width: 0}
+  .app-shell .warship-settings .panel-heading {flex-wrap: wrap}
+  .warship-page .warship-inline {width: 100%; justify-content: flex-start}
+  .warship-page .warship-inline > input {flex-basis: 100%; width: 100%}
+  .warship-page .warship-replay {grid-template-columns: minmax(0, 1fr); padding: 0 16px 16px}
+  .warship-page .warship-samples {grid-template-columns: repeat(auto-fill, minmax(min(220px, 100%), 1fr)); padding: 0 16px 16px}
+  .warship-page .warship-preview {margin-inline: 16px}
+  .warship-page .warship-preview.croppable {touch-action: none}
+  .warship-page .warship-table-wrap {padding-inline: 16px}
+  .warship-page .warship-table {min-width: 480px}
+  .toast, .legacy-working {bottom: calc(var(--mobile-nav-height) + 12px); font-size: 14px}
+  [data-slot='dialog-content'] {max-height: calc(100dvh - 32px - env(safe-area-inset-top) - env(safe-area-inset-bottom)); overflow-y: auto}
+  [data-slot='dialog-close'] {min-width: 44px; min-height: 44px; display: grid; place-items: center}
+  [data-slot='select-item'] {min-height: 44px; font-size: 16px}
+  .login-page {padding-block: max(24px, env(safe-area-inset-top)) max(24px, env(safe-area-inset-bottom))}
+  .login-card input {min-height: 48px; font-size: 16px}
+  .login-card .button {min-height: 48px; font-size: 16px}
+}

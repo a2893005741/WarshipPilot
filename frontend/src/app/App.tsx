@@ -4,7 +4,7 @@
 
 import { PasswordInput, Select } from '../components/FormControls'
 import { Input } from '../components/ui/input'
-import { Suspense, useEffect, useRef, useState, useSyncExternalStore, type FormEvent, type ChangeEvent } from 'react'
+import { Suspense, useEffect, useLayoutEffect, useRef, useState, useSyncExternalStore, type FormEvent, type ChangeEvent } from 'react'
 import { Link, NavLink, Outlet, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { getLayout, subscribeLayout } from './layout'
 import {NavHandle} from './NavHandle'
@@ -24,6 +24,7 @@ import { getMaterialInspector, subscribeMaterialInspector } from './materialInsp
 import { InstanceTabs } from '../components/InstanceTabs'
 import { TaskNavTree } from '../components/TaskNavTree'
 import { SidebarTransition } from '../components/SidebarTransition'
+import { MobileNavigation, type MobileMenu } from '../components/MobileNavigation'
 
 import { useIsDesktop } from './useIsDesktop'
 import { TaskSwitcher } from '../components/TaskSwitcher'
@@ -260,9 +261,9 @@ function ModernShell({children, instance, pageTitle, onCreate, updateAvailable, 
   const {instances, theme, notify, ui} = useApp()
   const connection = useConnection()
   const {pathname} = useLocation()
-  const [mobileOpen, setMobileOpen] = useState(false)
-  const closeDrawer = () => setMobileOpen(false)
-  useEffect(() => {setMobileOpen(false)}, [pathname])
+  const [mobileOpen, setMobileOpen] = useState<MobileMenu>(null)
+  const closeDrawer = () => setMobileOpen(null)
+  useLayoutEffect(() => {setMobileOpen(null)}, [pathname])
   const base = instance ? '/i/' + encodeURIComponent(instance) : ''
   const currentTask = pathname.match(/\/task\/([^/]+)/)?.[1]
   const pluginManager = pathname === '/plugins'
@@ -309,7 +310,7 @@ function ModernShell({children, instance, pageTitle, onCreate, updateAvailable, 
   </>
   const topbar = <header className="topbar">
     {modernShell && <div className="sidebar-brand modern-topbar-brand"><div className="sidebar-brand-left">{brand}</div></div>}
-    <button className="mobile-toggle icon-button" aria-label={ui('nav.open')} onClick={() => setMobileOpen(true)}><Menu size={20}/></button>
+    <button className="mobile-toggle icon-button" aria-label={ui('nav.open')} aria-haspopup="dialog" aria-expanded={mobileOpen !== null} onClick={() => setMobileOpen(instance ? 'tasks' : 'more')}><Menu size={20}/></button>
     {modernShell
       ? <span className="modern-topbar-title">{pageTitle}</span>
       : <div className="breadcrumb with-tabs">{tabNav}{currentTask
@@ -340,7 +341,7 @@ function ModernShell({children, instance, pageTitle, onCreate, updateAvailable, 
     <aside className="sidebar" style={layout.sidebarWidth != null ? ({'--sidebar-width': `${layout.sidebarWidth}px`} as React.CSSProperties) : undefined} onContextMenu={event => event.preventDefault()}>
       <SidebarResizeHandle label="拖动调整侧边栏宽度（双击恢复默认）"/>
       {/* 现代主题把招牌放进顶栏，桌面端这一行隐藏；窄屏侧栏是抽屉，招牌回抽屉里。 */}
-      <div className={`sidebar-brand ${modernShell ? 'modern-sidebar-actions' : ''}`.trim()}><div className="sidebar-brand-left">{brand}</div><button className="mobile-close icon-button" aria-label={ui('nav.close')} onClick={() => setMobileOpen(false)}><X size={18}/></button></div>
+      <div className={`sidebar-brand ${modernShell ? 'modern-sidebar-actions' : ''}`.trim()}><div className="sidebar-brand-left">{brand}</div><button className="mobile-close icon-button" aria-label={ui('nav.close')} onClick={closeDrawer}><X size={18}/></button></div>
       <SidebarTransition viewKey={instance ? `instance:${instance}` : 'global'}>
         <Suspense fallback={<ModernNavigation {...navigationProps}/>}>
           <PrimaryNavigation {...navigationProps} fallback={<ModernNavigation {...navigationProps}/>}/>
@@ -354,6 +355,7 @@ function ModernShell({children, instance, pageTitle, onCreate, updateAvailable, 
       {connection !== 'ready' && <div className="connection-banner" role="status"><WifiOff size={16}/>{ui('connection.connecting')}</div>}
       <main id="main-content" tabIndex={-1}>{children}</main>
     </div>
+    <MobileNavigation instance={instance} menu={mobileOpen} onMenuChange={setMobileOpen} updateAvailable={Boolean(updateAvailable)}/>
     {theme !== 'minimal' && <MaterialInspector/>}
   </div>
 }
