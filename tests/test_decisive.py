@@ -7,6 +7,9 @@ from types import SimpleNamespace
 import unittest
 from unittest.mock import patch
 
+import cv2
+import numpy as np
+
 from module.api.alas.config_adapter import alas_schema
 from module.config.config import Config
 from module.config.schema import save_field, schema
@@ -135,6 +138,28 @@ class DecisiveReplayTest(unittest.TestCase):
         _, (x, y, *_) = replay.inputs[0]
         self.assertLess(abs(float(x) - 38) + abs(float(y) - 343), 16)  # 决战选关 -> 换票
         self.assertEqual(replay.machine.decisive_end, 'tickets')
+
+    def test_stage_clear_choice_keeps_rewards_and_continues(self):
+        # 确认通关/放弃 after a stage BOSS: the original recognizes no page there
+        # and asks for a game restart (live run, 2026-11-18).
+        image = np.zeros((720, 1280, 3), np.uint8)
+        for name, x, y in (('decisive-clear-title.png', 276, 254), ('decisive-abandon-title.png', 766, 254)):
+            template = cv2.imdecode(np.fromfile(ROOT / 'assets/game' / name, np.uint8), cv2.IMREAD_COLOR)
+            h, w = template.shape[:2]
+            image[y:y + h, x:x + w] = cv2.cvtColor(template, cv2.COLOR_BGR2RGB)
+        image[600:620, 600:690] = [34, 143, 246]  # 确认
+        choice = png(image)
+        screens = [choice, self.no_tickets]
+        replay = Replay()
+        replay.run(choice, lambda *a: screens.pop(0) if screens else self.home)
+        taps = [TaskController.screen_point(*args[:2]) for _, args in replay.inputs[:2]]
+        self.assertLess(abs(taps[0][0] - 400) + abs(taps[0][1] - 340), 20)  # 确认通关
+        self.assertLess(abs(taps[1][0] - 646) + abs(taps[1][1] - 610), 20)  # 确认
+        self.assertEqual(replay.machine.decisive_end, 'tickets')
+        # Other tasks never act on it.
+        machine = vm('sortie')
+        machine.feed(choice)
+        self.assertFalse(machine.decisive_clear())
 
 
 class DecisivePlatformTest(unittest.TestCase):

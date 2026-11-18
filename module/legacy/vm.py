@@ -63,6 +63,8 @@ class LegacyVM:
             return cv2.imdecode(np.frombuffer((resources/'assets/game'/name).read_bytes(),np.uint8),cv2.IMREAD_COLOR)
         self.continue_templates = [(390,190,template('expedition-continue-title.png')),
                                    (515,315,template('expedition-continue-question.png'))]
+        self.clear_templates = [(276,254,template('decisive-clear-title.png')),
+                                (766,254,template('decisive-abandon-title.png'))]
         self.config = json.loads((resources / 'assets/legacy/task-defaults.json').read_text(encoding='utf-8'))
         # 决战 also reads the general page's drop/retirement settings (拆船方式,
         # 捞*, 图鉴新船, 捞船截图); the task's own page wins on overlap.
@@ -108,6 +110,7 @@ class LegacyVM:
         self.globals[b'host_sdk'] = self.sdk
         self.globals[b'host_page'] = lambda value: self.page_changed(text(value)) if value is not None else None
         self.globals[b'host_continue'] = self.expedition_continue
+        self.globals[b'host_decisive_clear'] = self.decisive_clear
         self.globals[b'host_split'] = lambda value,separator: self.lua.table_from(value.split(separator))
         # Old TableSize also measures strings: 当前日期() pads "5" to "05" with it.
         self.lua.execute(b'''
@@ -141,12 +144,18 @@ class LegacyVM:
                     ''' + identifier('固定延时点击') + b'''(198, 368, 700)
                     LuaAuxLib.LuaAuxLid(13, true)
                 end
+                if host_decisive_clear() then
+                    host_page('DECISIVE_CLEAR')
+                    ''' + identifier('固定延时点击') + b'''(284, 300, 700)
+                    ''' + identifier('固定延时点击') + b'''(82, 484, 1500)
+                    LuaAuxLib.LuaAuxLid(13, true)
+                end
                 local value = original(...)
                 host_page(value)
                 return value
             end
         '''
-        for marker,value in {'EXPEDITION_CONTINUE':'继续远征确认'}.items():
+        for marker,value in {'EXPEDITION_CONTINUE':'继续远征确认','DECISIVE_CLEAR':'决战确认通关'}.items():
             page_source=page_source.replace(marker.encode(),value.encode())
         self.lua.execute(page_source)
         # 战役剩余次数 asks the physical screen width (720 on this frame) and
@@ -246,6 +255,19 @@ class LegacyVM:
             patch=cv2.cvtColor(self.image[y:y+h,x:x+w], cv2.COLOR_RGB2BGR)
             if float(cv2.matchTemplate(patch,template,cv2.TM_CCOEFF_NORMED)[0,0])<.96:return False
         return bool(np.all(np.abs(self.image[445,450].astype(int)-[231,194,32])<35))
+
+    def decisive_clear(self):
+        # The 确认通关/放弃 choice after a stage BOSS is also newer than the
+        # recovered script, which sees no page there and asks for a restart.
+        # Take 确认通关 (keep the rewards, go to the next stage), then 确认.
+        if self.task != 'decisive':
+            return False
+        for x,y,template in self.clear_templates:
+            if template is None:return False
+            h,w=template.shape[:2]
+            patch=cv2.cvtColor(self.image[y:y+h,x:x+w], cv2.COLOR_RGB2BGR)
+            if float(cv2.matchTemplate(patch,template,cv2.TM_CCOEFF_NORMED)[0,0])<.96:return False
+        return bool(np.all(np.abs(self.image[610,645].astype(int)-[34,143,246])<35))
 
     def set_physical(self, value):
         self.physical = bool(value)
