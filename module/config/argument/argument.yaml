@@ -1233,87 +1233,6 @@ control:
       source:
         page: 功能控制台
         ui_line: 154
-    换票资源:
-      name: 换票资源
-      type: select
-      value: 0
-      storage: legacy
-      key: 换票资源
-      source:
-        page: 功能控制台
-        ui_line: 169
-      option:
-      - value: 0
-        label: 钢
-      - value: 1
-        label: 弹
-      - value: 2
-        label: 铝
-      - value: 3
-        label: 油
-    '351':
-      name: '351'
-      type: checkbox
-      value: false
-      storage: legacy
-      key: '351'
-      source:
-        page: 功能控制台
-        ui_line: 221
-    U96:
-      name: U96
-      type: checkbox
-      value: false
-      storage: legacy
-      key: U96
-      source:
-        page: 功能控制台
-        ui_line: 225
-    U1206:
-      name: U1206
-      type: checkbox
-      value: false
-      storage: legacy
-      key: U1206
-      source:
-        page: 功能控制台
-        ui_line: 226
-    鹦鹉螺:
-      name: 鹦鹉螺
-      type: checkbox
-      value: false
-      storage: legacy
-      key: 鹦鹉螺
-      source:
-        page: 功能控制台
-        ui_line: 227
-    U1405:
-      name: U1405
-      type: checkbox
-      value: false
-      storage: legacy
-      key: U1405
-      source:
-        page: 功能控制台
-        ui_line: 231
-    鲃鱼:
-      name: 鲃鱼
-      type: checkbox
-      value: false
-      storage: legacy
-      key: 鲃鱼
-      source:
-        page: 功能控制台
-        ui_line: 232
-    开局SL潜艇:
-      name: 开局SL潜艇
-      type: checkbox
-      value: true
-      storage: legacy
-      key: 开局SL潜艇
-      source:
-        page: 功能控制台
-        ui_line: 233
 expedition:
   Scheduler:
     Enable:
@@ -7988,7 +7907,6 @@ decisive:
       value: false
       storage: task
       key: enabled
-      display: readonly
     Priority:
       name: 优先级
       help: 数字越小，优先级越高。
@@ -7998,14 +7916,12 @@ decisive:
       max: 10
       storage: task
       key: priority
-      display: readonly
     StartTime:
       name: 计划时间
       type: time
       value: 00:00
       storage: task
       key: start_time
-      display: readonly
     IntervalMinutes:
       name: 执行间隔（分钟）
       type: number
@@ -8014,14 +7930,12 @@ decisive:
       max: 10080
       storage: task
       key: interval_minutes
-      display: readonly
     NextRun:
       name: 下次运行
       type: datetime-local
       value: ''
       storage: scheduler
       key: NextRun
-      display: readonly
     Runs:
       name: 执行次数
       type: number
@@ -8030,14 +7944,12 @@ decisive:
       max: 9999
       storage: task
       key: runs
-      display: readonly
     SaveScreenshots:
       name: 保留任务截图
       type: checkbox
       value: true
       storage: task
       key: save_screenshots
-      display: readonly
   Decisive:
     决战换票开关:
       name: 决战换票开关
@@ -8048,6 +7960,24 @@ decisive:
       source:
         page: 功能控制台
         ui_line: 167
+    换票资源:
+      name: 换票资源
+      type: select
+      value: 0
+      storage: legacy
+      key: 换票资源
+      source:
+        page: 功能控制台
+        ui_line: 169
+      option:
+      - value: 0
+        label: 钢
+      - value: 1
+        label: 弹
+      - value: 2
+        label: 铝
+      - value: 3
+        label: 油
     决战开关:
       name: 决战开关
       type: checkbox
@@ -8460,6 +8390,15 @@ decisive:
       source:
         page: 功能控制台
         ui_line: 214
+    开局SL潜艇:
+      name: 开局SL潜艇
+      type: checkbox
+      value: true
+      storage: legacy
+      key: 开局SL潜艇
+      source:
+        page: 功能控制台
+        ui_line: 233
     U47:
       name: U47
       type: checkbox
@@ -8478,6 +8417,60 @@ decisive:
       source:
         page: 功能控制台
         ui_line: 220
+    U96:
+      name: U96
+      type: checkbox
+      value: false
+      storage: legacy
+      key: U96
+      source:
+        page: 功能控制台
+        ui_line: 225
+    U1206:
+      name: U1206
+      type: checkbox
+      value: false
+      storage: legacy
+      key: U1206
+      source:
+        page: 功能控制台
+        ui_line: 226
+    鹦鹉螺:
+      name: 鹦鹉螺
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 鹦鹉螺
+      source:
+        page: 功能控制台
+        ui_line: 227
+    '351':
+      name: '351'
+      type: checkbox
+      value: false
+      storage: legacy
+      key: '351'
+      source:
+        page: 功能控制台
+        ui_line: 221
+    U1405:
+      name: U1405
+      type: checkbox
+      value: false
+      storage: legacy
+      key: U1405
+      source:
+        page: 功能控制台
+        ui_line: 231
+    鲃鱼:
+      name: 鲃鱼
+      type: checkbox
+      value: false
+      storage: legacy
+      key: 鲃鱼
+      source:
+        page: 功能控制台
+        ui_line: 232
 reward:
   Scheduler:
     Enable:

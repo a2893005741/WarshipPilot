@@ -1836,112 +1836,6 @@
           "page": "功能控制台",
           "ui_line": 154
         }
-      },
-      "换票资源": {
-        "name": "换票资源",
-        "type": "select",
-        "value": 0,
-        "storage": "legacy",
-        "key": "换票资源",
-        "source": {
-          "page": "功能控制台",
-          "ui_line": 169
-        },
-        "option": [
-          {
-            "value": 0,
-            "label": "钢"
-          },
-          {
-            "value": 1,
-            "label": "弹"
-          },
-          {
-            "value": 2,
-            "label": "铝"
-          },
-          {
-            "value": 3,
-            "label": "油"
-          }
-        ]
-      },
-      "351": {
-        "name": "351",
-        "type": "checkbox",
-        "value": false,
-        "storage": "legacy",
-        "key": "351",
-        "source": {
-          "page": "功能控制台",
-          "ui_line": 221
-        }
-      },
-      "U96": {
-        "name": "U96",
-        "type": "checkbox",
-        "value": false,
-        "storage": "legacy",
-        "key": "U96",
-        "source": {
-          "page": "功能控制台",
-          "ui_line": 225
-        }
-      },
-      "U1206": {
-        "name": "U1206",
-        "type": "checkbox",
-        "value": false,
-        "storage": "legacy",
-        "key": "U1206",
-        "source": {
-          "page": "功能控制台",
-          "ui_line": 226
-        }
-      },
-      "鹦鹉螺": {
-        "name": "鹦鹉螺",
-        "type": "checkbox",
-        "value": false,
-        "storage": "legacy",
-        "key": "鹦鹉螺",
-        "source": {
-          "page": "功能控制台",
-          "ui_line": 227
-        }
-      },
-      "U1405": {
-        "name": "U1405",
-        "type": "checkbox",
-        "value": false,
-        "storage": "legacy",
-        "key": "U1405",
-        "source": {
-          "page": "功能控制台",
-          "ui_line": 231
-        }
-      },
-      "鲃鱼": {
-        "name": "鲃鱼",
-        "type": "checkbox",
-        "value": false,
-        "storage": "legacy",
-        "key": "鲃鱼",
-        "source": {
-          "page": "功能控制台",
-          "ui_line": 232
-        }
-      },
-      "开局SL潜艇": {
-        "name": "开局SL潜艇",
-        "type": "checkbox",
-        "value": true,
-        "storage": "legacy",
-        "key": "开局SL潜艇",
-        "source": {
-          "page": "功能控制台",
-          "ui_line": 233
-        }
       }
     }
   },
@@ -12278,8 +12172,7 @@
         "type": "checkbox",
         "value": false,
         "storage": "task",
-        "key": "enabled",
-        "display": "readonly"
+        "key": "enabled"
       },
       "Priority": {
         "name": "优先级",
@@ -12289,34 +12182,32 @@
         "min": 1,
         "max": 10,
         "storage": "task",
-        "key": "priority",
-        "display": "readonly"
+        "key": "priority"
       },
       "StartTime": {
         "name": "计划时间",
         "type": "time",
-        "value": "00:00",
+        "value": "00:10",
         "storage": "task",
         "key": "start_time",
-        "display": "readonly"
+        "help": "首次运行的计划时间。决战次数每天 0 点刷新；今日次数打完或决战票用完后，次日在这个时间再检查。"
       },
       "IntervalMinutes": {
-        "name": "执行间隔（分钟）",
+        "name": "重试间隔（分钟）",
         "type": "number",
         "value": 60,
         "min": 1,
         "max": 10080,
         "storage": "task",
         "key": "interval_minutes",
-        "display": "readonly"
+        "help": "船坞已满或其他提前结束时，按此间隔再试。"
       },
       "NextRun": {
         "name": "下次运行",
         "type": "datetime-local",
         "value": "",
         "storage": "scheduler",
-        "key": "NextRun",
-        "display": "readonly"
+        "key": "NextRun"
       },
       "Runs": {
         "name": "执行次数",
@@ -12326,15 +12217,14 @@
         "max": 9999,
         "storage": "task",
         "key": "runs",
-        "display": "readonly"
+        "display": "hide"
       },
       "SaveScreenshots": {
         "name": "保留任务截图",
         "type": "checkbox",
         "value": true,
         "storage": "task",
-        "key": "save_screenshots",
-        "display": "readonly"
+        "key": "save_screenshots"
       }
     },
     "Decisive": {
@@ -12347,7 +12237,37 @@
         "source": {
           "page": "功能控制台",
           "ui_line": 167
-        }
+        },
+        "help": "开始决战前先用所选资源兑换决战票，兑换按钮变灰后继续决战。"
+      },
+      "换票资源": {
+        "name": "换票资源",
+        "type": "select",
+        "value": 0,
+        "storage": "legacy",
+        "key": "换票资源",
+        "source": {
+          "page": "功能控制台",
+          "ui_line": 169
+        },
+        "option": [
+          {
+            "value": 0,
+            "label": "钢"
+          },
+          {
+            "value": 1,
+            "label": "弹"
+          },
+          {
+            "value": 2,
+            "label": "铝"
+          },
+          {
+            "value": 3,
+            "label": "油"
+          }
+        ]
       },
       "决战开关": {
         "name": "决战开关",
@@ -12358,7 +12278,9 @@
         "source": {
           "page": "功能控制台",
           "ui_line": 174
-        }
+        },
+        "display": "hide",
+        "help": "决战启动时自动开启；自动调度请使用上方的“启用任务”。"
       },
       "决战限制次数": {
         "name": "决战限制次数",
@@ -12771,7 +12693,8 @@
             "value": 99,
             "label": "100"
           }
-        ]
+        ],
+        "help": "每天最多打几次决战。原脚本按 BOSS 战计数，3 次 BOSS 算一次决战，计数保存在 log/legacy-files/记录文件.txt。"
       },
       "决战方案": {
         "name": "决战方案",
@@ -12808,7 +12731,8 @@
             "value": 5,
             "label": "E1"
           }
-        ]
+        ],
+        "help": "原脚本提示：小型船全部用潜艇；中型一条 2 费，其余尽量高费；大型尽量高费，不能选战巡。修改选船后需在游戏里点重置。"
       },
       "决战道中阵型": {
         "name": "决战道中阵型",
@@ -13048,7 +12972,8 @@
         "source": {
           "page": "功能控制台",
           "ui_line": 213
-        }
+        },
+        "help": "满编后每次进入战斗地图点 5 次购买经验。"
       },
       "教官用技能": {
         "name": "教官用技能",
@@ -13059,7 +12984,20 @@
         "source": {
           "page": "功能控制台",
           "ui_line": 214
-        }
+        },
+        "help": "教官技能可用时点 5 次释放；教官是哈巴库克时原脚本不会用技能。"
+      },
+      "开局SL潜艇": {
+        "name": "开局SL潜艇",
+        "type": "checkbox",
+        "value": true,
+        "storage": "legacy",
+        "key": "开局SL潜艇",
+        "source": {
+          "page": "功能控制台",
+          "ui_line": 233
+        },
+        "help": "未满编时，即使费用标记不符也优先选潜艇。"
       },
       "U47": {
         "name": "U47",
@@ -13081,6 +13019,72 @@
         "source": {
           "page": "功能控制台",
           "ui_line": 220
+        }
+      },
+      "U96": {
+        "name": "U96",
+        "type": "checkbox",
+        "value": false,
+        "storage": "legacy",
+        "key": "U96",
+        "source": {
+          "page": "功能控制台",
+          "ui_line": 225
+        }
+      },
+      "U1206": {
+        "name": "U1206",
+        "type": "checkbox",
+        "value": false,
+        "storage": "legacy",
+        "key": "U1206",
+        "source": {
+          "page": "功能控制台",
+          "ui_line": 226
+        }
+      },
+      "鹦鹉螺": {
+        "name": "鹦鹉螺",
+        "type": "checkbox",
+        "value": false,
+        "storage": "legacy",
+        "key": "鹦鹉螺",
+        "source": {
+          "page": "功能控制台",
+          "ui_line": 227
+        }
+      },
+      "351": {
+        "name": "351",
+        "type": "checkbox",
+        "value": false,
+        "storage": "legacy",
+        "key": "351",
+        "source": {
+          "page": "功能控制台",
+          "ui_line": 221
+        }
+      },
+      "U1405": {
+        "name": "U1405",
+        "type": "checkbox",
+        "value": false,
+        "storage": "legacy",
+        "key": "U1405",
+        "source": {
+          "page": "功能控制台",
+          "ui_line": 231
+        }
+      },
+      "鲃鱼": {
+        "name": "鲃鱼",
+        "type": "checkbox",
+        "value": false,
+        "storage": "legacy",
+        "key": "鲃鱼",
+        "source": {
+          "page": "功能控制台",
+          "ui_line": 232
         }
       }
     }

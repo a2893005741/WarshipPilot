@@ -6,18 +6,20 @@ from datetime import datetime, timezone, timedelta
 import time
 import uuid
 
-from module.legacy.vm import LegacyVM, identifier, text
+from module.legacy.vm import LegacyHalt, LegacyVM, identifier, text
 from module.runtime.native import NATIVE_TASKS, NativeRun
 from module.logger import atomic_json, now
 from module.config.task_settings import read_tasks
 from module.config.config import Config
 
-SUPPORTED = ('expedition', 'sortie', 'campaign', 'exercise', 'reward')
+SUPPORTED = ('expedition', 'sortie', 'campaign', 'exercise', 'reward', 'decisive')
 NAMES = {'expedition': '远征收取与继续派遣', 'sortie': '原方案C', 'campaign': '原脚本打战役',
-         'exercise': '原脚本打演习', 'reward': '原脚本收任务'}
+         'exercise': '原脚本打演习', 'reward': '原脚本收任务', 'decisive': '原脚本决战'}
 SOURCES = {'expedition': 'native', 'sortie': 'original_lua_functions',
            'campaign': 'original_lua_functions', 'exercise': 'original_lua_functions',
-           'reward': 'original_lua_functions'}
+           'reward': 'original_lua_functions', 'decisive': 'original_lua_functions'}
+DECISIVE_REASONS = {'limit': '今日决战次数已打完', 'tickets': '决战票已用完'}
+BURST = 0.4  # seconds: the original taps a button 5 times with 100 ms waits
 CAMPAIGN_BATH = timedelta(milliseconds=900000)  # original: 战役泡澡时间戳 + 900000
 EXPEDITION_MARGIN = timedelta(seconds=30)  # let the game flag the expedition finished
 EXPEDITION_MIN = timedelta(minutes=1)
@@ -65,6 +67,13 @@ def legacy_next_run(task, current, settings, state, elapsed_ms):
                      + timedelta(days=day) for day in (0, 1) for hour in (0, 12, 18)]
         due = min(moment for moment in refreshes if moment > local)
         return due.astimezone(timezone.utc), '本轮演习对手已打完，等待 0、12、18 点刷新'
+    if task == 'decisive':
+        end = state.get('决战结束')
+        if end in DECISIVE_REASONS:
+            return next_daily(current, settings['start_time']), DECISIVE_REASONS[end] + '，次日计划时间再检查'
+        if end == 'dock_full':
+            return current + interval, f'船坞已满，{settings["interval_minutes"]} 分钟后再试'
+        return current + interval, f'提前结束，{settings["interval_minutes"]} 分钟后再试'
     if task == 'campaign':
         if state.get('打战役时间戳'):
             return next_daily(current, settings['start_time']), '今日战役次数已用完'
@@ -129,6 +138,10 @@ class TaskController:
     def event(self, message):
         self.runtime.store.event('原脚本 · ' + message)
 
+    def progress(self):
+        # An original wait that stays on one page by design (决战慢修等待).
+        self.page_time = time.monotonic()
+
     def page(self, value):
         if value != self.result['page']:
             self.result['page'] = value
@@ -147,14 +160,18 @@ class TaskController:
         if self.busy:
             raise ValueError('已有任务持有当前设备，请先停止或等待完成')
         if task not in SUPPORTED:
-            raise ValueError('目前接入远征、战役、演习、任务奖励和原方案C出征，其他任务尚未适配')
+            raise ValueError('目前接入远征、战役、演习、任务奖励、决战和原方案C出征，其他任务尚未适配')
         if not self.runtime.serial or self.runtime.status != 'live':
             raise ValueError('请先连接舰R并恢复实时画面')
         self.runtime.adb.ensure_input_ready(self.runtime.serial)
-        settings = read_tasks(self.runtime.store.root)[task]
+        tasks = read_tasks(self.runtime.store.root)
+        settings = tasks[task]
         if task in NATIVE_TASKS:
             return self.start_native(task, settings)
-        vm = LegacyVM(self.runtime.resources, self.runtime.store.root, task, settings, self.event, self.page)
+        if task == 'decisive':
+            settings = settings | {'general_legacy': tasks['general']['legacy']}
+        vm = LegacyVM(self.runtime.resources, self.runtime.store.root, task, settings, self.event, self.page,
+                      progress=self.progress)
         self.result = {'status': 'running', 'task': task, 'name': NAMES[task], 'page': '', 'action': '启动原函数',
                        'inputs': 0, 'collected': 0, 'battles': 0, 'error': '',
                        'id': uuid.uuid4().hex, 'started': now(), 'settings': settings}
@@ -305,7 +322,7 @@ class TaskController:
                                   'content': f'{NAMES.get(task, task)} 连续失败 {self.failures[task]} 次：{message[:200]}'})
             self.event(f'{NAMES.get(task, task)} 连续失败 {self.failures[task]} 次，调度器已停止：{message[:200]}')
         else:
-            retry = read_tasks(self.runtime.store.root)[task]['interval_minutes'] if task == 'exercise' else 10
+            retry = read_tasks(self.runtime.store.root)[task]['interval_minutes'] if task in ('exercise', 'decisive') else 10
             self.due[task] = (datetime.now(timezone.utc) + timedelta(minutes=retry)).isoformat()
             self.event(f'{NAMES.get(task, task)} 失败（第 {self.failures[task]} 次），{retry} 分钟后重试：{message[:200]}')
         self.save_due()
@@ -335,9 +352,13 @@ class TaskController:
         self.runtime.adb.ensure_input_ready(self.runtime.serial)
         stamp=time.monotonic()
         key=(name, tuple(v//20 for v in coordinates))
-        if sum(k==key and stamp-t<60 for t,k in self.clicks)>=10:
-            raise RuntimeError('同一操作一分钟重复十次，已停止并保存现场')
-        self.clicks.append((stamp,key))
+        if self.clicks and self.clicks[-1][1]==key and stamp-self.clicks[-1][0]<BURST:
+            # One original burst (e.g. 教官用技能: five taps 100 ms apart) is one action.
+            self.clicks[-1]=(stamp,key)
+        else:
+            if sum(k==key and stamp-t<60 for t,k in self.clicks)>=10:
+                raise RuntimeError('同一操作一分钟重复十次，已停止并保存现场')
+            self.clicks.append((stamp,key))
         if name=='tap':self.runtime.adb.click(self.runtime.serial,*coordinates)
         else:self.runtime.adb.swipe(self.runtime.serial,*coordinates)
         self.result['inputs']+=1
@@ -396,16 +417,26 @@ class TaskController:
             raise RuntimeError('原函数已返回，但尚未达到出征次数，保留现场供核对')
         if task=='exercise' and not self.vm.exercise_completed:
             raise RuntimeError('原演习提前返回，尚未确认两页对手已打完，保留现场供核对')
+        extra=''
+        if task=='decisive':
+            record=self.vm.globals[identifier('TABLE')]
+            bosses=int(record['决战BOSS次数'.encode()] or 0)
+            self.result['battles']=bosses
+            extra=f'；今日 BOSS {bosses} 次（3 次 BOSS 算一次决战）'
+            if text(self.vm.globals[identifier('挂远征原因')] or b''):
+                extra+='；'+text(self.vm.globals[identifier('挂远征原因')]).lstrip('，')
         self.result.update(status='completed', action='原流程已回港，本轮完成', ended=now())
         state = {name: self.vm.globals[identifier(name)] or 0 for name in ('打战役时间戳', '战役泡澡时间戳')}
         if task == 'exercise':
             state['演习完成'] = self.vm.exercise_completed
+        if task == 'decisive':
+            state['决战结束'] = self.vm.decisive_end
         elapsed = self.vm.sdk(84)  # the VM's millisecond clock (old GetTickCount)
         due, reason = legacy_next_run(task, datetime.now(timezone.utc), settings, state, elapsed)
         self.due[task]=due.isoformat()
         self.save_due()
         self.failures.pop(task, None)
-        self.event(f'完成：{NAMES[task]}；下次 {due.astimezone().strftime("%m-%d %H:%M")}（{reason}）')
+        self.event(f'完成：{NAMES[task]}；下次 {due.astimezone().strftime("%m-%d %H:%M")}（{reason}）{extra}')
         self.vm=None;self.persist()
 
     def tick(self, raw):
@@ -418,9 +449,20 @@ class TaskController:
             if self.vm and self.result['status']=='running':
                 if self.result['task'] == 'sortie':
                     self.result['battles']=int(self.vm.globals[identifier('战斗次数C')] or 0)
+                elif self.result['task'] == 'decisive':
+                    self.result['battles']=int(self.vm.globals[identifier('TABLE')]['决战BOSS次数'.encode()] or 0)
                 limit=360 if '战斗' in self.result['page'] else 150
                 if time.monotonic()-self.page_time>limit:
                     raise RuntimeError('原任务页面长期没有进展：'+self.result['page'])
+        except LegacyHalt as exc:
+            # The original stops the whole script here; so does the scheduler.
+            self.vm=None;self.touch=None;self.scheduler=False;self.save_due()
+            self.result.update(status='stopped',action=str(exc)[:300],ended=now())
+            self.event('停止：'+str(exc)[:300]+'；调度器已停止')
+            launcher = getattr(self.runtime, 'launcher', None)
+            if launcher:
+                launcher.publish({'instance': '舰R', 'title': '决战已停止', 'content': str(exc)[:200]})
+            self.persist()
         except Exception as exc:
             self.vm=None;self.touch=None
             if self.scheduler and self.result.get('task'):

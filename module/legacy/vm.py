@@ -26,24 +26,37 @@ def text(value):
 
 
 # Desktop task -> original global function used as the entry point.
-ENTRIES = {'sortie': '出征战斗', 'campaign': '打战役', 'exercise': '打演习', 'reward': '收任务'}
+ENTRIES = {'sortie': '出征战斗', 'campaign': '打战役', 'exercise': '打演习', 'reward': '收任务',
+           'decisive': '决战'}
 PHYSICAL = (720, 1280)  # portrait size of the 1280x720 game frame (old GetScreen)
 CANVAS = (540, 960)     # the script's default canvas
+# 决战 returns without a status value; its log line before each return says why.
+DECISIVE_ENDS = {'今天的决战次数打完了': 'limit', '票用完了,结束决战': 'tickets',
+                 '仓满了,停止决战,转远征': 'dock_full', '仓库满了,停止决战,转远征': 'dock_full'}
+RECORD_FILE = '记录文件.txt'  # original /sdcard/记录文件.txt: 日期 and 决战BOSS次数
+
+
+class LegacyHalt(RuntimeError):
+    """The original deliberately stops the whole script (it loops forever)."""
 
 
 class LegacyVM:
-    def __init__(self, resources: Path, data: Path, task: str, settings: dict, log, page_changed):
+    def __init__(self, resources: Path, data: Path, task: str, settings: dict, log, page_changed,
+                 progress=None):
         if task not in ENTRIES:
             raise ValueError(f'原脚本没有对应的任务入口：{task}')
         self.task = task
         self.resources, self.data = resources, data
         self.log, self.page_changed = log, page_changed
+        self.progress = progress or (lambda: None)
         self.started = time.monotonic()
         self.image = None
         self.patterns = {}
         self.search_images = {}
         self.speed_notice = False
         self.exercise_completed = False
+        self.decisive_end = None
+        self.snapshots = []
         self.canvas = CANVAS
         self.physical = False  # GetScreen answers the physical size (战役剩余次数 only)
         def template(name):
@@ -51,6 +64,9 @@ class LegacyVM:
         self.continue_templates = [(390,190,template('expedition-continue-title.png')),
                                    (515,315,template('expedition-continue-question.png'))]
         self.config = json.loads((resources / 'assets/legacy/task-defaults.json').read_text(encoding='utf-8'))
+        # 决战 also reads the general page's drop/retirement settings (拆船方式,
+        # 捞*, 图鉴新船, 捞船截图); the task's own page wins on overlap.
+        self.config.update(settings.get('general_legacy', {}))
         self.config.update(settings.get('legacy', {}))
         self.config.update({'前方案A': False, '前方案B': False,
                             '前方案C': True, '后方案A': False, '后方案B': False, '后方案C': False,
@@ -68,6 +84,9 @@ class LegacyVM:
             # The desktop scheduler owns the switch; a manual run also runs
             # when scheduling is disabled. Fleet/formation remain original enums.
             self.config['演习开关'] = True
+        if task == 'decisive':
+            # Same ownership rule as 演习开关.
+            self.config['决战开关'] = True
         self.lua = LuaRuntime(encoding=None, unpack_returned_tuples=True, register_eval=False,
                               register_builtins=False, max_memory=64_000_000)
         self.lua.execute((resources / 'assets/legacy/main.lua52.luac').read_bytes())
@@ -78,15 +97,24 @@ class LegacyVM:
                             '点击时间点': -10000, 'X暂存': -1, 'Y暂存': -1,
                             '有用': 1, '上次养成记录': 0, '战斗次数C': 0, '快修次数C': 0}.items():
             self.globals[identifier(name)] = value.encode() if isinstance(value, str) else value
-        self.globals[identifier('TABLE')] = self.lua.table_from({
-            '养成记录'.encode(): 0, '日期'.encode(): datetime.now().strftime('%Y%m%d').encode(),
-            '决战BOSS次数'.encode(): 0})
+        # 日期 uses the format of the original 当前日期(): MMDD.
+        record = {'养成记录': 0, '日期': datetime.now().strftime('%m%d'), '决战BOSS次数': 0}
+        if task == 'decisive':
+            # The original main loads this file at start-up; 决战 keeps the
+            # day's BOSS count in it ("打3次BOSS算一次决战") and resets it itself
+            # when 日期 differs from 当前日期().
+            record |= self.read_record()
+        self.globals[identifier('TABLE')] = self.to_lua(record)
         self.globals[b'host_sdk'] = self.sdk
         self.globals[b'host_page'] = lambda value: self.page_changed(text(value)) if value is not None else None
         self.globals[b'host_continue'] = self.expedition_continue
         self.globals[b'host_split'] = lambda value,separator: self.lua.table_from(value.split(separator))
+        # Old TableSize also measures strings: 当前日期() pads "5" to "05" with it.
         self.lua.execute(b'''
-            LuaAuxLib = {TableSize=function(t) local n=0 for _ in pairs(t) do n=n+1 end return n end,
+            LuaAuxLib = {TableSize=function(t)
+                             if type(t) == 'string' then return #t end
+                             local n=0 for _ in pairs(t) do n=n+1 end return n
+                         end,
                          StringSplit=host_split}
             LuaAuxLib.LuaAuxLid = function(cmd, ...)
                 if cmd == 13 or cmd == 15 or cmd == 65 or cmd == 219 then
@@ -154,6 +182,24 @@ class LegacyVM:
                     end
                 end
             end''')(entry)
+        if task == 'decisive':
+            # Original main order: 决战换票 (own switch) then 决战. 决战 returns
+            # wherever it stops (usually 决战选关); 收远征 then walks home and
+            # collects, as the sortie wrapper does.
+            # 泡澡(…, "决战") waits up to 15 minutes when the bath is full and
+            # calls 出征战斗 meanwhile. The desktop scheduler runs 方案C as its
+            # own task with its own settings, so the wait only keeps time.
+            self.globals[b'host_decisive_wait'] = self.decisive_wait
+            self.globals[identifier('出征战斗')] = self.lua.eval(b'function() host_decisive_wait() end')
+            entry = self.lua.eval(b'''function(exchange, decisive, collect)
+                return function()
+                    if LuaAuxLib.LuaAuxLid(193, ''' + repr('决战换票开关').encode() + b''') == true then
+                        exchange()
+                    end
+                    decisive()
+                    collect()
+                end
+            end''')(self.globals[identifier('决战换票')], entry, self.globals[identifier('收远征')])
         if task == 'sortie':
             entry_source = b'''function(collect, sortie)
                 return function()
@@ -279,8 +325,15 @@ class LegacyVM:
     def sdk(self, command, *args):
         command=int(command)
         if command==10:
-            if args and args[0] is not None:self.log(text(args[0])[:500])
+            if args and args[0] is not None:
+                message=text(args[0])
+                self.log(message[:500])
+                if self.task=='decisive':self.decisive_log(message)
             return 0
+        if command==186:
+            # SnapShot(path): 决战 saves the drop screen. Keep the file name,
+            # store it under the data folder instead of /sdcard/Pictures.
+            return self.snapshot(args[0] if args else b'')
         if command==74:
             self.log(' '.join(text(value) for value in args if value is not None)[:500])
             return 0
@@ -325,6 +378,45 @@ class LegacyVM:
                 self.speed_notice = True
             return 0
         raise RuntimeError(f'原脚本运行接口尚未适配：{command}，参数：{str([text(a) for a in args])[:240]}')
+
+    def decisive_log(self, message):
+        for prefix, reason in DECISIVE_ENDS.items():
+            if message.startswith(prefix):
+                self.decisive_end = reason
+        if message.startswith('决战慢修等待'):
+            # The bath wait stays on 港区 for up to 15 minutes by design.
+            self.progress()
+        if message == '新船上锁停止':
+            # 图鉴新船 = 新船上锁停止: the original logs this every second forever.
+            raise LegacyHalt('决战捞到新船，已按“新船上锁停止”设置上锁并停止，请到船坞查看')
+
+    def decisive_wait(self):
+        self.progress()
+
+    def snapshot(self, filename):
+        name=Path(text(filename).replace('\\','/')).name or f'{int(time.time()*1000)}.png'
+        if not name.lower().endswith('.png'):name+='.png'
+        folder=self.data/'screenshots'/'decisive'
+        folder.mkdir(parents=True,exist_ok=True)
+        if self.image is not None:
+            ok,data=cv2.imencode('.png',cv2.cvtColor(self.image,cv2.COLOR_RGB2BGR))
+            if ok:
+                (folder/name).write_bytes(data.tobytes())
+                self.snapshots.append(name)
+                self.log('已保存决战截图：screenshots/decisive/'+name)
+        return 1
+
+    def read_record(self):
+        try:
+            value=json.loads(text(self.read_file(RECORD_FILE.encode()) or b''))
+        except ValueError:
+            return {}
+        if not isinstance(value,dict):return {}
+        record={}
+        if isinstance(value.get('日期'),str):record['日期']=value['日期']
+        for key in ('决战BOSS次数','养成记录'):
+            if isinstance(value.get(key),(int,float)) and not isinstance(value.get(key),bool):record[key]=value[key]
+        return record
 
     def to_lua(self, value):
         if isinstance(value,dict):return self.lua.table_from({text(k).encode():self.to_lua(v) for k,v in value.items()})

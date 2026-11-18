@@ -111,15 +111,7 @@
         "后方案A": false,
         "后方案B": false,
         "后方案C": false,
-        "后远征": true,
-        "换票资源": 0,
-        "351": false,
-        "U96": false,
-        "U1206": false,
-        "鹦鹉螺": false,
-        "U1405": false,
-        "鲃鱼": false,
-        "开局SL潜艇": true
+        "后远征": true
       }
     },
     "expedition": {
@@ -626,7 +618,7 @@
       "Scheduler": {
         "Enable": false,
         "Priority": 5,
-        "StartTime": "00:00",
+        "StartTime": "00:10",
         "IntervalMinutes": 60,
         "NextRun": "",
         "Runs": 1,
@@ -634,6 +626,7 @@
       },
       "Decisive": {
         "决战换票开关": false,
+        "换票资源": 0,
         "决战开关": true,
         "决战限制次数": 11,
         "决战方案": 0,
@@ -650,8 +643,15 @@
         "抱头蹲防": true,
         "满编后买经验": false,
         "教官用技能": true,
+        "开局SL潜艇": true,
         "U47": false,
-        "U81": false
+        "U81": false,
+        "U96": false,
+        "U1206": false,
+        "鹦鹉螺": false,
+        "351": false,
+        "U1405": false,
+        "鲃鱼": false
       }
     },
     "reward": {

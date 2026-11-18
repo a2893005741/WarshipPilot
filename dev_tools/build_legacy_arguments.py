@@ -19,7 +19,7 @@ tasks={
  'sortie_a':{'name':'方案 A','executable':False,'help':'保存原脚本方案 A 参数；本版尚未接入执行。'},
  'sortie_b':{'name':'方案 B','executable':False,'help':'保存原脚本方案 B 参数；本版尚未接入执行。'},
  'sortie':{'name':'方案 C','executable':True,'help':'使用原脚本方案 C 执行出征，修改的方案参数在下次任务启动时使用。'},
- 'decisive':{'name':'决战','executable':False,'help':'保存原脚本决战参数；本版尚未接入执行。'},
+ 'decisive':{'name':'决战','executable':True,'help':'使用原脚本决战。'},
 }
 labels={'Scheduler':'调度设置','Expedition':'远征设置','Campaign':'战役设置','Exercise':'演习设置','Map':'关卡与路线','Fleet':'舰队与换船','Repair':'修理设置','Battle':'节点与阵型','Enemy':'敌舰判断','Sortie':'出征设置','Runtime':'运行与限制','Retirement':'拆船与强化','Drop':'捞船与截图','General':'其他设置','Control':'方案控制','Decisive':'决战设置'}
 args={task:{} for task in tasks}
@@ -61,7 +61,7 @@ for field in inventory['fields']:
  if key not in defaults or re.search('注册码|密码|账号|帐号|token|密钥|邮箱|手机|SPT|包名|IOS|配置文件',key,re.I):continue
  task={'方案A':'sortie_a','方案B':'sortie_b','方案C':'sortie'}.get(page)
  if not task:
-  task='campaign' if key.startswith('战役') else 'exercise' if key.startswith('演习') else 'decisive' if key.startswith('决战') or key in ['肌肉记忆','关键一击','黑科技','长跑训练','抱头蹲防','满编后买经验','教官用技能','U47','U81'] else 'control' if page=='功能控制台' else 'general'
+  task='campaign' if key.startswith('战役') else 'exercise' if key.startswith('演习') else 'decisive' if key.startswith('决战') or key in ['肌肉记忆','关键一击','黑科技','长跑训练','抱头蹲防','满编后买经验','教官用技能','U47','U81','换票资源','351','U96','U1206','鹦鹉螺','U1405','鲃鱼','开局SL潜艇'] else 'control' if page=='功能控制台' else 'general'
  group=group_for(key,task);value=defaults[key]
  entry={'name':re.sub('[ABC]$','',key) if page.startswith('方案') else key,'type':'checkbox' if isinstance(value,bool) else 'number' if isinstance(value,int) else 'input','value':value,'storage':'legacy','key':key,'source':{'page':page,'ui_line':field['ui_definition_line']}}
  options=field.get('legacy_options_in_order')

@@ -7,7 +7,9 @@ from pydantic import BaseModel, ConfigDict, Field
 from module.config.config import Config
 
 TASKS = ('expedition', 'campaign', 'exercise', 'reward', 'sortie', 'sortie_a', 'sortie_b', 'decisive', 'general', 'control')
-EXECUTABLE = ['expedition', 'campaign', 'exercise', 'reward', 'sortie']
+EXECUTABLE = ['expedition', 'campaign', 'exercise', 'reward', 'sortie', 'decisive']
+# Decisive-only originals that earlier releases showed on the 功能控制台 page.
+DECISIVE_FROM_CONTROL = ('换票资源', '351', 'U96', 'U1206', '鹦鹉螺', 'U1405', '鲃鱼', '开局SL潜艇')
 
 
 class TaskDraft(BaseModel):
@@ -54,6 +56,13 @@ def read_tasks(root):
                     elif field['storage'] == 'legacy':
                         flattened['legacy'][field['key']] = value
             raw = flattened
+        if task == 'decisive':
+            earlier = saved.get('control', {}).get('Control', {})
+            legacy = dict(raw.get('legacy', {}))
+            for key in DECISIVE_FROM_CONTROL:
+                if key in earlier and key not in legacy:
+                    legacy[key] = earlier[key]
+            raw = raw | {'legacy': legacy}
         tasks[task] = TaskDraft.model_validate(defaults | raw).model_dump()
     # v0.3 stored inert drafts. The executable release uses the user's selected C.
     tasks['sortie'].update(fleet=2,stage='6-1',route='α',night_battle='never',repair='quick')

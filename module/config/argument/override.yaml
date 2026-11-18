@@ -21,3 +21,26 @@ exercise.Exercise.演习避潜艇:
   help: 按原脚本识别对方潜艇并尝试刷新；刷新次数用完后仍会挑战。
 exercise.Exercise.演习夜战:
   display: hide
+decisive.Scheduler.StartTime:
+  help: 首次运行的计划时间。决战次数每天 0 点刷新；今日次数打完或决战票用完后，次日在这个时间再检查。
+  value: 00:10
+decisive.Scheduler.IntervalMinutes:
+  name: 重试间隔（分钟）
+  help: 船坞已满或其他提前结束时，按此间隔再试。
+decisive.Scheduler.Runs:
+  display: hide
+decisive.Decisive.决战换票开关:
+  help: 开始决战前先用所选资源兑换决战票，兑换按钮变灰后继续决战。
+decisive.Decisive.决战开关:
+  display: hide
+  help: 决战启动时自动开启；自动调度请使用上方的“启用任务”。
+decisive.Decisive.决战限制次数:
+  help: 每天最多打几次决战。原脚本按 BOSS 战计数，3 次 BOSS 算一次决战，计数保存在 log/legacy-files/记录文件.txt。
+decisive.Decisive.决战方案:
+  help: 原脚本提示：小型船全部用潜艇；中型一条 2 费，其余尽量高费；大型尽量高费，不能选战巡。修改选船后需在游戏里点重置。
+decisive.Decisive.开局SL潜艇:
+  help: 未满编时，即使费用标记不符也优先选潜艇。
+decisive.Decisive.满编后买经验:
+  help: 满编后每次进入战斗地图点 5 次购买经验。
+decisive.Decisive.教官用技能:
+  help: 教官技能可用时点 5 次释放；教官是哈巴库克时原脚本不会用技能。
