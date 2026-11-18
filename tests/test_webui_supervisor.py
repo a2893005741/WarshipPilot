@@ -240,5 +240,26 @@ class SupervisedInstallerTest(unittest.TestCase):
         self.assertEqual(self.result()['error'], 'cannot start')
 
 
+class HealthCheckTest(unittest.TestCase):
+    def check(self, health):
+        from deploy.installer import wait_healthy
+        response = Mock()
+        response.__enter__ = Mock(return_value=response)
+        response.__exit__ = Mock(return_value=False)
+        process = Mock(pid=4321)
+        process.poll.return_value = None
+        with tempfile.TemporaryDirectory() as folder,                 patch('deploy.installer.json.load', return_value=health),                 patch('deploy.installer.urllib.request.urlopen', return_value=response),                 patch('deploy.installer.time.monotonic', side_effect=[0, 0, 0, 100]),                 patch('deploy.installer.time.sleep'):
+            wait_healthy(Path(folder), process, ['--port', '22680'])
+
+    def test_worker_started_directly_or_through_the_venv_launcher_stub(self):
+        self.check({'product': 'WarshipPilot', 'pid': 4321, 'ppid': 1})
+        # uv's .venv/Scripts/pythonw.exe starts the real interpreter as a child.
+        self.check({'product': 'WarshipPilot', 'pid': 9999, 'ppid': 4321})
+
+    def test_another_backend_on_the_port_is_not_accepted(self):
+        with self.assertRaisesRegex(RuntimeError, '未能启动'):
+            self.check({'product': 'WarshipPilot', 'pid': 9999, 'ppid': 1})
+
+
 if __name__ == '__main__':
     unittest.main()

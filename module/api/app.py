@@ -66,7 +66,8 @@ def create_app(runtime: Runtime, key: str, shutdown):
 
     async def health(request):
         return JSONResponse({"product": "WarshipPilot", "version": VERSION, "read_only": False,
-                             "pid": os.getpid(), "commit": getattr(runtime, 'commit', ''),
+                             "pid": os.getpid(), "ppid": os.getppid(),
+                             "commit": getattr(runtime, 'commit', ''),
                              "root": str(runtime.store.root.resolve())})
 
     async def api(request: Request):

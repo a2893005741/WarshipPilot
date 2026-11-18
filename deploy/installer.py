@@ -83,7 +83,9 @@ def wait_healthy(root, process, argv):
         try:
             with urllib.request.urlopen(f'http://127.0.0.1:{port}/health', timeout=1) as response:
                 health = json.load(response)
-                if health.get('product') == 'WarshipPilot' and health.get('pid') == process.pid:
+                # .venv\Scripts\pythonw.exe is uv's launcher stub: the serving
+                # interpreter is its child, so its parent is the started process.
+                if health.get('product') == 'WarshipPilot' and process.pid in (health.get('pid'), health.get('ppid')):
                     return
         except (OSError, ValueError):
             pass
