@@ -7,6 +7,7 @@ import re
 import secrets
 import base64
 import os
+from subprocess import TimeoutExpired
 
 from PIL import Image
 from pydantic import BaseModel, Field, ValidationError
@@ -178,12 +179,9 @@ def create_app(runtime: Runtime, key: str, shutdown):
                 methods = [str(m) for m in body.get("methods", [])][:10]
                 return JSONResponse(await asyncio.to_thread(runtime.start_benchmark, str(body.get("kind", "")), methods))
             if action == "connect-adb":
-                if not runtime.adb:
-                    raise ValueError("请先设置 ADB 路径")
-                def connect():
-                    with runtime.io_lock:
-                        return runtime.adb.connect(str(body.get("serial", "")))
-                return JSONResponse({"message": await asyncio.to_thread(connect)})
+                return JSONResponse(await asyncio.to_thread(runtime.connect_adb, str(body.get("serial", ""))))
+            if action == "restart-adb":
+                return JSONResponse(await asyncio.to_thread(runtime.restart_adb))
             if action == "select":
                 return JSONResponse(await asyncio.to_thread(runtime.select, str(body.get("serial", ""))))
             if action == "control":
@@ -237,6 +235,8 @@ def create_app(runtime: Runtime, key: str, shutdown):
     async def error(request, exc):
         if isinstance(exc, ValidationError):
             message = "设置格式不正确：" + str(exc).splitlines()[0]
+        elif isinstance(exc, TimeoutExpired):
+            message = "设备操作超时，请重试"
         else:
             message = str(exc)[:700]
         runtime.store.event(message, "warning")
@@ -258,7 +258,7 @@ def create_app(runtime: Runtime, key: str, shutdown):
 
     return Starlette(routes=[Route("/health", health), Route("/api/{action}", api, methods=["GET", "POST"]),
                               WebSocketRoute('/api/v1/ws', gateway.endpoint), *launcher_routes(runtime.launcher), Mount("/", ConsoleFiles(directory=runtime.resources / "frontend" / "dist", html=True))],
-                     exception_handlers={ValueError: error, RuntimeError: error, ValidationError: error, OSError: error}, lifespan=lifespan)
+                     exception_handlers={ValueError: error, RuntimeError: error, ValidationError: error, OSError: error, TimeoutExpired: error}, lifespan=lifespan)
 
 
 def legacy_report(runtime: Runtime, body: dict):

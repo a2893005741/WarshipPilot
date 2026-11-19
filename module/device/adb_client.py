@@ -64,17 +64,23 @@ class Adb:
         # Adapted from ALAS Adb.swipe_adb, milliseconds retained from original SWIPEEX.
         self.shell(serial,'input','swipe',*[str(int(v)) for v in (x1,y1,x2,y2,duration)])
 
+    def _devices(self):
+        for line in self.run("devices", "-l").decode("utf-8", errors="replace").splitlines():
+            parts = line.split(maxsplit=2)
+            if len(parts) >= 2 and not line.startswith(("List of devices", "*")):
+                yield parts[0], parts[1], parts[2] if len(parts) == 3 else ""
+
+    def device_state(self, serial: str) -> str:
+        return next((state for name, state, _ in self._devices() if name == serial), "")
+
     def discover(self) -> list[dict]:
         devices = []
-        for line in self.run("devices", "-l").decode("utf-8", errors="replace").splitlines()[1:]:
-            parts = line.split()
-            if len(parts) < 2:
-                continue
-            item = {"serial": parts[0], "state": parts[1], "detail": " ".join(parts[2:]), "game_installed": False}
-            if parts[1] == "device":
+        for serial, state, detail in self._devices():
+            item = {"serial": serial, "state": state, "detail": detail, "game_installed": False}
+            if state == "device":
                 try:
-                    item["game_installed"] = ("package:" + GAME_PACKAGE) in self.shell(parts[0], "pm", "list", "packages", GAME_PACKAGE).splitlines()
-                    item["size"] = self.shell(parts[0], "wm", "size")
+                    item["game_installed"] = ("package:" + GAME_PACKAGE) in self.shell(serial, "pm", "list", "packages", GAME_PACKAGE).splitlines()
+                    item["size"] = self.shell(serial, "wm", "size")
                 except (RuntimeError, subprocess.TimeoutExpired) as exc:
                     item["error"] = str(exc)
             devices.append(item)
@@ -84,6 +90,20 @@ class Adb:
         if not re.fullmatch(r"127\.0\.0\.1:[0-9]{1,5}", serial) or not 1 <= int(serial.split(":")[1]) <= 65535:
             raise ValueError("请填写本机 MuMu 地址，例如 127.0.0.1:16416")
         return self.run("connect", serial).decode("utf-8", errors="replace").strip()
+
+    def reconnect(self, serial: str):
+        """Refresh only the selected emulator transport."""
+        if serial.startswith("127.0.0.1:"):
+            self.run("disconnect", serial)
+            self.connect(serial)
+        else:
+            self.run("-s", serial, "reconnect")
+
+    def restart_service(self):
+        """Restart the shared server addressed by this ADB client."""
+        self.input_checked = 0.
+        self.run("kill-server", timeout=20)
+        self.run("start-server", timeout=20)
 
     def profile(self, serial: str) -> dict:
         packages = self.shell(serial, "pm", "list", "packages", GAME_PACKAGE)

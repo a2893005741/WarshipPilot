@@ -29,6 +29,14 @@ export function Devices() {
             })}><Link size={16} />连接</button>
           </div>
         </Row>
+        <Row label="ADB 服务" help="重新连接已保存的模拟器。重启共享服务会短暂断开同一服务上的设备。">
+          <button className="button secondary" disabled={!!busy || !state?.last_serial || !!state.automation?.running || !!state.device?.benchmark.running} onClick={() => job("重启 ADB", async () => {
+            const result = await api("restart-adb", {});
+            setToast(result.message);
+            setDevices(await api("devices", {}));
+            setState(await api("state"));
+          })}><RefreshCw size={16} />重启并重连</button>
+        </Row>
         {devices.map((device) => (
           <Row key={device.serial} label={device.game_installed ? "战舰少女R" : "其他安卓实例"}
             help={`${device.serial} · ${device.state} · ${device.size || device.detail}${device.error ? " · " + device.error : ""}`}>

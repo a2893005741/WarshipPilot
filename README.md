@@ -42,6 +42,8 @@ Windows x64 推荐使用[舰R独立启动器](https://github.com/a2893005741/War
 
 设备配置默认截图 nemu_ipc、控制 ADB；支持 ADB、ADB_nc、DroidCast、uiautomator2、scrcpy，以及 MaaTouch/minitouch 控制。首次部署只连接明确配置的舰R Serial，不切换其它游戏实例。MuMu IPC 要求后台位于已登录桌面用户的会话。
 
+设备离线时，WP 先尝试重连目标端口，仍失败且检测到 ADB 服务或连接异常时才重启服务。自动重启间隔至少两分钟。也可以在「设备 → ADB 服务」手动点击「重启并重连」。重启会中断同一 ADB 服务上的其他连接。
+
 ## 开发验证
 
 ```powershell

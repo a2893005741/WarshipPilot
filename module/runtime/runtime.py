@@ -4,6 +4,8 @@ import hashlib
 import io
 import json
 import re
+import socket
+import subprocess
 from pathlib import Path
 import threading
 import time
@@ -20,6 +22,9 @@ from module.logger import Store, atomic_json, now
 from module.config.config import Config
 from module.vision.legacy import ColorProfile, LegacyVision
 from module.runtime.controller import TaskController
+
+ADB_RESTART_COOLDOWN = 120
+ADB_CONNECTION_ERRORS = (RuntimeError, subprocess.TimeoutExpired)
 
 SCREENSHOT_DEFAULT, CONTROL_DEFAULT = 'nemu_ipc', 'ADB'  # the pair verified live in v0.4
 
@@ -65,6 +70,7 @@ class Runtime:
         # AzurPilot connects to the configured emulator on start; so do we.
         self.auto_connect_enabled = True
         self.next_connect = 0.0
+        self.next_adb_restart = 0.0
         self.connect_error = ''
         self.benchmark = {'running': False, 'kind': '', 'progress': '', 'results': {}, 'error': ''}
         self.legacy = LegacyVision(resources / "assets" / "legacy")
@@ -136,28 +142,27 @@ class Runtime:
         return devices
 
     def select(self, serial: str):
-        self.auto_connect_enabled = True
         with self.io_lock:
-            if self.automation.busy:
-                raise ValueError('请先停止当前任务，再切换设备')
-            if not self.adb:
-                raise ValueError(self.setup_error)
-            devices = self.adb.discover()
-            if not any(d["serial"] == serial and d["game_installed"] and d["state"] == "device" for d in devices):
-                raise ValueError(f"{serial} 不在线或没有安装战舰少女R（请确认模拟器已启动、Serial 正确）")
-            profile = self.adb.profile(serial)
-            self.open_emulator(serial)
-            with self.lock:
-                self.serial = serial
-                self.profile = profile
-                self.frame = None
-                self.legacy_result = None
-                self.recent_frames.clear()
-                self.recognition = {"label": "未分类", "score": None}
-                self.session = None
-                self.error = ""
-                self.failures = 0
-                self.status = "live"
+            self._check_device_change()
+            self._require_online(serial, self.adb.device_state(serial))
+            return self._select(serial)
+
+    def _select(self, serial):
+        profile = self.adb.profile(serial)
+        self.open_emulator(serial)
+        with self.lock:
+            self.serial = serial
+            self.profile = profile
+            self.frame = None
+            self.legacy_result = None
+            self.recent_frames.clear()
+            self.recognition = {"label": "未分类", "score": None}
+            self.session = None
+            self.error = self.connect_error = ""
+            self.failures = 0
+            self.status = "live"
+            self.auto_connect_enabled = True
+            if self.config.get("serial") != serial:
                 self.config["serial"] = serial
                 self.save_config()
         self.store.event(f"已连接舰R实例 {serial} · 游戏版本 {profile['version']} · "
@@ -166,40 +171,167 @@ class Runtime:
         self.wake.set()
         return profile
 
-    def auto_connect(self):
-        """Connect the configured emulator serial, as AzurPilot does with
-        Emulator_Serial. Never falls back to another instance."""
+    @staticmethod
+    def _parse_serial(serial):
+        serial = serial.strip().replace('：', ':').replace(' ', '')
+        if re.fullmatch(r'[0-9]+', serial):
+            serial = f'127.0.0.1:{serial}'
+        if re.fullmatch(r'emulator-[0-9]+', serial):
+            return serial
+        match = re.fullmatch(r'127\.0\.0\.1:([0-9]{1,5})', serial)
+        if match and 1 <= int(match[1]) <= 65535:
+            return f'127.0.0.1:{int(match[1])}'
+        raise ValueError('Serial 应为有效的本机端口，例如 127.0.0.1:16416')
+
+    def _configured_serial(self):
+        serial = self.config.get('serial', '')
+        if not serial.strip():
+            raise ValueError('请在「设备设置」填写模拟器 Serial，例如 127.0.0.1:16416')
+        # Devices chosen from discovery may include USB serials. They are
+        # passed as a single argument, never parsed as a network address.
+        if not serial.startswith('127.0.0.1:'):
+            return serial
+        return self._parse_serial(serial)
+
+    def _check_device_change(self):
+        if self.automation.busy or self.benchmark['running'] or self.automation.update_pending:
+            raise ValueError('任务、设备测试或更新进行中，请结束后再操作')
         if not self.adb:
             raise ValueError(self.setup_error or '没有找到 ADB')
-        serial = self.config.get('serial', '').strip()
-        if not serial:
-            raise ValueError('请在「设备设置」填写模拟器 Serial，例如 127.0.0.1:16416')
+
+    @staticmethod
+    def _target_listening(serial):
+        host, port = serial.split(':')
+        try:
+            with socket.create_connection((host, int(port)), timeout=1):
+                return True
+        except OSError:
+            return False
+
+    def _connect_transport(self, serial):
+        # ADB connect can exit successfully while its output reports failure.
         if serial.startswith('127.0.0.1:'):
             try:
                 self.adb.connect(serial)
-            except Exception:
+            except ADB_CONNECTION_ERRORS:
                 pass
-        return self.select(serial)
+        return self.adb.device_state(serial)
+
+    @staticmethod
+    def _require_online(serial, state):
+        if state == 'unauthorized':
+            raise ValueError(f'{serial} 未授权，请在模拟器内确认 ADB 调试授权')
+        if state != 'device':
+            raise RuntimeError(f'{serial} 未在线，请确认模拟器已启动且 ADB 调试已开启')
+
+    def _restart_adb_service(self, serial):
+        with self.lock:
+            self._check_device_change()
+            self.next_adb_restart = time.monotonic() + ADB_RESTART_COOLDOWN
+            self.serial, self.status, self.profile, self.frame = '', 'idle', None, None
+            self.legacy_result = None
+            self.recent_frames.clear()
+            self.recognition = {"label": "未分类", "score": None}
+            self.session = None
+        self.store.event(f'正在重启共享 ADB 服务并重新连接 {serial}', 'warning')
+        # Cached forwards and control streams cannot survive a server restart.
+        self.close_emulator()
+        self.adb.close()
+        self.adb.ipc_failed = ''
+        try:
+            self.adb.restart_service()
+        except subprocess.TimeoutExpired as exc:
+            raise RuntimeError('重启 ADB 服务超时') from exc
+
+    def _connect_with_recovery(self, serial):
+        try:
+            state = self._connect_transport(serial)
+            if state == 'offline':
+                try:
+                    self.adb.reconnect(serial)
+                except ADB_CONNECTION_ERRORS:
+                    pass
+                state = self.adb.device_state(serial)
+        except ADB_CONNECTION_ERRORS as exc:
+            state = None  # The ADB server did not return a device list.
+            transport_error = exc
+        can_restart = (state is None or state == 'offline' or
+                       (state == '' and serial.startswith('127.0.0.1:') and self._target_listening(serial)))
+        if (can_restart and time.monotonic() >= self.next_adb_restart
+                and (not self.serial or self.status == 'fault' or self.serial == serial)):
+            self._restart_adb_service(serial)
+            state = self._connect_transport(serial)
+        if state is None:
+            raise transport_error
+        self._require_online(serial, state)
+
+    def connect_adb(self, serial):
+        serial = self._parse_serial(serial)
+        if not serial.startswith('127.0.0.1:'):
+            raise ValueError('请填写本机 ADB 地址，例如 127.0.0.1:16416')
+        with self.io_lock:
+            self._check_device_change()
+            was_selected = self.serial == serial
+            self._connect_with_recovery(serial)
+            if was_selected and not self.serial:
+                self._select(serial)
+        return {'message': f'ADB 设备已在线：{serial}'}
+
+    def restart_adb(self):
+        with self.io_lock:
+            self._check_device_change()
+            serial = self._configured_serial()
+            self.auto_connect_enabled = True
+            try:
+                self._restart_adb_service(serial)
+                self._require_online(serial, self._connect_transport(serial))
+                self._select(serial)
+            except Exception as exc:
+                self.connect_error = str(exc)[:200]
+                raise
+            finally:
+                self.next_connect = time.monotonic() + 15
+                self.wake.set()
+        return {'serial': serial, 'message': f'ADB 已重启，舰R已重新连接：{serial}'}
+
+    def _auto_connect_if_due(self):
+        def due():
+            return (self.auto_connect_enabled and not self.automation.busy
+                    and not self.benchmark['running'] and not self.automation.update_pending
+                    and time.monotonic() >= self.next_connect and (not self.serial or self.status == 'fault'))
+
+        if not due():
+            return
+        with self.io_lock:
+            if not due():
+                return
+            try:
+                self._check_device_change()
+                serial = self._configured_serial()
+                self._connect_with_recovery(serial)
+                self._select(serial)
+            except Exception as exc:
+                message = str(exc)[:200]
+                if message != self.connect_error:
+                    self.store.event('自动连接模拟器失败，15 秒后重试：' + message, 'warning')
+                self.connect_error = message
+            finally:
+                self.next_connect = time.monotonic() + 15
 
     def set_serial(self, serial):
-        """Save the emulator serial (AzurPilot Emulator_Serial) and reconnect to it."""
-        serial = serial.strip().replace('：', ':').replace(' ', '')
-        if serial.isdigit():
-            serial = f'127.0.0.1:{serial}'
-        if not re.fullmatch(r'(127\.0\.0\.1:\d{1,5}|emulator-\d+)', serial):
-            raise ValueError('Serial 格式应为 127.0.0.1:端口（例如 127.0.0.1:16416）')
-        with self.io_lock:
+        """Save the emulator serial and reconnect to it."""
+        serial = self._parse_serial(serial)
+        with self.io_lock, self.lock:
             if self.automation.busy:
                 raise ValueError('请先停止当前任务')
-            with self.lock:
-                self.config['serial'] = serial
-                self.save_config()
-                if self.serial and self.serial != serial:
-                    self.close_emulator()
-                    self.serial, self.status, self.profile, self.frame = '', 'idle', None, None
-        self.auto_connect_enabled = True
-        self.next_connect = 0
-        self.connect_error = ''
+            self.config['serial'] = serial
+            self.save_config()
+            if self.serial and self.serial != serial:
+                self.close_emulator()
+                self.serial, self.status, self.profile, self.frame = '', 'idle', None, None
+            self.auto_connect_enabled = True
+            self.next_connect = 0
+            self.connect_error = ''
         self.store.event(f'模拟器 Serial 已设为 {serial}，正在连接')
         self.wake.set()
         return {'serial': serial}
@@ -244,20 +376,7 @@ class Runtime:
     def _loop(self):
         while not self.stop_event.is_set():
             self.wake.clear()
-            if (self.auto_connect_enabled and not self.automation.busy and time.monotonic() >= self.next_connect
-                    and (not self.serial or self.status == 'fault')):
-                self.next_connect = time.monotonic() + 15
-                try:
-                    if self.status == 'fault':
-                        with self.lock:
-                            self.serial, self.status = '', 'idle'
-                    self.auto_connect()
-                    self.connect_error = ''
-                except Exception as exc:
-                    message = str(exc)[:200]
-                    if message != self.connect_error:
-                        self.store.event('自动连接模拟器失败，15 秒后重试：' + message, 'warning')
-                    self.connect_error = message
+            self._auto_connect_if_due()
             if self.automation.native:
                 # The native task takes its own screenshots and publishes them.
                 with self.lock:
