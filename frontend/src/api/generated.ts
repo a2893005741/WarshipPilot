@@ -1,4 +1,4 @@
-// 由 dev_tools.export_api_schema 生成，请勿手动编辑。
+// 取自 AzurPilot 的接口类型，无生成器；修改 RPC 方法时与 module/api/alas 一起手动维护。
 export interface Parameters {
   "launcher.status": Record<string, never>
   "launcher.autostart.set": { enabled: boolean }

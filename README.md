@@ -67,11 +67,12 @@ WebUI 复用本机 AzurPilot 的现代样式、外壳和参数页结构：总览
 
 前端按 `app/`、`pages/`、`components/`、`api/`、`config/`、`styles/` 分目录；后端接口位于 `module/api/`，运行与调度服务位于 `module/runtime/`，共用异常位于 `module/exception.py`。业务请求通过 `/api/v1/ws`，截图与下载保留鉴权 HTTP。
 
-原脚本业务字段共 506 项，按原控件的选项次序和默认值生成；不迁移注册码、令牌等敏感项。定义在 `module/config/argument/task.yaml`、`argument.yaml`、`default.yaml`、`override.yaml`、`gui.yaml`。运行以下命令生成，避免直接编辑生成文件：
+原脚本业务字段共 506 项，按原控件的选项次序和默认值生成；不迁移注册码、令牌等敏感项。定义在 `module/config/argument/task.yaml`、`argument.yaml`、`default.yaml`、`override.yaml`、`gui.yaml`。修改 YAML 后运行以下命令生成 `args.json`、`menu.json`、`schema.json` 与 `config/template.json`，避免直接编辑生成文件：
 
 ```powershell
 .venv/Scripts/python.exe -m module.config.config_updater
-.venv/Scripts/python.exe -m dev_tools.export_api_schema
 ```
+
+前端接口类型 `frontend/src/api/generated.ts` 取自 AzurPilot，没有生成器；新增或修改 RPC 方法时与 `module/api/alas` 一起手动维护。
 
 `config/warship.json` 的 `Tasks.<任务>.<参数组>.<参数>` 对齐 ALAS 配置层级。旧扁平任务配置启动时自动转换，原调度开关、间隔和下次运行时间保留。修改字段后自动保存，出错提示留在对应字段旁；运行任务前等待保存完成。

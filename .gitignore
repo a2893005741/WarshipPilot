@@ -46,8 +46,6 @@ docs/*
 .workbuddy/
 .codebuddy/
 .zcode/
-AGENTS.md
-CLAUDE.md
 
 # Frontend
 node_modules/
